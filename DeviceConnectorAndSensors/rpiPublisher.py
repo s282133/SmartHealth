@@ -14,11 +14,11 @@ from pressureSensor import pressureSensorClass
 from glycemiaSensor import glycemiaSensorClass
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR = 30              # chiedo una misurazione ogni 30 minuti
-POLLING_PERIOD_PRESSURE = 60       # chiedo una misurazione ogni 60 minuti
-POLLING_PERIOD_GLYCEMIA = 120       # chiedo una misurazione ogni 120 minuti
+POLLING_PERIOD_HR = 5               # chiedo una misurazione ogni 5 minuti
+POLLING_PERIOD_PRESSURE = 10        # chiedo una misurazione ogni 10 minuti
+POLLING_PERIOD_GLYCEMIA = 20        # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 60
+ONE_MINUTE_IN_SEC = 1
 
 class rpiPub():
 
@@ -114,4 +114,3 @@ if __name__ == "__main__":
             rpi.publishGlycemia(newMeasureGlycemia)
         counter = counter + 1
         time.sleep(ONE_MINUTE_IN_SEC)
-        #time.sleep(1)
