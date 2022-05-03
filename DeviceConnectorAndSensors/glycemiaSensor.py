@@ -4,9 +4,9 @@ import random
 
 # this class represents a simulated pressure sensor
 
-class pressureSensorClass():
+class glycemiaSensorClass():
 
-    simulatedMeasures = [20 for i in range(1000)]
+    simulatedMeasures = [80 for i in range(1000)]
 
-    def getPressure(self, counter):
+    def getGlycemia(self, counter):
         return self.simulatedMeasures[counter] + random.randint(-3, 3)

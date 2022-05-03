@@ -3,12 +3,6 @@ import time
 import json
 import string
 
-# periodo in minuti
-PERIODO_HR = 5
-PERIODO_PRESSURE = 15
-
-# DA FARE: mettere funzioni publisher MQTT ma non so se vanno mantenute quelle subscriber
-
 class rpi():
 
     # MQTT FUNCTIONS
@@ -41,7 +35,7 @@ if __name__ == "__main__":
     broker = conf["broker"]
     port = conf["port"]
     MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)
-    
+
     MQTTpubsub.start()    
 
     while True:
