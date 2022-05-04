@@ -4,6 +4,9 @@ from MyMQTT import *
 import time
 import json
 
+
+# TODO: extend to publisher MQTT broker
+
 class dataAnalysisClass():
 
     # MQTT FUNCTIONS
@@ -11,6 +14,7 @@ class dataAnalysisClass():
     def __init__(self, clientID, topic, broker, port):
         self.client = MyMQTT(clientID, broker, port, self)
         self.topic = topic
+        self.thresholdsFile = open("../CatalogueAndSettings/timeshift.json", "r")
 
     def start(self):
         self.client.start()
@@ -34,28 +38,65 @@ class dataAnalysisClass():
         #print(f"{sensorName} measured a {measureType} of {value} {unit} at time {timestamp}.\n")
         if (measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {value} at time {timestamp}")
-            self.manageHeartRate(value)
+            week = "qualcosa da 0 a 36"
+            self.manageHeartRate(value, week)
         elif (measureType == "pressure"):
             print(f"DataAnalysisBlock received PRESSURE measure of: {value} at time {timestamp}")
-            self.managePressure(value)            
+            week = "qualcosa da 0 a 36"
+            self.managePressure(value, week)            
         elif (measureType == "glycemia"):
             print(f"DataAnalysisBlock received GLYCEMIA measure of: {value} at time {timestamp}")
-            self.manageGlycemia(value)
+            week = "qualcosa da 0 a 36"
+            self.manageGlycemia(value, week)
         else:
             print("Measure type not recognized")
 
+    # per queste funzioni descritte sotto dovremmo anche farci passare la settimana di gravidanza
 
-    def manageHeartRate(self, value):
-        # TODO: evaluate heart rate according to thresholds and month of pregnancy
-        pass
+    def manageHeartRate(self, value, week):
+        # TODO: evaluate heart rate according to thresholds due to week of pregnancy
+        thresholdsHR = self.thresholdsFile["heartrate"]
+        for rangeHR in thresholdsHR:
+            weekmin = rangeHR["weekrange"].split("-")[0]
+            weekmax = rangeHR["weekrange"].split("-")[1]
+            if (week >= weekmin and week <= weekmax):
+                if (value >= rangeHR["min"] and value <= rangeHR["max"]):
+                    print(f"DataAnalysisBlock: heart rate is in range")
+                    # TODO: send message to MQTT broker
+                else:
+                    print(f"DataAnalysisBlock: heart rate is NOT in range") 
+                    # take further action !
+                    # TODO: send message to MQTT broker
 
-    def managePressure(self, value):
-        # TODO: evaluate pressure according to thresholds and month of pregnancy
-        pass
+    def managePressure(self, value, week):
+        # TODO: evaluate pressure according to thresholds due to week of pregnancy
+        thresholdsPR = self.thresholdsFile["pressure"]
+        for rangePR in thresholdsPR:
+            weekmin = rangePR["weekrange"].split("-")[0]
+            weekmax = rangePR["weekrange"].split("-")[1]
+            if (week >= weekmin and week <= weekmax):
+                if (value >= rangePR["min"] and value <= rangePR["max"]):
+                    print(f"DataAnalysisBlock: pressure is in range")
+                    # TODO: send message to MQTT broker
+                else:
+                    print(f"DataAnalysisBlock: pressure is NOT in range") 
+                    # take further action !
+                    # TODO: send message to MQTT broker
 
-    def manageGlycemia(self, value):
-        # TODO: evaluate glycemia according to thresholds and month of pregnancy
-        pass
+    def manageGlycemia(self, value, week):
+        # TODO: evaluate glycemia according to thresholds due to week of pregnancy
+        thresholdsGL = self.thresholdsFile["glycemia"]
+        for rangeGL in thresholdsGL:
+            weekmin = rangeGL["weekrange"].split("-")[0]
+            weekmax = rangeGL["weekrange"].split("-")[1]
+            if (week >= weekmin and week <= weekmax):
+                if (value >= rangeGL["min"] and value <= rangeGL["max"]):
+                    print(f"DataAnalysisBlock: glycemia is in range")
+                    # TODO: send message to MQTT broker
+                else:
+                    print(f"DataAnalysisBlock: glycemia is NOT in range") 
+                    # take further action !
+                    # TODO: send message to MQTT broker
 
 
 
