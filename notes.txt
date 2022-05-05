@@ -1,5 +1,3 @@
-1) Forse meglio mettere "timeshift.json" nella cartella "PostProcessing";
-2) Estendere il file dataAnalysis con funzioni da publisher MQTT;
-3) Creare una sola istanza del file MyMQTT;
-4) Spostare il file TESTsubscriber da lì;
-5) Mettere vettori sensati di misure simulate nei sensori di pressure e glycemia.
+1) Estendere il file dataAnalysis con funzioni da publisher MQTT;
+2) Creare una sola istanza del file MyMQTT;
+3) Mettere vettori sensati di misure simulate nei sensori di pressure e glycemia.

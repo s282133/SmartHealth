@@ -31,7 +31,7 @@ class rpi():
 
 
 if __name__ == "__main__":
-    conf = json.load(open("settings.json"))
+    conf = json.load(open("../CatalogueAndSettings/settings.json"))
     broker = conf["broker"]
     port = conf["port"]
     MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)

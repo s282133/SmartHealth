@@ -14,7 +14,7 @@ class dataAnalysisClass():
     def __init__(self, clientID, topic, broker, port):
         self.client = MyMQTT(clientID, broker, port, self)
         self.topic = topic
-        self.thresholdsFile = open("../CatalogueAndSettings/timeshift.json", "r")
+        self.thresholdsFile = open("timeshift.json", "r")
 
     def start(self):
         self.client.start()
