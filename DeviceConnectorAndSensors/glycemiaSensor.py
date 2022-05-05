@@ -17,4 +17,4 @@ class glycemiaSensorClass():
 
 
     def getGlycemia(self, counter):
-        return self.simulatedMeasures[counter] + random.randint(-3, 3)
+        return (self.simulatedMeasures[counter] % len(self.simulatedMeasures)) + random.randint(-3, 3)
