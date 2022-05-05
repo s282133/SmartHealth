@@ -1,10 +1,11 @@
+import random
+
 # this class represents a simulated heartrate sensor
 
 class heartrateSensorClass():
     
     def getHR(self,counter):
-        measure = self.hb[counter]
-        return measure
+        return (self.simulatedMeasures[counter] % len(self.simulatedMeasures)) + random.randint(-3, 3)
 
 
     # vector of simulated measures

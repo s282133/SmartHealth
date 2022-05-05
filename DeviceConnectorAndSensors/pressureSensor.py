@@ -6,7 +6,9 @@ import random
 
 class pressureSensorClass():
 
+    # non so quale siano i range normali di pressione
+
     simulatedMeasures = [20 for i in range(1000)]
 
     def getPressure(self, counter):
-        return self.simulatedMeasures[counter] + random.randint(-3, 3)
+        return (self.simulatedMeasures[counter] % len(self.simulatedMeasures)) + random.randint(-3, 3)
