@@ -18,7 +18,7 @@ POLLING_PERIOD_HR = 5               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 10        # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 20        # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 1
+ONE_MINUTE_IN_SEC = 60
 
 class rpiPub():
 
@@ -64,6 +64,7 @@ class rpiPub():
 
     def publishHR(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # cambiare topic! legarlo all'id paziente
         rpi.myPublish("P4IoT/SmartHealth/heartrate", json.dumps({"bn": "http://example.org/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}))
         print(f"Published {measure} with topic: P4IoT/SmartHealth/heartrate")
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
     rpi.start()
 
     rpi.initSensors()
-
+ 
     counter = 0
     while True:
         if counter % POLLING_PERIOD_HR == 0:

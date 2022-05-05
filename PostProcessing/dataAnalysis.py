@@ -66,7 +66,7 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: heart rate is NOT in range") 
                     # take further action !
-                    # TODO: send message to MQTT broker
+                    # TODO: send message to MQTT broker OR TELEGRAM or both
 
     def managePressure(self, value, week):
         # TODO: evaluate pressure according to thresholds due to week of pregnancy
@@ -81,7 +81,7 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
                     # take further action !
-                    # TODO: send message to MQTT broker
+                    # TODO: send message to MQTT broker OR TELEGRAM or both
 
     def manageGlycemia(self, value, week):
         # TODO: evaluate glycemia according to thresholds due to week of pregnancy
@@ -96,7 +96,7 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
                     # take further action !
-                    # TODO: send message to MQTT broker
+                    # TODO: send message to MQTT broker OR TELEGRAM or both
 
 
 
