@@ -21,7 +21,7 @@ class rpi():
     def notify(self, topic, msg):   
         d = json.loads(msg)
         bn = d["bn"]
-        sensorName = bn.split("/")[3]           # "bn": "http://example.org/sensor1/"  -> "sensor1"
+        sensorName = bn.split("/")[3] + "/" + bn.split("/")[4]           # "bn": "http://example.org/clientID/sensor1/"  -> "clientID/sensor1"
         e = d["e"]
         measureType = e[0]["n"]
         unit = e[0]["u"]
@@ -34,7 +34,21 @@ if __name__ == "__main__":
     conf = json.load(open("../CatalogueAndSettings/settings.json"))
     broker = conf["broker"]
     port = conf["port"]
+
+    # topic : P4IoT/SmartHealth/#  =>  tutti i sensori di tutti i client
+    # topic : P4IoT/SmartHealth/clientID/#  =>  tutti i sensori di un client specifico
+    # topic : P4IoT/SmartHealth/clientID/sensor1 =>  un sensore specifico di un client specifico
+    # topic : P4IoT/SmartHealth/+/sensor1 => il sensore1 (ex: heartrate) di tutti i client
+    
+    # TEST 1
     MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)
+    # questo test sarebbe per piu client ma ad oggi ne abbiamo solo una istanza
+
+    # TEST 2
+    # MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/+/heartrate", broker, port)
+
+    # TEST 3
+    # MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/+/glycemia", broker, port)
 
     MQTTpubsub.start()    
 

@@ -18,22 +18,20 @@ POLLING_PERIOD_HR = 5               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 10        # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 20        # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 60
+ONE_MINUTE_IN_SEC = 1               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
+                                    # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
 
 class rpiPub():
 
     # MQTT FUNCTIONS
     def __init__(self, clientID):
         self.clientID = clientID
-        # create an instance of paho.mqtt.client
         self._paho_mqtt = PahoMQTT.Client(self.clientID, False) 
-        # register the callback
         self._paho_mqtt.on_connect = self.myOnConnect
 
         self.messageBroker = 'test.mosquitto.org'
 
     def start (self):
-		#manage connection to broker
         self._paho_mqtt.connect(self.messageBroker, 1883)
         self._paho_mqtt.loop_start()
 
@@ -42,7 +40,6 @@ class rpiPub():
         self._paho_mqtt.disconnect()
 
     def myPublish(self, topic, message):
-		# publish a message with a certain topic
         self._paho_mqtt.publish(topic, message, 2)
 
     def myOnConnect (self, paho_mqtt, userdata, flags, rc):
@@ -64,9 +61,8 @@ class rpiPub():
 
     def publishHR(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # cambiare topic! legarlo all'id paziente
-        rpi.myPublish("P4IoT/SmartHealth/heartrate", json.dumps({"bn": "http://example.org/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}))
-        print(f"Published {measure} with topic: P4IoT/SmartHealth/heartrate")
+        rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/heartrate", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}))
+        print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/heartrate")
 
     # PRESSURE
 
@@ -76,8 +72,8 @@ class rpiPub():
 
     def publishPressure(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        rpi.myPublish("P4IoT/SmartHealth/pressure", json.dumps({"bn": "http://example.org/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": measure}]}))
-        print(f"Published {measure} with topic: P4IoT/SmartHealth/pressure")
+        rpi.myPublish("P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": measure}]}))
+        print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
 
     # GLYCEMIA
 
@@ -87,8 +83,8 @@ class rpiPub():
 
     def publishGlycemia(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        rpi.myPublish("P4IoT/SmartHealth/glycemia", json.dumps({"bn": "http://example.org/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}))
-        print(f"Published {measure} with topic: P4IoT/SmartHealth/glycemia")
+        rpi.myPublish("P4IoT/SmartHealth/{self.clientID}/glycemia", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}))
+        print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/glycemia")
 
 
     # altri sensori possono essere aggiunti qua
@@ -96,7 +92,7 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    rpi = rpiPub("rpiPub")
+    rpi = rpiPub("rpiPub")      # qui devo definire il clientID, parla con le ragazze
 
     rpi.start()
 
