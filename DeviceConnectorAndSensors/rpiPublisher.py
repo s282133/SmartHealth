@@ -67,13 +67,15 @@ class rpiPub():
     # PRESSURE
 
     def getPressuremeasure(self, counter):
-        newMeasurePressure = self.pressureSensor.getPressure(counter)
-        return newMeasurePressure
+        dictPressure = self.pressureSensor.getPressure(counter)
+        return dictPressure
 
-    def publishPressure(self, measure):
+    def publishPressure(self, measureDict):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        rpi.myPublish("P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": measure}]}))
-        print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
+        pressureHigh = measureDict["pressureHigh"]
+        pressureLow = measureDict["pressureLow"]
+        rpi.myPublish("P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": f'{pressureHigh},{pressureLow}'}]}))
+        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
 
     # GLYCEMIA
 
@@ -104,8 +106,8 @@ if __name__ == "__main__":
             newMeasureHR = int(rpi.getHRmeasure(counter))
             rpi.publishHR(newMeasureHR)
         if counter % POLLING_PERIOD_PRESSURE == 0:
-            newMeasurePressure = int(rpi.getPressuremeasure(counter))
-            rpi.publishPressure(newMeasurePressure)
+            newMeasurePressureDict = rpi.getPressuremeasure(counter)
+            rpi.publishPressure(newMeasurePressureDict)
         if counter % POLLING_PERIOD_GLYCEMIA == 0:
             newMeasureGlycemia = int(rpi.getGlycemia(counter))
             rpi.publishGlycemia(newMeasureGlycemia)

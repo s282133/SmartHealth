@@ -50,6 +50,9 @@ if __name__ == "__main__":
     # TEST 3
     # MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/+/glycemia", broker, port)
 
+    # TEST 4
+    MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/+/pressure", broker, port)
+
     MQTTpubsub.start()    
 
     while True:

@@ -5,7 +5,8 @@ import random
 class heartrateSensorClass():
     
     def getHR(self,counter):
-        return (self.simulatedMeasures[counter] % len(self.simulatedMeasures)) + random.randint(-3, 3)
+        counter = counter % len(self.simulatedMeasures)
+        return self.simulatedMeasures[counter] + random.randint(-3, 3)
 
 
     # vector of simulated measures
