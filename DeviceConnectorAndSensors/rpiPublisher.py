@@ -74,7 +74,7 @@ class rpiPub():
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         pressureHigh = measureDict["pressureHigh"]
         pressureLow = measureDict["pressureLow"]
-        rpi.myPublish("P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": f'{pressureHigh},{pressureLow}'}]}))
+        rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": f'{pressureHigh},{pressureLow}'}]}))
         print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
 
     # GLYCEMIA
@@ -94,7 +94,7 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    rpi = rpiPub("rpiPub")      # qui devo definire il clientID, parla con le ragazze
+    rpi = rpiPub("345")      # qui devo definire il clientID, parla con le ragazze
 
     rpi.start()
 
