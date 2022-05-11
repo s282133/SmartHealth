@@ -74,6 +74,7 @@ class rpiPub():
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         pressureHigh = measureDict["pressureHigh"]
         pressureLow = measureDict["pressureLow"]
+        # TODO : mettere 2 "e", una per min e una per max
         rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": f'{pressureHigh},{pressureLow}'}]}))
         print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
 
