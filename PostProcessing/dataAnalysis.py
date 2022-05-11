@@ -19,6 +19,7 @@ class dataAnalysisClass():
         self.client = MyMQTT(clientID, broker, port, self)
         self.topic = topic
         self.thresholdsFile = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\PostProcessing\\timeshift.json",'r'))
+        #self.thresholdsFile = json.load(open("..\\PostProcessing\\timeshift.json",'r'))
 
     def start(self):
         self.client.start()
@@ -82,6 +83,7 @@ class dataAnalysisClass():
 
                 # varifica superamento soglia e invio di un messaggio automatico a telegram 
                 self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json")) 
+                #self.catalog = json.load(open("..\\CatalogueAndSettings\\catalog.json"))
                 self.lista = self.catalog["doctorList"]
                 messaggio_inviato = False
                 for doctorObject in self.lista:

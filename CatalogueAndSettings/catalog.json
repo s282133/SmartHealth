@@ -6,7 +6,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 8,
+  "LastPatientID": 9,
   "doctorList": [
     {
       "doctorID": "1",
