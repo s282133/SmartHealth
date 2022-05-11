@@ -55,9 +55,10 @@ class dataAnalysisClass():
         else:
             print("Measure type not recognized")
 
-        clientID = self.bn.split("/")[3]
-        measure = self.value
-        return clientID
+        # Da capire il passaggio delle variabili tra le classi!
+        # clientID = self.bn.split("/")[3]
+        # measure = self.value
+        # return clientID
 
     # per queste funzioni descritte sotto dovremmo anche farci passare la settimana di gravidanza
 
