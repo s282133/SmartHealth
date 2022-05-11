@@ -3,6 +3,10 @@
 from MyMQTT import *
 import time
 import json
+import telepot
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+from unicodedata import name
+from telepot.loop import MessageLoop
 
 
 # TODO: extend to publisher MQTT broker
@@ -120,13 +124,6 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
                     # take further action !
                     # TODO: send message to MQTT broker OR TELEGRAM or both
-
-
-
-import telepot
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-from unicodedata import name
-from telepot.loop import MessageLoop
 
 # Classe Bot Telegram
 class SwitchBot:
