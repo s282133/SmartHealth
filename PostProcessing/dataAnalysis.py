@@ -64,8 +64,7 @@ class dataAnalysisClass():
         for rangeHR in thresholdsHR:
             weekmin = rangeHR["weekrange"].split("-")[0]
             weekmax = rangeHR["weekrange"].split("-")[1]
-
-        #ATTENZIONE NON FUNZIONA CONDIZIONE DELLE SETTIMANE    
+   
         if (week >= weekmin and week <= weekmax):
             #if (self.value >= rangeHR["min"] and self.value <= rangeHR["max"]):
             if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
