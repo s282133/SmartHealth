@@ -43,7 +43,7 @@ class dataAnalysisClass():
         #print(f"{sensorName} measured a {measureType} of {self.value} {unit} at time {timestamp}.\n")
         if (measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {timestamp}")
-            week = "7"
+            week = "35"
             self.manageHeartRate(week)
         elif (measureType == "pressure"):
             print(f"DataAnalysisBlock received PRESSURE measure of: {self.value} at time {timestamp}")
@@ -86,11 +86,14 @@ class dataAnalysisClass():
                 #self.catalog = json.load(open("..\\CatalogueAndSettings\\catalog.json"))
                 self.lista = self.catalog["doctorList"]
                 messaggio_inviato = False
+
+                IDpaziente = 1 #da aggiornare in real time
+
                 for doctorObject in self.lista:
                     patientList = doctorObject["patientList"]
                     for userObject in patientList:
                         patientID = userObject["patientID"] 
-                        if  "1" == patientID:
+                        if  IDpaziente == patientID:
                             self.chat_ID = doctorObject["doctorID"]
                             mybot.send_alert(self)
                             messaggio_inviato = True
@@ -152,10 +155,11 @@ class SwitchBot:
         #measure = MQTTpubsub.notify
         clientID = 2
         measure = 1
+        measureType = "heart rate"
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡', callback_data=f'on'), 
                 InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=f'off')]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        self.bot.sendMessage(chat_ID, text=f'Attention, patient {clientID} heart rate is NOT in range: {measure}. \n What do you want to do?', reply_markup=keyboard)
+        self.bot.sendMessage(chat_ID, text=f'Attention, patient {clientID} {measureType} is NOT in range: {measure}. \n What do you want to do?', reply_markup=keyboard)
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)

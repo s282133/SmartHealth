@@ -83,17 +83,25 @@
 
         function sendPOSTrequest() {
             event.preventDefault();
+
+            doctorID = 1;
             name = $("#name").val();
             surname = $("#surname").val();
             mail = $("#mail").val();
+            lastUpdate = 1234;
+            
             $.ajax({
                 type: "POST",
                 url: "/doctors",
                 contentType: "application/json",
                 data: JSON.stringify({
+
+                    doctorID: doctorID,
                     userName: name,
                     userSurname: surname,
-                    userEmail: mail
+                    userEmail: mail,
+                    lastUpdate: lastUpdate
+
                 }),
                 dataType: "json",
                 success: function (response) {
