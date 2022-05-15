@@ -35,7 +35,6 @@ class dataAnalysisClass():
         d = json.loads(msg)
         self.bn = d["bn"]
         self.sensorName = self.bn.split("/")[3]           # "bn": "http://example.org/sensor1/"  -> "sensor1"
-
         self.clientID = self.bn.split("/")[3]  
 
         e = d["e"]
@@ -71,27 +70,18 @@ class dataAnalysisClass():
             weekmax = rangeHR["weekrange"].split("-")[1]
    
         if (week >= weekmin and week <= weekmax):
-            #if (self.value >= rangeHR["min"] and self.value <= rangeHR["max"]):
             if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
                 print(f"DataAnalysisBlock: heart rate is in range")
-                # TODO: send message to MQTT broker
             else:
                 print(f"DataAnalysisBlock: heart rate is NOT in range") 
-                # take further action !
-                # TODO: send message to MQTT broker OR TELEGRAM or both
 
                 # varifica superamento soglia e invio di un messaggio automatico a telegram 
                 self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
                 self.lista = self.catalog["doctorList"]
-                messaggio_inviato = False
+                #messaggio_inviato = False
 
-                # ricerca ID paziente
-                # ricerca chatID dottore
-                # messaggio di errore
-                # manfìda messaggio
-                # messaggio = "abc"
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
-                IDpaziente = 1 
+                IDpaziente = 1 # gestire ricerca ID paziente
 
                 self.telegramID = self.findDoctor(IDpaziente)
 
