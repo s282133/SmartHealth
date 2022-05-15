@@ -6,10 +6,10 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 7,
+  "LastPatientID": 9,
   "doctorList": [
     {
-      "doctorID": "1",
+      "doctorID": 1,
       "doctorName": "Giulia",
       "doctorSurname": "Codagnone",
       "doctorMail": "laura.cubeddu@gmail.com",
@@ -30,15 +30,14 @@
           },
           "connectedDevice": {
             "devicesID": "raspberry1",
+            "onlineSince": "2022-03-22",
             "mesureType": [
               "Heart Rate",
               "Pression",
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": [
-              491287865
-            ],
+            "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": "123",
               "apikeys": [
@@ -55,19 +54,18 @@
           "personalData": {
             "taxIDcode": "ABCDEFGH",
             "userEmail": "giulia.codagnone@gmail.com",
-            "pregnancyDayOne": "22/03/99"
+            "pregnancyDayOne": "2022-01-02"
           },
           "connectedDevice": {
             "devicesID": "raspberry22",
+            "onlineSince": "2022-02-01",
             "mesureType": [
               "Heart Rate",
               "Pression",
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": [
-              123
-            ],
+            "telegramID": 123,
             "thingspeakInfo": {
               "channel": "123",
               "apikeys": [
@@ -84,19 +82,18 @@
           "personalData": {
             "taxIDcode": "ABCDEFGH",
             "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "22/03/99"
+            "pregnancyDayOne": "2022-02-05"
           },
           "connectedDevice": {
             "devicesID": "raspberry22",
+            "onlineSince": "2022-02-08",
             "mesureType": [
               "Heart Rate",
               "Pression",
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": [
-              0
-            ],
+            "telegramID": 0,
             "thingspeakInfo": {
               "channel": "0",
               "apikeys": [
@@ -113,10 +110,39 @@
           "personalData": {
             "taxIDcode": "ABCDEFGH",
             "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "22/03/99"
+            "pregnancyDayOne": "2022-07-03"
           },
           "connectedDevice": {
             "devicesID": "raspberry22",
+            "onlineSince": "2022-08-03",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "0",
+              "apikeys": [
+                "FRN2A7XGJHIUSN24",
+                "ABCDEFGHILMNOPQR"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 8,
+          "patientName": "Elisa",
+          "patientSurname": "Aime",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-09-01"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry22",
+            "onlineSince": "2022-09-23",
             "mesureType": [
               "Heart Rate",
               "Pression",
@@ -186,7 +212,7 @@
       ]
     },
     {
-      "doctorID": "2",
+      "doctorID": 2,
       "doctorName": "Giacomo",
       "doctorSurname": "Codagnone",
       "doctorMail": "laura.cubeddu@gmail.com",
@@ -207,15 +233,14 @@
           },
           "connectedDevice": {
             "devicesID": "raspberry1",
+            "onlineSince": "2022-03-31",
             "mesureType": [
               "Heart Rate",
               "Pression",
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": [
-              491287865
-            ],
+            "telegramID": 491287865,
             "thingspeakInfo": {
               "channel": "123",
               "apikeys": [
@@ -237,15 +262,14 @@
           },
           "connectedDevice": {
             "devicesID": "raspberry2",
+            "onlineSince": "2022-03-31",
             "mesureType": [
               "Heart Rate",
               "Pression",
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": [
-              123
-            ],
+            "telegramID": 123,
             "thingspeakInfo": {
               "channel": "123",
               "apikeys": [
@@ -305,5 +329,6 @@
         }
       ]
     }
+  
   ]
 }

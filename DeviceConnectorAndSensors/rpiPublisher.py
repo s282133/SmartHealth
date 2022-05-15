@@ -18,7 +18,7 @@ POLLING_PERIOD_HR = 1               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 2         # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 3        # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 0               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
+ONE_MINUTE_IN_SEC = 1               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
 
 class rpiPub():
@@ -75,7 +75,8 @@ class rpiPub():
         pressureHigh = measureDict["pressureHigh"]
         pressureLow = measureDict["pressureLow"]
         # TODO : mettere 2 "e", una per min e una per max
-        rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/pressure", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressure", "u": "hPa", "t": timeOfMessage, "v": f'{pressureHigh},{pressureLow}'}]}))
+        message = json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]})
+        rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/pressure", message)
         print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
 
     # GLYCEMIA
@@ -100,19 +101,19 @@ if __name__ == "__main__":
     rpi.start()
 
     rpi.initSensors()
- 
+    SEC_WAIT = 3
     counter = 0
     while True:
         if counter % POLLING_PERIOD_HR == 0:
-            time.sleep(15)
+            time.sleep(SEC_WAIT)
             newMeasureHR = int(rpi.getHRmeasure(counter))
             rpi.publishHR(newMeasureHR)
         if counter % POLLING_PERIOD_PRESSURE == 0:
-            time.sleep(15)
+            time.sleep(SEC_WAIT)
             newMeasurePressureDict = rpi.getPressuremeasure(counter)
             rpi.publishPressure(newMeasurePressureDict)
         if counter % POLLING_PERIOD_GLYCEMIA == 0:
-            time.sleep(15)
+            time.sleep(SEC_WAIT)
             newMeasureGlycemia = int(rpi.getGlycemia(counter))
             rpi.publishGlycemia(newMeasureGlycemia)
         counter = counter + 1

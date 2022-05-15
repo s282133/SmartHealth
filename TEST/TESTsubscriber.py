@@ -27,7 +27,11 @@ class rpi():
         unit = e[0]["u"]
         timestamp = e[0]["t"]
         value = e[0]["v"]
-        print(f"{sensorName} measured a {measureType} of {value} {unit} at time {timestamp}.\n")
+        if(measureType == "pressureHigh"):
+            pressureLow = e[1]["v"]
+            print(f"{sensorName} measured a {measureType}/pressureLow of {value}/{pressureLow} {unit} at time {timestamp}.\n")
+        else:
+            print(f"{sensorName} measured a {measureType} of {value} {unit} at time {timestamp}.\n")
 
 
 if __name__ == "__main__":
