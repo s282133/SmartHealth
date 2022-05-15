@@ -48,7 +48,7 @@ class dataAnalysisClass():
             self.managePressure(week)            
         elif (self.measureType == "glycemia"):
             print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}")
-            week = "qualcosa da 0 a 36"
+            week = "1"
             self.manageGlycemia(week)
         else:
             print("Measure type not recognized")
@@ -74,25 +74,12 @@ class dataAnalysisClass():
                 self.lista = self.catalog["doctorList"]
 
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
-                patientID = self.clientID # gestire ricerca ID paziente
-
-                # patientID = self.findPatient(self.clientID)
+                patientID = self.clientID 
                 self.telegramID = self.findDoctor(patientID)
                 if self.telegramID > 0:
                     mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                 else:
-                    print("Dottore non trovato per il paziente...")
-
-                # if self.telegramID > 0:
-                #     mybot.send_alert(self.telegramID,messaggio, "on_press", "off_press")
-                # else:
-                #     print("Dottore non trovato per il paziente...")
-
-                # if self.telegramID > 0:
-                #     mybot.send_alert(self.telegramID,messaggio, "on_glyce", "off_glyce")
-                # else:
-                #     print("Dottore non trovato per il paziente...")
-
+                    print("Doctor not found for this patient")
 
                 
     def managePressure(self, week):
@@ -107,8 +94,18 @@ class dataAnalysisClass():
                     # TODO: send message to MQTT broker
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
-                    # take further action !
-                    # TODO: send message to MQTT broker OR TELEGRAM or both
+                    # varifica superamento soglia e invio di un messaggio automatico a telegram 
+                    self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
+                    self.lista = self.catalog["doctorList"]
+
+                    messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
+                    patientID = self.clientID 
+                    self.telegramID = self.findDoctor(patientID)
+                    if self.telegramID > 0:
+                        mybot.send_alert(self.telegramID,messaggio, "pression on", "pression off")
+                    else:
+                        print("Doctor not found for this patient")
+
 
     def manageGlycemia(self, week):
         # TODO: evaluate glycemia according to thresholds due to week of pregnancy
@@ -117,13 +114,24 @@ class dataAnalysisClass():
             weekmin = rangeGL["weekrange"].split("-")[0]
             weekmax = rangeGL["weekrange"].split("-")[1]
             if (week >= weekmin and week <= weekmax):
-                if (self.value >= rangeGL["min"] and self.value <= rangeGL["max"]):
+                #if (self.value >= rangeGL["min"] and self.value <= rangeGL["max"]):
+                if (self.value <= 1):
+
                     print(f"DataAnalysisBlock: glycemia is in range")
                     # TODO: send message to MQTT broker
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
-                    # take further action !
-                    # TODO: send message to MQTT broker OR TELEGRAM or both
+                   # varifica superamento soglia e invio di un messaggio automatico a telegram 
+                    self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
+                    self.lista = self.catalog["doctorList"]
+
+                    messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
+                    patientID = self.clientID 
+                    self.telegramID = self.findDoctor(patientID)
+                    if self.telegramID > 0:
+                        mybot.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
+                    else:
+                        print("Doctor not found for this patient")
 
 
     def findDoctor(self, patientID):

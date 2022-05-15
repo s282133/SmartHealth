@@ -101,6 +101,7 @@ class Registrazione(object):
             return json.dumps(self.lista) 
 
 
+
 # Inviare pagine html per la registrazione al messaggio inviato da un dottore
 class EchoBot():
     exposed=True

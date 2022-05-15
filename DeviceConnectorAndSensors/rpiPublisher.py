@@ -96,7 +96,7 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    rpi = rpiPub("345")      # qui devo definire il clientID, parla con le ragazze
+    rpi = rpiPub("1")      # qui devo definire il patientID, parla con le ragazze
 
     rpi.start()
 
