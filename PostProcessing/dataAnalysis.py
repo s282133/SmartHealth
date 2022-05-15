@@ -121,7 +121,7 @@ class dataAnalysisClass():
                     # TODO: send message to MQTT broker
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
-                   # varifica superamento soglia e invio di un messaggio automatico a telegram 
+                    # varifica superamento soglia e invio di un messaggio automatico a telegram 
                     self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
                     self.lista = self.catalog["doctorList"]
 
@@ -147,8 +147,6 @@ class dataAnalysisClass():
             if telegramID > 0: 
                 break
         return telegramID    
-
-
 
 
 
