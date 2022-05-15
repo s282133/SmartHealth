@@ -39,9 +39,6 @@
                         <input type="text" class="form-control" id="mail">
                     </div>
 
-					
-					
-
                     <button type="submit" class="btn btn-primary">Submit</button>
                     
                 <!-- </form>
@@ -84,11 +81,9 @@
         function sendPOSTrequest() {
             event.preventDefault();
 
-            doctorID = 1;
             name = $("#name").val();
             surname = $("#surname").val();
             mail = $("#mail").val();
-            lastUpdate = 1234;
             
             $.ajax({
                 type: "POST",
@@ -96,11 +91,9 @@
                 contentType: "application/json",
                 data: JSON.stringify({
 
-                    doctorID: doctorID,
-                    userName: name,
-                    userSurname: surname,
-                    userEmail: mail,
-                    lastUpdate: lastUpdate
+                    doctorName: name,
+                    doctorSurname: surname,
+                    doctorMail: mail
 
                 }),
                 dataType: "json",

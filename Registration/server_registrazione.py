@@ -52,9 +52,22 @@ class Registrazione(object):
             # aggiungere un dottore alla lista di dottori
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
+
+            doctor = {
+                "doctorID": 0,
+                "doctorName": self.record["doctorName"],
+                "doctorSurname": self.record["doctorSurname"],
+                "doctorMail": self.record["doctorMail"],
+                "lastUpdate": "",
+                "connectedDevice": {
+                    "telegramID": ""
+                },
+                "patientList": []
+            }
+
             self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
-            self.dictionary['doctorList'].insert(1, self.record) 
-            with open("C:\\Users\\Giulia\\Desktop\\P4IoT\\catalog.json", "w") as f: 
+            self.dictionary['doctorList'].append(doctor) 
+            with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
                 json.dump(self.dictionary, f, indent=2)  
             return json.dumps(self.dictionary)
 

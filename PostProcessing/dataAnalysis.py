@@ -34,32 +34,31 @@ class dataAnalysisClass():
 
         d = json.loads(msg)
         self.bn = d["bn"]
-        sensorName = self.bn.split("/")[3]           # "bn": "http://example.org/sensor1/"  -> "sensor1"
+        self.sensorName = self.bn.split("/")[3]           # "bn": "http://example.org/sensor1/"  -> "sensor1"
+
+        self.clientID = self.bn.split("/")[3]  
+
         e = d["e"]
-        measureType = e[0]["n"]
+        self.measureType = e[0]["n"]
         unit = e[0]["u"]
-        timestamp = e[0]["t"]
+        self.timestamp = e[0]["t"]
         self.value = e[0]["v"]
         #print(f"{sensorName} measured a {measureType} of {self.value} {unit} at time {timestamp}.\n")
-        if (measureType == "heartrate"):
-            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {timestamp}")
+        if (self.measureType == "heartrate"):
+            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}")
             week = "35"
             self.manageHeartRate(week)
-        elif (measureType == "pressure"):
-            print(f"DataAnalysisBlock received PRESSURE measure of: {self.value} at time {timestamp}")
+        elif (self.measureType == "pressure"):
+            print(f"DataAnalysisBlock received PRESSURE measure of: {self.value} at time {self.timestamp}")
             week = "qualcosa da 0 a 36"
             self.managePressure(week)            
-        elif (measureType == "glycemia"):
-            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {timestamp}")
+        elif (self.measureType == "glycemia"):
+            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}")
             week = "qualcosa da 0 a 36"
             self.manageGlycemia(week)
         else:
             print("Measure type not recognized")
 
-        # Da capire il passaggio delle variabili tra le classi!
-        # clientID = self.bn.split("/")[3]
-        # measure = self.value
-        # return clientID
 
     # per queste funzioni descritte sotto dovremmo anche farci passare la settimana di gravidanza
 
@@ -82,24 +81,29 @@ class dataAnalysisClass():
                 # TODO: send message to MQTT broker OR TELEGRAM or both
 
                 # varifica superamento soglia e invio di un messaggio automatico a telegram 
-                self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json")) 
-                #self.catalog = json.load(open("..\\CatalogueAndSettings\\catalog.json"))
+                self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
                 self.lista = self.catalog["doctorList"]
                 messaggio_inviato = False
 
-                IDpaziente = 1 #da aggiornare in real time
+                # ricerca ID paziente
+                # ricerca chatID dottore
+                # messaggio di errore
+                # manfìda messaggio
+                # messaggio = "abc"
+                messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
+                IDpaziente = 1 
 
-                for doctorObject in self.lista:
-                    patientList = doctorObject["patientList"]
-                    for userObject in patientList:
-                        patientID = userObject["patientID"] 
-                        if  IDpaziente == patientID:
-                            self.chat_ID = doctorObject["doctorID"]
-                            mybot.send_alert(self)
-                            messaggio_inviato = True
-                            break
-                    if messaggio_inviato: 
-                        break
+                self.telegramID = self.findDoctor(IDpaziente)
+
+                if self.telegramID > 0:
+                    mybot.send_alert(self.telegramID,messaggio, "heartrate on", "heartrate off")
+                else:
+                    print("Dottore non trovato per il paziente...")
+
+                    #mybot.send_alert(self.telegramID,messaggio, "on_press", "off_press")
+
+                    #mybot.send_alert(self.telegramID,messaggio, "on_glyce", "off_glyce")
+
                 
     def managePressure(self, week):
         # TODO: evaluate pressure according to thresholds due to week of pregnancy
@@ -131,6 +135,23 @@ class dataAnalysisClass():
                     # take further action !
                     # TODO: send message to MQTT broker OR TELEGRAM or both
 
+
+    def findDoctor(self, IDpaziente):
+        telegramID = 0
+        for doctorObject in self.lista:
+            patientList = doctorObject["patientList"]
+            for userObject in patientList:
+                patientID = userObject["patientID"] 
+                if  IDpaziente == patientID:
+                    connectedDevice = userObject["connectedDevice"]
+                    telegramID = connectedDevice["telegramID"]
+                    break
+            if telegramID > 0: 
+                break
+        return telegramID    
+
+
+
 # Classe Bot Telegram
 class SwitchBot:
     def __init__(self, token, broker, port, topic):
@@ -149,17 +170,14 @@ class SwitchBot:
         MessageLoop(self.bot, {'chat': self.on_chat_message,
                                'callback_query': self.on_callback_query}).run_as_thread()
 
-    def send_alert(self, MQTTpubsub): 
-        chat_ID = 786029508                            # DA AGGIORNARE IN REAL
-        #clientID = self.bn.split("/")[3]
-        #measure = MQTTpubsub.notify
-        clientID = 2
-        measure = 1
-        measureType = "heart rate"
-        buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡', callback_data=f'on'), 
-                InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=f'off')]]
+    def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
+
+        buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
+                   InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
+
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        self.bot.sendMessage(chat_ID, text=f'Attention, patient {clientID} {measureType} is NOT in range: {measure}. \n What do you want to do?', reply_markup=keyboard)
+        #self.bot.sendMessage(telegramID, text=f'Attention, patient {clientID} {measureType} is NOT in range: {measure}. \n What do you want to do?', reply_markup=keyboard)
+        self.bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)

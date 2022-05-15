@@ -100,19 +100,19 @@ if __name__ == "__main__":
     rpi.start()
 
     rpi.initSensors()
- 
+    SEC_WAIT = 3
     counter = 0
     while True:
         if counter % POLLING_PERIOD_HR == 0:
-            time.sleep(15)
+            time.sleep(SEC_WAIT)
             newMeasureHR = int(rpi.getHRmeasure(counter))
             rpi.publishHR(newMeasureHR)
         if counter % POLLING_PERIOD_PRESSURE == 0:
-            time.sleep(15)
+            time.sleep(SEC_WAIT)
             newMeasurePressureDict = rpi.getPressuremeasure(counter)
             rpi.publishPressure(newMeasurePressureDict)
         if counter % POLLING_PERIOD_GLYCEMIA == 0:
-            time.sleep(15)
+            time.sleep(SEC_WAIT)
             newMeasureGlycemia = int(rpi.getGlycemia(counter))
             rpi.publishGlycemia(newMeasureGlycemia)
         counter = counter + 1
