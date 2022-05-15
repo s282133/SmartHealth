@@ -44,7 +44,7 @@ class dataAnalysisClass():
             self.manageHeartRate(week)
         elif (self.measureType == "pressure"):
             print(f"DataAnalysisBlock received PRESSURE measure of: {self.value} at time {self.timestamp}")
-            week = "qualcosa da 0 a 36"
+            week = "1"
             self.managePressure(week)            
         elif (self.measureType == "glycemia"):
             print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}")
@@ -57,7 +57,6 @@ class dataAnalysisClass():
     # per queste funzioni descritte sotto dovremmo anche farci passare la settimana di gravidanza
 
     def manageHeartRate(self, week):
-        # TODO: evaluate heart rate according to thresholds due to week of pregnancy
         
         thresholdsHR = self.thresholdsFile["heartrate"]
         for rangeHR in thresholdsHR:
@@ -75,13 +74,12 @@ class dataAnalysisClass():
                 self.lista = self.catalog["doctorList"]
 
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
-                IDpaziente = 1 # gestire ricerca ID paziente
+                patientID = self.clientID # gestire ricerca ID paziente
 
-                IDpaziente = self.findPatient(self.clientID)
-
-                self.telegramID = self.findDoctor(IDpaziente)
+                # patientID = self.findPatient(self.clientID)
+                self.telegramID = self.findDoctor(patientID)
                 if self.telegramID > 0:
-                    mybot.send_alert(self.telegramID,messaggio, "heartrate on", "heartrate off")
+                    mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                 else:
                     print("Dottore non trovato per il paziente...")
 
@@ -128,13 +126,13 @@ class dataAnalysisClass():
                     # TODO: send message to MQTT broker OR TELEGRAM or both
 
 
-    def findDoctor(self, IDpaziente):
+    def findDoctor(self, patientID):
         telegramID = 0
         for doctorObject in self.lista:
             patientList = doctorObject["patientList"]
             for userObject in patientList:
                 patientID = userObject["patientID"] 
-                if  IDpaziente == patientID:
+                if  patientID == patientID:
                     connectedDevice = userObject["connectedDevice"]
                     telegramID = connectedDevice["telegramID"]
                     break
@@ -142,19 +140,7 @@ class dataAnalysisClass():
                 break
         return telegramID    
 
-    def findPatient(self, clientID):
-        telegramID = 0
-        for doctorObject in self.lista:
-            patientList = doctorObject["patientList"]
-            for userObject in patientList:
-                patientID = userObject["patientID"] 
-                if  IDpaziente == patientID:
-                    connectedDevice = userObject["connectedDevice"]
-                    telegramID = connectedDevice["telegramID"]
-                    break
-            if telegramID > 0: 
-                break
-        return telegramID    
+
 
 
 
