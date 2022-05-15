@@ -8,9 +8,6 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from unicodedata import name
 from telepot.loop import MessageLoop
 
-
-# TODO: extend to publisher MQTT broker
-
 class dataAnalysisClass():
 
     # MQTT FUNCTIONS
@@ -19,7 +16,6 @@ class dataAnalysisClass():
         self.client = MyMQTT(clientID, broker, port, self)
         self.topic = topic
         self.thresholdsFile = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\PostProcessing\\timeshift.json",'r'))
-        #self.thresholdsFile = json.load(open("..\\PostProcessing\\timeshift.json",'r'))
 
     def start(self):
         self.client.start()
@@ -36,13 +32,12 @@ class dataAnalysisClass():
         self.bn = d["bn"]
         self.sensorName = self.bn.split("/")[3]           # "bn": "http://example.org/sensor1/"  -> "sensor1"
         self.clientID = self.bn.split("/")[3]  
-
         e = d["e"]
         self.measureType = e[0]["n"]
         unit = e[0]["u"]
         self.timestamp = e[0]["t"]
         self.value = e[0]["v"]
-        #print(f"{sensorName} measured a {measureType} of {self.value} {unit} at time {timestamp}.\n")
+
         if (self.measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}")
             week = "35"
@@ -78,21 +73,28 @@ class dataAnalysisClass():
                 # varifica superamento soglia e invio di un messaggio automatico a telegram 
                 self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
                 self.lista = self.catalog["doctorList"]
-                #messaggio_inviato = False
 
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range: {self.value}. \n What do you want to do?"
                 IDpaziente = 1 # gestire ricerca ID paziente
 
-                self.telegramID = self.findDoctor(IDpaziente)
+                IDpaziente = self.findPatient(self.clientID)
 
+                self.telegramID = self.findDoctor(IDpaziente)
                 if self.telegramID > 0:
                     mybot.send_alert(self.telegramID,messaggio, "heartrate on", "heartrate off")
                 else:
                     print("Dottore non trovato per il paziente...")
 
-                    #mybot.send_alert(self.telegramID,messaggio, "on_press", "off_press")
+                # if self.telegramID > 0:
+                #     mybot.send_alert(self.telegramID,messaggio, "on_press", "off_press")
+                # else:
+                #     print("Dottore non trovato per il paziente...")
 
-                    #mybot.send_alert(self.telegramID,messaggio, "on_glyce", "off_glyce")
+                # if self.telegramID > 0:
+                #     mybot.send_alert(self.telegramID,messaggio, "on_glyce", "off_glyce")
+                # else:
+                #     print("Dottore non trovato per il paziente...")
+
 
                 
     def managePressure(self, week):
@@ -139,6 +141,21 @@ class dataAnalysisClass():
             if telegramID > 0: 
                 break
         return telegramID    
+
+    def findPatient(self, clientID):
+        telegramID = 0
+        for doctorObject in self.lista:
+            patientList = doctorObject["patientList"]
+            for userObject in patientList:
+                patientID = userObject["patientID"] 
+                if  IDpaziente == patientID:
+                    connectedDevice = userObject["connectedDevice"]
+                    telegramID = connectedDevice["telegramID"]
+                    break
+            if telegramID > 0: 
+                break
+        return telegramID    
+
 
 
 
