@@ -6,7 +6,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 17,
+  "LastPatientID": 19,
   "doctorList": [
     {
       "doctorID": 1,
@@ -135,6 +135,54 @@
             "taxIDcode": "jijd",
             "userEmail": "fefepoq@gmail.com",
             "pregnancyDayOne": "sdofkapof"
+          },
+          "connectedDevice": {
+            "devicesID": "",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "0",
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 0,
+          "patientName": "lillo",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "CBDLRA",
+            "userEmail": "laurac.music@yahoo.com",
+            "pregnancyDayOne": "10/03/2022"
+          },
+          "connectedDevice": {
+            "devicesID": "",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "0",
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 0,
+          "patientName": "lillo",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "CBDLRA",
+            "userEmail": "laurac.music@yahoo.com",
+            "pregnancyDayOne": "10/03/2022"
           },
           "connectedDevice": {
             "devicesID": "",

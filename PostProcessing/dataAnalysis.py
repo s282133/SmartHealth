@@ -185,7 +185,10 @@ if __name__ == "__main__":
     
     # SwitchBot per connettersi al Bot telegram
     conf=json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\settingsTelegram.json"))
-    token = conf["telegramToken"]
+    
+    #token = conf["telegramToken"]
+    #token Laura
+    token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U"
     broker = conf["brokerIP"]
     port = conf["brokerPort"]
     topic = conf["mqttTopic"]
