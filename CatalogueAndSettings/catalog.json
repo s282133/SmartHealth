@@ -6,7 +6,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 16,
+  "LastPatientID": 17,
   "doctorList": [
     {
       "doctorID": 1,
@@ -111,6 +111,30 @@
             "taxIDcode": "ABCDEFGH",
             "userEmail": "mario.rossi@gmail.com",
             "pregnancyDayOne": "22/03/99"
+          },
+          "connectedDevice": {
+            "devicesID": "",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "0",
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 0,
+          "patientName": "Antonio",
+          "patientSurname": "De Luca",
+          "personalData": {
+            "taxIDcode": "jijd",
+            "userEmail": "fefepoq@gmail.com",
+            "pregnancyDayOne": "sdofkapof"
           },
           "connectedDevice": {
             "devicesID": "",

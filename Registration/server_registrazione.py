@@ -9,22 +9,28 @@ from MyMQTT import *
 from collections import UserList
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-import os
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
+from PageHTML import *
 class Registrazione(object):
     exposed=True
     def GET(self,*uri,**params):
         
         # apertura pagina html per registrazione dottore
         if uri[0] == "start": 
-            f1 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\doctors.html')   
+            #f1 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\doctors.html')   
+            filename = sys.path[0] + '\\PageHTML\\doctors.html'
+            f1 = open(filename)
             fileContent = f1.read()      
             f1.close()
             return fileContent
 
         # apertura pagina html per registrazione paziente
         if uri[0] == "registrazione_paziente": 
-            f2 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\patients.html')   
+            #f2 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\patients.html')   
+            filename = sys.path[0] + '\\PageHTML\\patients.html'
+            f2 = open(filename)
             fileContent = f2.read()      
             f2.close()
             return fileContent
@@ -32,10 +38,16 @@ class Registrazione(object):
         # apertura tabella con dati iniziali
         if uri[0] == "tabella": 
 
-            cur_path = os.path.dirname(__file__)
-            new_path = os.path.relpath('..\\CatalogueAndSettings\\catalog.json', cur_path)
-            f4 = open(new_path,'catalog.json')
+            # anto commented here
+            # cur_path = os.path.dirname(__file__)
+            # new_path = os.path.relpath('..\\CatalogueAndSettings\\catalog.json', cur_path)
+            # f4 = open(new_path,'catalog.json')
+            # self.catalog = json.load(f4)
+            # end comment
+            filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+            f4 = open(filename)
             self.catalog = json.load(f4)
+        
 
             # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
             # self.catalog = json.load(f4)
@@ -75,10 +87,12 @@ class Registrazione(object):
                 "patientList": []
             }
 
-            self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
+            #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
+            self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
             self.dictionary['doctorList'].append(doctor) 
-            with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
-                json.dump(self.dictionary, f, indent=2)  
+            #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
+            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
 
 
@@ -114,7 +128,8 @@ class Registrazione(object):
                 }
                 }
 
-            self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
+            #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
+            self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
             self.lista = self.dictionary["doctorList"]
 
             self.LastPatientID = self.dictionary["LastPatientID"]
@@ -130,8 +145,9 @@ class Registrazione(object):
                 doctor_number += 1
  
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
-            with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
-                json.dump(self.dictionary, f, indent=2) 
+            #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
+            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
 
@@ -180,9 +196,13 @@ if __name__=="__main__":
     # Telegram per inviare le pagine html per la registrazione
     #conf = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\settings.json"))
     
-    cur_path = os.path.dirname(__file__)
-    new_path = os.path.relpath('..\\CatalogueAndSettings\\settings.json', cur_path)
-    conf = json.load(open(new_path,'settings.json'))
+    # anto commented here
+    # cur_path = os.path.dirname(__file__)
+    # new_path = os.path.relpath('..\\CatalogueAndSettings\\settings.json', cur_path)
+    # conf = json.load(open(new_path,'settings.json'))
+    conf_file = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
+    conf = json.load(open(conf_file))
+    # end comment
 
     token = conf["telegramToken"]
     bot=EchoBot(token)
