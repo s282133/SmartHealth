@@ -27,6 +27,10 @@ class dataAnalysisClass():
     
     def stop(self):
         self.client.stop()
+        
+    def myPublish(self, topic, message):
+        self.client.myPublish(topic, message, 2) 
+        print(f"Published on {topic}")
     
     def notify(self, topic, msg):
 
@@ -166,6 +170,8 @@ class SwitchBot:
                    InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         self.bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
+        
+
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
@@ -190,7 +196,10 @@ class SwitchBot:
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
         self.client.myPublish(self.topic, payload)
+        #if query_data=="on":
+        MQTTpubsub.myPublish("P4IoT/SmartHealth/clientID/+/monitoring", "on")
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
+        
 
 
 
