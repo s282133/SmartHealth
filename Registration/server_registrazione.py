@@ -9,6 +9,7 @@ from MyMQTT import *
 from collections import UserList
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+import os
 
 class Registrazione(object):
     exposed=True
@@ -30,8 +31,14 @@ class Registrazione(object):
 
         # apertura tabella con dati iniziali
         if uri[0] == "tabella": 
-            f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
+
+            cur_path = os.path.dirname(__file__)
+            new_path = os.path.relpath('..\\CatalogueAndSettings\\catalog.json', cur_path)
+            f4 = open(new_path,'catalog.json')
             self.catalog = json.load(f4)
+
+            # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
+            # self.catalog = json.load(f4)
           
             self.clientID = 1 # DA AGGIORNARE IN REAL TIME
 
@@ -171,7 +178,12 @@ if __name__=="__main__":
     cherrypy.engine.block() 
 
     # Telegram per inviare le pagine html per la registrazione
-    conf = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\settings.json"))
+    #conf = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\settings.json"))
+    
+    cur_path = os.path.dirname(__file__)
+    new_path = os.path.relpath('..\\CatalogueAndSettings\\settings.json', cur_path)
+    conf = json.load(open(new_path,'settings.json'))
+
     token = conf["telegramToken"]
     bot=EchoBot(token)
     print("Bot started ...")
