@@ -3,6 +3,11 @@ import time
 import json
 import string
 
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
+
+from DeviceConnectorAndSensors import glycemiaSensor
+
 class rpi():
 
     # MQTT FUNCTIONS
@@ -44,6 +49,9 @@ if __name__ == "__main__":
     # topic : P4IoT/SmartHealth/clientID/sensor1 =>  un sensore specifico di un client specifico
     # topic : P4IoT/SmartHealth/+/sensor1 => il sensore1 (ex: heartrate) di tutti i client
     
+    testSensor = glycemiaSensor.glycemiaSensorClass()
+    print(testSensor.TESTfunc("working test"))
+
     # TEST 1
     MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)
     # questo test sarebbe per piu client ma ad oggi ne abbiamo solo una istanza
