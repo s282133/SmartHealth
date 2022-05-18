@@ -75,7 +75,9 @@ class dataAnalysisClass():
                 self.catalog = json.load(open(catalog_fn))
                 self.lista = self.catalog["doctorList"]
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                self.telegramID = self.findDoctor(self.clientID)
+                #self.telegramID = self.findDoctor(self.clientID)
+                #telegramID Laura
+                self.telegramID=491287865
                 if self.telegramID > 0:
                     mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                 else:
@@ -96,7 +98,9 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = self.findDoctor(self.clientID)
+                    #self.telegramID = self.findDoctor(self.clientID)
+                    #telegramID Laura
+                    self.telegramID=491287865
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID,messaggio, "pression on", "pression off")
                     else:
@@ -116,7 +120,9 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = self.findDoctor(self.clientID)
+                    #self.telegramID = self.findDoctor(self.clientID)
+                    #telegramID Laura
+                    self.telegramID=491287865
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
