@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # topic : P4IoT/SmartHealth/+/sensor1 => il sensore1 (ex: heartrate) di tutti i client
     
     testSensor = glycemiaSensor.glycemiaSensorClass()
-    print(testSensor.TESTfunc("working test"))
+    print(testSensor.TESTfunc("working test Laura"))
 
     # TEST 1
     MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)
