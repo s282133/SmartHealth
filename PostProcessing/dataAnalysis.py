@@ -29,12 +29,13 @@ class dataAnalysisClass():
         self.client.stop()
         
     def myPublish(self, topic, message):
-        self.client.myPublish(topic, message, 2) 
+        self.client.myPublish(topic, message) 
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
 
         d = json.loads(msg)
+        print(str(d))
         self.bn = d["bn"]
         self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
         e = d["e"]
