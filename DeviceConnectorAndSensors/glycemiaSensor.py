@@ -13,6 +13,9 @@ class glycemiaSensorClass():
     # high: > 100
     # source: https://healthy.thewom.it/esami-e-analisi/glicemia-2/#:~:text=altri%20fattori%20minori.-,Livelli%20glicemici%20normali,aumento%20del%20rischio%20di%20salute)
     
+    def TESTfunc(self, testSTR):
+        return testSTR
+
     def getGlycemia(self, counter):
         counter = counter % len(self.simulatedMeasures)
         return self.simulatedMeasures[counter] + random.randint(-3, 3)
