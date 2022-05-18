@@ -1,5 +1,6 @@
 ### Description: MQTT subscriber that processes data from the MQTT broker, evaluating if it is according to thresholds
 
+from gettext import Catalog
 from MyMQTT import *
 import time
 import json
@@ -7,6 +8,8 @@ import telepot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from unicodedata import name
 from telepot.loop import MessageLoop
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 
 class dataAnalysisClass():
 
@@ -15,7 +18,8 @@ class dataAnalysisClass():
     def __init__(self, clientID, topic, broker, port):
         self.client = MyMQTT(clientID, broker, port, self)
         self.topic = topic
-        self.thresholdsFile = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\PostProcessing\\timeshift.json",'r'))
+        timeshift_fn = sys.path[0] + '\\PostProcessing\\timeshift.json'
+        self.thresholdsFile = json.load(open(timeshift_fn,'r'))
 
     def start(self):
         self.client.start()
@@ -67,7 +71,8 @@ class dataAnalysisClass():
                 print(f"DataAnalysisBlock: heart rate is in range")
             else:
                 print(f"DataAnalysisBlock: heart rate is NOT in range") 
-                self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
+                catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                self.catalog = json.load(open(catalog_fn))
                 self.lista = self.catalog["doctorList"]
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                 self.telegramID = self.findDoctor(self.clientID)
@@ -87,7 +92,8 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
-                    self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
+                    catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                    self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = self.findDoctor(self.clientID)
@@ -106,7 +112,8 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: glycemia is in range")
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
-                    self.catalog = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\catalog.json"))
+                    catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                    self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = self.findDoctor(self.clientID)
@@ -184,7 +191,8 @@ class SwitchBot:
 if __name__ == "__main__":
     
     # SwitchBot per connettersi al Bot telegram
-    conf=json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\settingsTelegram.json"))
+    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsTelegram.json'
+    conf=json.load(open(conf_fn))
     
     #token = conf["telegramToken"]
     #token Laura
@@ -195,7 +203,8 @@ if __name__ == "__main__":
     mybot=SwitchBot(token,broker,port,topic)
 
     # dataAnalysis per analizzare le soglie e mandare il messaggio telegram
-    conf = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto Iot condiviso\\CatalogueAndSettings\\settings.json"))
+    conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
+    conf = json.load(open(conf_fn2))
     broker = conf["broker"]
     port = conf["port"]
     MQTTpubsub = dataAnalysisClass("rpiSub", "P4IoT/SmartHealth/#", broker, port)
