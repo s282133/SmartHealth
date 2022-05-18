@@ -42,6 +42,7 @@ class rpiPub():
         self.client.stop()
 
     def myPublish(self, topic, message):
+        print(f"{self.clientID} publishing {message} to topic: {topic}")
         self.client.myPublish(topic, message)
 
     def notify(self, topic, message):
@@ -69,7 +70,9 @@ class rpiPub():
 
     def publishHR(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/heartrate", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}))
+        topicHR = f"P4IoT/SmartHealth/{self.clientID}/heartrate"
+        messageHR = json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]})
+        rpi.myPublish(topicHR, messageHR)
         print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/heartrate")
 
     # PRESSURE
