@@ -97,26 +97,13 @@
 
         function sendPOSTrequest() {
             event.preventDefault();
-            
-            patientID = 0;
+
             name = $("#name").val();
             surname = $("#surname").val();
             taxidcode = $("#taxidcode").val();
             mail = $("#mail").val();
 			data = $("#data").val();
-			device = $("#device").val();
-            mesureType = [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ];
-            chatID = [0];
-            channel = "0";
-            apikeys = [
-                "FRN2A7XGJHIUSN24",
-                "ABCDEFGHILMNOPQR"
-              ];
+            
 
             $.ajax({
                 type: "POST",
@@ -124,24 +111,14 @@
                 contentType: "application/json",
                 data: JSON.stringify({
 
-                    patientID: patientID,
                     patientName: name,
                     patientSurname: surname,
-					personalData:{
+					
                     taxIDcode: taxidcode,
 					userEmail: mail,
 					pregnancyDayOne: data
-					},
-                    connectedDevice:{
-					devicesID: device,
-                    mesureType: mesureType,
-                    telegramID: chatID,
-                    thingspeakInfo: {
-                    channel:channel,
-                    apikeys:apikeys
-                    }
-                }
-
+					
+                    
                 }),
                 dataType: "json",
                 success: function (response) {

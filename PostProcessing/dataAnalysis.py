@@ -82,7 +82,8 @@ class dataAnalysisClass():
             weekmin = rangePR["weekrange"].split("-")[0]
             weekmax = rangePR["weekrange"].split("-")[1]
             if (week >= weekmin and week <= weekmax):
-                if (int(self.value) >= int(rangePR["min"]) and int(self.value) <= int(rangePR["max"])):
+                if (int(self.value) >= int(rangePR["min"]) and int(self.value) <= 1):
+
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
@@ -200,6 +201,5 @@ if __name__ == "__main__":
     while True:
         time.sleep(1)
 
-    #MQTTsubscriber.stop()
 
 

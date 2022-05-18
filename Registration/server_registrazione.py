@@ -32,7 +32,10 @@ class Registrazione(object):
         if uri[0] == "tabella": 
             f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
             self.catalog = json.load(f4)
-            chat_ID = "786029508" # DA AGGIORNARE IN REAL TIME
+          
+            self.clientID = 1 # DA AGGIORNARE IN REAL TIME
+
+            chat_ID = "786029508"
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
             for doctorObject in self.lista:
@@ -60,7 +63,7 @@ class Registrazione(object):
                 "doctorMail": self.record["doctorMail"],
                 "lastUpdate": "",
                 "connectedDevice": {
-                    "telegramID": ""
+                    "telegramID": 0
                 },
                 "patientList": []
             }
@@ -79,6 +82,31 @@ class Registrazione(object):
             body = cherrypy.request.body.read() 
             self.record = json.loads(body) 
 
+            patient = {
+                "patientID": 0,
+                "patientName": self.record["patientName"],
+                "patientSurname": self.record["patientSurname"],
+                "personalData": {
+                    "taxIDcode": self.record["taxIDcode"],
+                    "userEmail": self.record["userEmail"],
+                    "pregnancyDayOne": self.record["pregnancyDayOne"]
+                },
+                "connectedDevice": {
+                    "devicesID": "",
+                    "mesureType": [
+                    "Heart Rate",
+                    "Pression",
+                    "Temperature",
+                    "Glycemia"
+                    ],
+                    "telegramID": 0,
+                    "thingspeakInfo": {
+                    "channel": "0",
+                    "apikeys": []
+                    }
+                }
+                }
+
             self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.lista = self.dictionary["doctorList"]
 
@@ -94,13 +122,25 @@ class Registrazione(object):
                     break
                 doctor_number += 1
  
-            self.dictionary['doctorList'][doctor_number]['patientList'].append(self.record)
+            self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
             with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
                 json.dump(self.dictionary, f, indent=2) 
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
 
-
+    def findDoctor(self, patientID):
+        telegramID = 0
+        for doctorObject in self.lista:
+            patientList = doctorObject["patientList"]
+            for userObject in patientList:
+                patientID = userObject["patientID"] 
+                if  patientID == patientID:
+                    connectedDevice = userObject["connectedDevice"]
+                    telegramID = connectedDevice["telegramID"]
+                    break
+            if telegramID > 0: 
+                break
+        return telegramID    
 
 # Inviare pagine html per la registrazione al messaggio inviato da un dottore
 class EchoBot():
