@@ -53,8 +53,8 @@ class Registrazione(object):
             # self.catalog = json.load(f4)
           
             self.clientID = 1 # DA AGGIORNARE IN REAL TIME
-
             chat_ID = "786029508"
+
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
             for doctorObject in self.lista:
