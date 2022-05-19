@@ -98,12 +98,10 @@ class rpiPub():
 
     def publishGlycemia(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        rpi.myPublish("P4IoT/SmartHealth/{self.clientID}/glycemia", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}))
+        rpi.myPublish(f"P4IoT/SmartHealth/{self.clientID}/glycemia", json.dumps({"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}))
         print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/glycemia")
 
-
     # altri sensori possono essere aggiunti qua
-
 
 if __name__ == "__main__":
 

@@ -171,8 +171,6 @@ class SwitchBot:
                    InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         self.bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
-        
-
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
@@ -180,7 +178,7 @@ class SwitchBot:
 
         if message == "/start": 
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
-            self.bot.sendMessage(chat_ID, text="Crea un tuo account personale a questo link: http://127.0.0.1:8080/start")
+            self.bot.sendMessage(chat_ID, text=f"Crea un tuo account personale a questo link: http://127.0.0.1:8080/start?chat_ID={chat_ID}")
 
         if message == "/registrazione_paziente": 
             self.bot.sendMessage(chat_ID, text="Registra un nuovo paziente a questo link: http://127.0.0.1:8080/registrazione_paziente")
@@ -210,9 +208,9 @@ if __name__ == "__main__":
     conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsTelegram.json'
     conf=json.load(open(conf_fn))
     
-    #token = conf["telegramToken"]
-    #token Laura
-    token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U"
+    token = conf["telegramToken"]
+    #token Laura 
+    #token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U"
     broker = conf["brokerIP"]
     port = conf["brokerPort"]
     topic = conf["mqttTopic"]

@@ -6,7 +6,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 19,
+  "LastPatientID": 20,
   "doctorList": [
     {
       "doctorID": 1,
@@ -72,130 +72,6 @@
                 "FRN2A7XGJHIUSN24",
                 "ABCDEFGHILMNOPQR"
               ]
-            }
-          }
-        },
-        {
-          "patientID": 5,
-          "patientName": "Maria",
-          "patientSurname": "Bianchi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "2022-02-05"
-          },
-          "connectedDevice": {
-            "devicesID": "raspberry22",
-            "onlineSince": "2022-02-08",
-            "mesureType": [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "0",
-              "apikeys": [
-                "FRN2A7XGJHIUSN24",
-                "ABCDEFGHILMNOPQR"
-              ]
-            }
-          }
-        },
-        {
-          "patientID": 0,
-          "patientName": "Paola",
-          "patientSurname": "Rossi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "22/03/99"
-          },
-          "connectedDevice": {
-            "devicesID": "",
-            "mesureType": [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "0",
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 0,
-          "patientName": "Antonio",
-          "patientSurname": "De Luca",
-          "personalData": {
-            "taxIDcode": "jijd",
-            "userEmail": "fefepoq@gmail.com",
-            "pregnancyDayOne": "sdofkapof"
-          },
-          "connectedDevice": {
-            "devicesID": "",
-            "mesureType": [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "0",
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 0,
-          "patientName": "lillo",
-          "patientSurname": "Codagnone",
-          "personalData": {
-            "taxIDcode": "CBDLRA",
-            "userEmail": "laurac.music@yahoo.com",
-            "pregnancyDayOne": "10/03/2022"
-          },
-          "connectedDevice": {
-            "devicesID": "",
-            "mesureType": [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "0",
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 0,
-          "patientName": "lillo",
-          "patientSurname": "Codagnone",
-          "personalData": {
-            "taxIDcode": "CBDLRA",
-            "userEmail": "laurac.music@yahoo.com",
-            "pregnancyDayOne": "10/03/2022"
-          },
-          "connectedDevice": {
-            "devicesID": "",
-            "mesureType": [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "0",
-              "apikeys": []
             }
           }
         }
@@ -366,6 +242,61 @@
           "lastUpdate": "2021-11-13 18:14"
         }
       ]
+    },
+    {
+      "doctorID": 0,
+      "doctorName": "Mario",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "giulia.codagnone@gmail.com",
+      "lastUpdate": "",
+      "connectedDevice": {
+        "telegramID": ""
+      },
+      "patientList": []
+    },
+    {
+      "doctorID": 0,
+      "doctorName": "Paola",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "giulia.codagnone@gmail.com",
+      "lastUpdate": "",
+      "connectedDevice": {
+        "telegramID": ""
+      },
+      "patientList": []
+    },
+    {
+      "doctorID": 0,
+      "doctorName": "Maria",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "giulia.codagnone@gmail.com",
+      "lastUpdate": "",
+      "connectedDevice": {
+        "telegramID": ""
+      },
+      "patientList": []
+    },
+    {
+      "doctorID": 0,
+      "doctorName": "Elena",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "giulia.codagnone@gmail.com",
+      "lastUpdate": "",
+      "connectedDevice": {
+        "telegramID": "786029508"
+      },
+      "patientList": []
+    },
+    {
+      "doctorID": 0,
+      "doctorName": "Antuan",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "giulia.codagnone@gmail.com",
+      "lastUpdate": "",
+      "connectedDevice": {
+        "telegramID": "786029508"
+      },
+      "patientList": []
     }
   ]
 }

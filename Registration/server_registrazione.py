@@ -19,6 +19,7 @@ class Registrazione(object):
         
         # apertura pagina html per registrazione dottore
         if uri[0] == "start": 
+            self.telegramID = params["chat_ID"]
             #f1 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\doctors.html')   
             filename = sys.path[0] + '\\PageHTML\\doctors.html'
             f1 = open(filename)
@@ -75,6 +76,7 @@ class Registrazione(object):
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
 
+            
             doctor = {
                 "doctorID": 0,
                 "doctorName": self.record["doctorName"],
@@ -82,10 +84,11 @@ class Registrazione(object):
                 "doctorMail": self.record["doctorMail"],
                 "lastUpdate": "",
                 "connectedDevice": {
-                    "telegramID": 0
+                    "telegramID": self.telegramID
                 },
                 "patientList": []
             }
+
 
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
