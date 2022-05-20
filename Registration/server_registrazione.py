@@ -111,8 +111,6 @@ class Registrazione(object):
 
         if uri[0] == "patients": 
 
-            # ricerca del giusto dottore tramite telegram ID e chat ID e inserimeno del paziente
-            #chat_ID = "786029508" # DA AGGIORNARE IN REAL TIME
             body = cherrypy.request.body.read() 
             self.record = json.loads(body) 
 
@@ -141,46 +139,23 @@ class Registrazione(object):
                 }
                 }
 
-            self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
-            #self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
+            #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
+            self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
 
             self.LastPatientID = self.dictionary["LastPatientID"]
             patient["patientID"] = self.LastPatientID + 1
             self.dictionary["LastPatientID"] = self.LastPatientID + 1
 
-            #da cambiare in una ricerca in base al patient ID (il chat id non ce l'ho prima dell'iscrizione del paziente dal suo telefono)
-            # doctor_number = 0
-            # self.lista = self.dictionary["doctorList"]
-            # for doctorObject in self.lista:
-            #     connectedDevice = doctorObject["connectedDevice"]
-            #     telegramID = connectedDevice["telegramID"] 
-            #     if chat_ID == telegramID: 
-            #         break
-            #     doctor_number += 1
-            
-            doctor_number = self.findDoctorwithpatientID(self.doctortelegramID)
+            # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
+            doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
-            with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
-            #with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+            #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
+            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
 
-    # def findDoctor(self, patientID):
-    #     telegramID = 0
-    #     for doctorObject in self.lista:
-    #         patientList = doctorObject["patientList"]
-    #         for userObject in patientList:
-    #             patientID = userObject["patientID"] 
-    #             if  patientID == patientID:
-    #                 connectedDevice = userObject["connectedDevice"]
-    #                 telegramID = connectedDevice["telegramID"]
-    #                 break
-    #         if telegramID > 0: 
-    #             break
-    #     return telegramID    
-
-    def findDoctorwithpatientID(self, doctortelegramID):
+    def findDoctorwithtelegramID(self, doctortelegramID):
         doctor_number = 0
         self.lista = self.dictionary["doctorList"]
         for doctorObject in self.lista:
