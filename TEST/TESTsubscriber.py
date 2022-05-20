@@ -53,7 +53,7 @@ if __name__ == "__main__":
     print(testSensor.TESTfunc("working test Laura"))
 
     # TEST 1
-    MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)
+    # MQTTpubsub = rpi("rpiSub", "P4IoT/SmartHealth/#", broker, port)
     # questo test sarebbe per piu client ma ad oggi ne abbiamo solo una istanza
 
     # TEST 2
