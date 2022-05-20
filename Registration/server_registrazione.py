@@ -30,6 +30,7 @@ class Registrazione(object):
 
         # apertura pagina html per registrazione paziente
         if uri[0] == "registrazione_paziente": 
+            self.doctortelegramID = params["chat_ID"]
             #f2 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\patients.html')   
             filename = sys.path[0] + '\\PageHTML\\patients.html'
             f2 = open(filename)
@@ -110,8 +111,8 @@ class Registrazione(object):
 
         if uri[0] == "patients": 
 
-           # ricerca del giusto dottore tramite telegram ID e chat ID e inserimeno del paziente
-            chat_ID = "786029508" # DA AGGIORNARE IN REAL TIME quando si iscrive il paziente (valuta di farlo dopo dal catalogo)
+            # ricerca del giusto dottore tramite telegram ID e chat ID e inserimeno del paziente
+            #chat_ID = "786029508" # DA AGGIORNARE IN REAL TIME
             body = cherrypy.request.body.read() 
             self.record = json.loads(body) 
 
@@ -148,15 +149,16 @@ class Registrazione(object):
             self.dictionary["LastPatientID"] = self.LastPatientID + 1
 
             #da cambiare in una ricerca in base al patient ID (il chat id non ce l'ho prima dell'iscrizione del paziente dal suo telefono)
-            doctor_number = 0
-            self.lista = self.dictionary["doctorList"]
-            for doctorObject in self.lista:
-                connectedDevice = doctorObject["connectedDevice"]
-                telegramID = connectedDevice["telegramID"] 
-                if chat_ID == telegramID: 
-                    break
-                doctor_number += 1
- 
+            # doctor_number = 0
+            # self.lista = self.dictionary["doctorList"]
+            # for doctorObject in self.lista:
+            #     connectedDevice = doctorObject["connectedDevice"]
+            #     telegramID = connectedDevice["telegramID"] 
+            #     if chat_ID == telegramID: 
+            #         break
+            #     doctor_number += 1
+            
+            doctor_number = self.findDoctorwithpatientID(self.doctortelegramID)
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
             with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
             #with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
@@ -164,19 +166,30 @@ class Registrazione(object):
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
 
-    def findDoctor(self, patientID):
-        telegramID = 0
+    # def findDoctor(self, patientID):
+    #     telegramID = 0
+    #     for doctorObject in self.lista:
+    #         patientList = doctorObject["patientList"]
+    #         for userObject in patientList:
+    #             patientID = userObject["patientID"] 
+    #             if  patientID == patientID:
+    #                 connectedDevice = userObject["connectedDevice"]
+    #                 telegramID = connectedDevice["telegramID"]
+    #                 break
+    #         if telegramID > 0: 
+    #             break
+    #     return telegramID    
+
+    def findDoctorwithpatientID(self, doctortelegramID):
+        doctor_number = 0
+        self.lista = self.dictionary["doctorList"]
         for doctorObject in self.lista:
-            patientList = doctorObject["patientList"]
-            for userObject in patientList:
-                patientID = userObject["patientID"] 
-                if  patientID == patientID:
-                    connectedDevice = userObject["connectedDevice"]
-                    telegramID = connectedDevice["telegramID"]
-                    break
-            if telegramID > 0: 
+            connectedDevice = doctorObject["connectedDevice"]
+            telegramID = connectedDevice["telegramID"] 
+            if doctortelegramID == telegramID: 
                 break
-        return telegramID    
+            doctor_number += 1
+        return doctor_number
 
 
 # Inviare pagine html per la registrazione al messaggio inviato da un dottore
