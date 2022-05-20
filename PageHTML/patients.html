@@ -103,6 +103,7 @@
             taxidcode = $("#taxidcode").val();
             mail = $("#mail").val();
 			data = $("#data").val();
+            device = $("#device").val();
             
 
             $.ajax({
@@ -113,12 +114,11 @@
 
                     patientName: name,
                     patientSurname: surname,
-					
                     taxIDcode: taxidcode,
 					userEmail: mail,
-					pregnancyDayOne: data
+					pregnancyDayOne: data,
+                    devicesID: device
 					
-                    
                 }),
                 dataType: "json",
                 success: function (response) {

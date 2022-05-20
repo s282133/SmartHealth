@@ -6,7 +6,8 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 20,
+  "LastPatientID": 23,
+  "LastDoctorID": 4,
   "doctorList": [
     {
       "doctorID": 1,
@@ -72,6 +73,78 @@
                 "FRN2A7XGJHIUSN24",
                 "ABCDEFGHILMNOPQR"
               ]
+            }
+          }
+        },
+        {
+          "patientID": 21,
+          "patientName": "Melissa",
+          "patientSurname": "Brondi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "22/03/99"
+          },
+          "connectedDevice": {
+            "devicesID": "",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "0",
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 22,
+          "patientName": "Lisa",
+          "patientSurname": "Rossi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "22/03/99"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry22",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 23,
+          "patientName": "Francesca",
+          "patientSurname": "Bianchi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "22/03/99"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry22",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
             }
           }
         }
@@ -244,52 +317,8 @@
       ]
     },
     {
-      "doctorID": 0,
+      "doctorID": 4,
       "doctorName": "Mario",
-      "doctorSurname": "Codagnone",
-      "doctorMail": "giulia.codagnone@gmail.com",
-      "lastUpdate": "",
-      "connectedDevice": {
-        "telegramID": ""
-      },
-      "patientList": []
-    },
-    {
-      "doctorID": 0,
-      "doctorName": "Paola",
-      "doctorSurname": "Codagnone",
-      "doctorMail": "giulia.codagnone@gmail.com",
-      "lastUpdate": "",
-      "connectedDevice": {
-        "telegramID": ""
-      },
-      "patientList": []
-    },
-    {
-      "doctorID": 0,
-      "doctorName": "Maria",
-      "doctorSurname": "Codagnone",
-      "doctorMail": "giulia.codagnone@gmail.com",
-      "lastUpdate": "",
-      "connectedDevice": {
-        "telegramID": ""
-      },
-      "patientList": []
-    },
-    {
-      "doctorID": 0,
-      "doctorName": "Elena",
-      "doctorSurname": "Codagnone",
-      "doctorMail": "giulia.codagnone@gmail.com",
-      "lastUpdate": "",
-      "connectedDevice": {
-        "telegramID": "786029508"
-      },
-      "patientList": []
-    },
-    {
-      "doctorID": 0,
-      "doctorName": "Antuan",
       "doctorSurname": "Codagnone",
       "doctorMail": "giulia.codagnone@gmail.com",
       "lastUpdate": "",

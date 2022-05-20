@@ -80,9 +80,8 @@ class dataAnalysisClass():
                 self.catalog = json.load(open(catalog_fn))
                 self.lista = self.catalog["doctorList"]
                 messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                #self.telegramID = self.findDoctor(self.clientID)
-                #telegramID Laura
-                self.telegramID=491287865
+                self.telegramID = self.findDoctor(self.clientID)
+                #self.telegramID=491287865 #telegramID Laura
                 if self.telegramID > 0:
                     mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                 else:
@@ -103,9 +102,8 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    #self.telegramID = self.findDoctor(self.clientID)
-                    #telegramID Laura
-                    self.telegramID=491287865
+                    self.telegramID = self.findDoctor(self.clientID)
+                    #self.telegramID=491287865 #telegramID Laura
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID,messaggio, "pression on", "pression off")
                     else:
@@ -125,9 +123,8 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    #self.telegramID = self.findDoctor(self.clientID)
-                    #telegramID Laura
-                    self.telegramID=491287865
+                    self.telegramID = self.findDoctor(self.clientID)
+                    #self.telegramID=491287865 #telegramID Laura
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
@@ -209,8 +206,7 @@ if __name__ == "__main__":
     conf=json.load(open(conf_fn))
     
     token = conf["telegramToken"]
-    #token Laura 
-    #token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U"
+    #token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U" #token Laura 
     broker = conf["brokerIP"]
     port = conf["brokerPort"]
     topic = conf["mqttTopic"]

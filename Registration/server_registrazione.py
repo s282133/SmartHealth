@@ -13,6 +13,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
 from PageHTML import *
+
 class Registrazione(object):
     exposed=True
     def GET(self,*uri,**params):
@@ -49,7 +50,6 @@ class Registrazione(object):
             f4 = open(filename)
             self.catalog = json.load(f4)
         
-
             # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
             # self.catalog = json.load(f4)
           
@@ -67,16 +67,16 @@ class Registrazione(object):
             self.lista = self.catalog["doctorList"][doctor_number] 
             return json.dumps(self.lista) 
 
-
+    # aggiungere un dottore alla lista di dottori al SUBMIT
     def POST(self,*uri,**params):
 
         if uri[0] == "doctors": 
- 
-            # aggiungere un dottore alla lista di dottori
+            
+            # 1))) prendere informazioni inserite 
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
 
-            
+            # 2))) formare la struttura per il catalogo
             doctor = {
                 "doctorID": 0,
                 "doctorName": self.record["doctorName"],
@@ -89,10 +89,19 @@ class Registrazione(object):
                 "patientList": []
             }
 
-
+            # 3))) apro il catalogo
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
+
+            # 4))) inserisco ID del dottore
+            self.LastDoctorID = self.dictionary["LastDoctorID"]
+            doctor["doctorID"] = self.LastDoctorID + 1
+            self.dictionary["LastDoctorID"] = self.LastDoctorID + 1
+
+            # 5))) inserisco il dottore nella lista
             self.dictionary['doctorList'].append(doctor) 
+
+            # 6))) salvo il catalogo aggiornato
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
@@ -102,7 +111,7 @@ class Registrazione(object):
         if uri[0] == "patients": 
 
            # ricerca del giusto dottore tramite telegram ID e chat ID e inserimeno del paziente
-            chat_ID = "786029508" # DA AGGIORNARE IN REAL TIME
+            chat_ID = "786029508" # DA AGGIORNARE IN REAL TIME quando si iscrive il paziente (valuta di farlo dopo dal catalogo)
             body = cherrypy.request.body.read() 
             self.record = json.loads(body) 
 
@@ -116,7 +125,7 @@ class Registrazione(object):
                     "pregnancyDayOne": self.record["pregnancyDayOne"]
                 },
                 "connectedDevice": {
-                    "devicesID": "",
+                    "devicesID": self.record["devicesID"],
                     "mesureType": [
                     "Heart Rate",
                     "Pression",
@@ -125,21 +134,22 @@ class Registrazione(object):
                     ],
                     "telegramID": 0,
                     "thingspeakInfo": {
-                    "channel": "0",
+                    "channel": 0,
                     "apikeys": []
                     }
                 }
                 }
 
-            #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
-            self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
-            self.lista = self.dictionary["doctorList"]
+            self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
+            #self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
 
             self.LastPatientID = self.dictionary["LastPatientID"]
-            self.record["patientID"] = self.LastPatientID + 1
+            patient["patientID"] = self.LastPatientID + 1
             self.dictionary["LastPatientID"] = self.LastPatientID + 1
 
+            #da cambiare in una ricerca in base al patient ID (il chat id non ce l'ho prima dell'iscrizione del paziente dal suo telefono)
             doctor_number = 0
+            self.lista = self.dictionary["doctorList"]
             for doctorObject in self.lista:
                 connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"] 
@@ -148,8 +158,8 @@ class Registrazione(object):
                 doctor_number += 1
  
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
-            #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
-            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+            with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
+            #with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
@@ -167,6 +177,7 @@ class Registrazione(object):
             if telegramID > 0: 
                 break
         return telegramID    
+
 
 # Inviare pagine html per la registrazione al messaggio inviato da un dottore
 class EchoBot():
@@ -203,10 +214,10 @@ if __name__=="__main__":
     # cur_path = os.path.dirname(__file__)
     # new_path = os.path.relpath('..\\CatalogueAndSettings\\settings.json', cur_path)
     # conf = json.load(open(new_path,'settings.json'))
-    conf_file = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
-    conf = json.load(open(conf_file))
     # end comment
 
+    conf_file = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
+    conf = json.load(open(conf_file))
     token = conf["telegramToken"]
     bot=EchoBot(token)
     print("Bot started ...")
