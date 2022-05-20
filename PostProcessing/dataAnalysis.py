@@ -178,7 +178,7 @@ class SwitchBot:
             self.bot.sendMessage(chat_ID, text=f"Crea un tuo account personale a questo link: http://127.0.0.1:8080/start?chat_ID={chat_ID}")
 
         if message == "/registrazione_paziente": 
-            self.bot.sendMessage(chat_ID, text="Registra un nuovo paziente a questo link: http://127.0.0.1:8080/registrazione_paziente")
+            self.bot.sendMessage(chat_ID, text=f"Registra un nuovo paziente a questo link: http://127.0.0.1:8080/registrazione_paziente?chat_ID={chat_ID}")
 
         if message == "/accesso_dati": 
             self.bot.sendMessage(chat_ID, text='Access to data at this link')
