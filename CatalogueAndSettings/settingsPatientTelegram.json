@@ -1,0 +1,6 @@
+{
+    "brokerIP": "test.mosquitto.org",
+    "brokerPort": 1883,
+    "mqttTopic": "IoT_project",
+    "telegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U"
+}

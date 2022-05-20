@@ -33,7 +33,6 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-
         d = json.loads(msg)
         print(str(d))
         self.bn = d["bn"]
@@ -60,12 +59,10 @@ class dataAnalysisClass():
             print("Measure type not recognized")
 
 
-
     # Funzioni di varifica del superamento della soglia e invio di un messaggio automatico a telegram 
     # TODO: per queste funzioni descritte sotto dovremmo anche farci passare la SETTIMANA DI GRAVIDANZA
 
     def manageHeartRate(self, week):
-        
         thresholdsHR = self.thresholdsFile["heartrate"]
         for rangeHR in thresholdsHR:
             weekmin = rangeHR["weekrange"].split("-")[0]
@@ -93,8 +90,7 @@ class dataAnalysisClass():
             weekmin = rangePR["weekrange"].split("-")[0]
             weekmax = rangePR["weekrange"].split("-")[1]
             if (week >= weekmin and week <= weekmax):
-                if (int(self.value) >= int(rangePR["min"]) and int(self.value) <= 1):
-
+                if (int(self.value) >= int(rangePR["min"]) and int(self.value) <= int(rangePR["max"])):
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
@@ -151,7 +147,7 @@ class SwitchBot:
         self.tokenBot = token
         # self.tokenBot=requests.get("http://catalogIP/telegram_token").json()["telegramToken"] # Catalog token
         self.bot = telepot.Bot(self.tokenBot)
-        self.client = MyMQTT("telegramBotOrlando", broker, port, None)
+        self.client = MyMQTT("telegramBot", broker, port, None)
         self.client.start()
         self.topic = topic
         self.__message = {'bn': "telegramBot",
@@ -160,8 +156,13 @@ class SwitchBot:
                               {'n': 'switch', 'v': '', 't': '', 'u': 'bool'},
                           ]
                           }
-        MessageLoop(self.bot, {'chat': self.on_chat_message,
-                               'callback_query': self.on_callback_query}).run_as_thread()
+
+        if self.tokenBot == "5031985695:AAFIu371DNzmCQ644R2JsWZWftCSOyNd9NU":
+            MessageLoop(self.bot, {'chat': self.on_chat_message,
+                                'callback_query': self.on_callback_query}).run_as_thread()
+        else:
+            MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
+                    'callback_query': self.on_callback_query}).run_as_thread()
 
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
@@ -196,21 +197,36 @@ class SwitchBot:
         MQTTpubsub.myPublish("P4IoT/SmartHealth/clientID/+/monitoring", "on")
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
         
+    def on_chat_patient_message(self, msg):
+        content_type, chat_type, patient_ID = telepot.glance(msg)
+        message = msg['text']
+
+        if message == "/start": 
+            #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
+            self.bot.sendMessage(patient_ID, text="Bot avviato correttamente, riceverai presto dei promemoria")
 
 
 
 if __name__ == "__main__":
     
-    # SwitchBot per connettersi al Bot telegram
-    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsTelegram.json'
+    # SwitchBot per connettersi al Bot telegram del dottore
+    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json'
     conf=json.load(open(conf_fn))
-    
     token = conf["telegramToken"]
-    #token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U" #token Laura 
     broker = conf["brokerIP"]
     port = conf["brokerPort"]
     topic = conf["mqttTopic"]
     mybot=SwitchBot(token,broker,port,topic)
+
+    # SwitchBot per connettersi al Bot telegram del paziente
+    #token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U" #token Laura 
+    conf_pz = sys.path[0] + '\\CatalogueAndSettings\\settingsPatientTelegram.json'
+    conf=json.load(open(conf_pz))
+    token_pz = conf["telegramToken"]
+    broker_pz = conf["brokerIP"]
+    port_pz = conf["brokerPort"]
+    topic_pz = conf["mqttTopic"]
+    mybot_pz=SwitchBot(token_pz,broker_pz,port_pz,topic_pz)
 
     # dataAnalysis per analizzare le soglie e mandare il messaggio telegram
     conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
