@@ -6,12 +6,15 @@ import time
 import telepot
 import cherrypy
 from MyMQTT import *
+from time import sleep
+from threading import Thread
 from collections import UserList
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
+
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
-
+from DeviceConnectorAndSensors.rpiPublisher import rpiPub
 from PageHTML import *
 
 class Registrazione(object):
@@ -41,16 +44,9 @@ class Registrazione(object):
         # apertura tabella con dati iniziali
         if uri[0] == "tabella": 
 
-            # anto commented here
-            # cur_path = os.path.dirname(__file__)
-            # new_path = os.path.relpath('..\\CatalogueAndSettings\\catalog.json', cur_path)
-            # f4 = open(new_path,'catalog.json')
-            # self.catalog = json.load(f4)
-            # end comment
             filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
-        
             # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
             # self.catalog = json.load(f4)
           
@@ -125,6 +121,7 @@ class Registrazione(object):
                 },
                 "connectedDevice": {
                     "devicesID": self.record["devicesID"],
+                    "onlineSince": "",
                     "mesureType": [
                     "Heart Rate",
                     "Pression",
@@ -149,12 +146,23 @@ class Registrazione(object):
             # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
             doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
-            
+
+
+
+            # PROVA THREAD
+            # creazione di un thread
+            rpi = rpiPub("GiuliaLaura")  
+            #thread1 = Thread(target=rpiPub, args=(patient["patientID"],))
+            #thread1.start()
+
+
+
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
+
 
     def findDoctorwithtelegramID(self, doctortelegramID):
         doctor_number = 0
