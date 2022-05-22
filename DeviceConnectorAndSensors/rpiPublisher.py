@@ -17,13 +17,13 @@ from pressureSensor import pressureSensorClass
 from glycemiaSensor import glycemiaSensorClass
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR = 1               # chiedo una misurazione ogni 5 minuti
-POLLING_PERIOD_PRESSURE = 2         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 3        # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
+POLLING_PERIOD_PRESSURE = 3         # chiedo una misurazione ogni 10 minuti
+POLLING_PERIOD_GLYCEMIA = 4        # chiedo una misurazione ogni 20 minuti
 
 ONE_MINUTE_IN_SEC = 1               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
-SEC_WAIT_NO_MONITORING = 3
+SEC_WAIT_NO_MONITORING = 30
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3;
 
 class rpiPub():
@@ -43,7 +43,7 @@ class rpiPub():
 
     def start (self):
         self.client.start()
-        self.subTopic = f"P4IoT/SmartHealth/{self.clientID}/+/monitoring"
+        self.subTopic = f"P4IoT/SmartHealth/{self.clientID}/monitoring"
         self.client.mySubscribe(self.subTopic)
 
     def stop (self):
@@ -54,14 +54,15 @@ class rpiPub():
         self.client.myPublish(topic, message)
 
     def notify(self, topic, message):
-        if message == "ON":
-            self.monitoring = True
-            print(f"{self.clientID} monitoring is ON")
-        elif message == "OFF":
-            self.monitoring = False
-            print(f"{self.clientID} monitoring is OFF")
+        msg = json.loads(message)
+        print(f"{self.clientID} received {msg} from topic: {topic}")
+        measureType = msg["measureType"]
+        status = msg["status"]
+        if status == "ON":
+                self.monitoring = True
         else:
-            print(f"{self.clientID} received unknown message: {message}")
+                self.monitoring = False
+        
 
     ##### SENSORS FUNCTIONS #####
 
@@ -146,7 +147,7 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    rpi = rpiPub(sys.argv[1])      # qui devo definire il patientID, parla con le ragazze
+    rpi = rpiPub()      # qui devo definire il patientID, parla con le ragazze
 
 
     # ho spostato tutta la parte di sotto nella funzione "routineFunction"
