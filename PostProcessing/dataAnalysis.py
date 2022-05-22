@@ -193,12 +193,14 @@ class SwitchBot:
         payload = self.__message.copy()
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
-        #self.client.myPublish(self.topic, payload)
-        #if query_data=="on":
-        topic = "P4IoT/SmartHealth/clientID/monitoring"
-        monitoring = "ON"
+        self.client.myPublish(self.topic, payload)
+        if query_data=="heartrate on":
+            monitoring = "ON"      
+        else:
+            monitoring = "OFF"
+        top = "P4IoT/SmartHealth/clientID/monitoring" 
         message =  {"status": monitoring}
-        self.client.myPublish(topic, message)
+        MQTTpubsub.myPublish(top, message)
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
         
     def on_chat_patient_message(self, msg):
