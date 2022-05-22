@@ -60,8 +60,10 @@ class rpiPub():
         status = msg["status"]
         if status == "ON":
                 self.monitoring = True
+                print(f"{self.clientID} monitoring is ON")
         else:
                 self.monitoring = False
+                print(f"{self.clientID} monitoring is OFF")
         
 
     ##### SENSORS FUNCTIONS #####
@@ -148,6 +150,26 @@ class rpiPub():
 if __name__ == "__main__":
 
     rpi = rpiPub("GiuliaLaura")      # qui devo definire il patientID, parla con le ragazze
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     # ho spostato tutta la parte di sotto nella funzione "routineFunction"
