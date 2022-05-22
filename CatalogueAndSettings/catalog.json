@@ -6,7 +6,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 25,
+  "LastPatientID": 27,
   "LastDoctorID": 4,
   "doctorList": [
     {
@@ -23,7 +23,6 @@
           "patientID": 1,
           "patientName": "Laura",
           "patientSurname": "Cubeddu",
-          "lastUpdate": "2022-03-31 12:58",
           "personalData": {
             "taxIDcode": "ABC",
             "userEmail": "laura.cubeddu@gmail.com",
@@ -175,6 +174,54 @@
         {
           "patientID": 25,
           "patientName": "Valeria",
+          "patientSurname": "Rossi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "22/03/99"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry22",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 26,
+          "patientName": "Luisa",
+          "patientSurname": "Monte",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "22/03/99"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry22",
+            "mesureType": [
+              "Heart Rate",
+              "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 27,
+          "patientName": "Maria",
           "patientSurname": "Rossi",
           "personalData": {
             "taxIDcode": "ABCDEFGH",

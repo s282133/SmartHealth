@@ -149,7 +149,7 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    rpi = rpiPub("GiuliaLaura")      # qui devo definire il patientID, parla con le ragazze
+    rpi = rpiPub()      # qui devo definire il patientID, parla con le ragazze
 
 
 
