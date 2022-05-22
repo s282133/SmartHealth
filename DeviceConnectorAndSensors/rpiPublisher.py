@@ -43,7 +43,8 @@ class rpiPub():
 
     def start (self):
         self.client.start()
-        self.subTopic = f"P4IoT/SmartHealth/{self.clientID}/monitoring"
+        #self.subTopic = f"P4IoT/SmartHealth/{self.clientID}/monitoring"
+        self.subTopic ="P4IoT/SmartHealth/clientID/monitoring"
         self.client.mySubscribe(self.subTopic)
 
     def stop (self):
@@ -56,7 +57,6 @@ class rpiPub():
     def notify(self, topic, message):
         msg = json.loads(message)
         print(f"{self.clientID} received {msg} from topic: {topic}")
-        measureType = msg["measureType"]
         status = msg["status"]
         if status == "ON":
                 self.monitoring = True

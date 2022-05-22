@@ -11,6 +11,7 @@ from telepot.loop import MessageLoop
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 
+
 class dataAnalysisClass():
 
     # MQTT FUNCTIONS
@@ -33,15 +34,15 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        d = json.loads(msg)
-        print(str(d))
-        self.bn = d["bn"]
-        self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
-        e = d["e"]
-        self.measureType = e[0]["n"]
-        self.unit = e[0]["u"]
-        self.timestamp = e[0]["t"]
-        self.value = e[0]["v"]
+        if topic != "P4IoT/SmartHealth/clientID/monitoring":
+            d = json.loads(msg)
+            self.bn = d["bn"]
+            self.clientID = self.bn.split("/")[2]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
+            e = d["e"]
+            self.measureType = e[0]["n"]
+            self.unit = e[0]["u"]
+            self.timestamp = e[0]["t"]
+            self.value = e[0]["v"]
 
         if (self.measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}")
@@ -192,9 +193,12 @@ class SwitchBot:
         payload = self.__message.copy()
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
-        self.client.myPublish(self.topic, payload)
+        #self.client.myPublish(self.topic, payload)
         #if query_data=="on":
-        MQTTpubsub.myPublish("P4IoT/SmartHealth/clientID/+/monitoring", "on")
+        topic = "P4IoT/SmartHealth/clientID/monitoring"
+        monitoring = "ON"
+        message =  {"status": monitoring}
+        self.client.myPublish(topic, message)
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
         
     def on_chat_patient_message(self, msg):
