@@ -234,8 +234,8 @@ if __name__ == "__main__":
     topic_pz = conf["mqttTopic"]
     mybot_pz=SwitchBot(token_pz,broker_pz,port_pz,topic_pz)
 
-    # dataAnalysis per analizzare le soglie e mandare il messaggio telegram
-    conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
+    # dataAnalysis per analizzare le soglie e mandare il messaggio telegram 
+    conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settings.json' #non ci andrebbe quello del dottore? quindi usiam quello già preso sopra 
     conf = json.load(open(conf_fn2))
     broker = conf["broker"]
     port = conf["port"]

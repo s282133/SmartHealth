@@ -213,7 +213,7 @@ if __name__=="__main__":
     # conf = json.load(open(new_path,'settings.json'))
     # end comment
 
-    conf_file = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
+    conf_file = sys.path[0] + '\\CatalogueAndSettings\\settings.json' #non ci andrebbe settingDoctorTelegram?
     conf = json.load(open(conf_file))
     token = conf["telegramToken"]
     bot=EchoBot(token)
