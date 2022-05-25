@@ -147,16 +147,6 @@ class Registrazione(object):
             doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
 
-
-
-            # PROVA THREAD
-            # creazione di un thread
-            rpi = rpiPub("GiuliaLaura")  
-            #thread1 = Thread(target=rpiPub, args=(patient["patientID"],))
-            #thread1.start()
-
-
-
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
