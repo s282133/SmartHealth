@@ -157,13 +157,15 @@ class SwitchBot:
                               {'n': 'switch', 'v': '', 't': '', 'u': 'bool'},
                           ]
                           }
-
-        if self.tokenBot == "5031985695:AAFIu371DNzmCQ644R2JsWZWftCSOyNd9NU":
+        print(f"self.tokenBot is {self.tokenBot}")
+        if self.tokenBot == "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE":
             MessageLoop(self.bot, {'chat': self.on_chat_message,
                                 'callback_query': self.on_callback_query}).run_as_thread()
+            print(f"token if is {self.tokenBot}")
         else:
             MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
                     'callback_query': self.on_callback_query}).run_as_thread()
+            print(f"token else is {self.tokenBot}")
 
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
@@ -225,7 +227,7 @@ if __name__ == "__main__":
     mybot=SwitchBot(token,broker,port,topic)
 
     # SwitchBot per connettersi al Bot telegram del paziente
-    #token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U" #token Laura 
+    # token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U" #token Laura 
     conf_pz = sys.path[0] + '\\CatalogueAndSettings\\settingsPatientTelegram.json'
     conf=json.load(open(conf_pz))
     token_pz = conf["telegramToken"]
@@ -235,10 +237,10 @@ if __name__ == "__main__":
     mybot_pz=SwitchBot(token_pz,broker_pz,port_pz,topic_pz)
 
     # dataAnalysis per analizzare le soglie e mandare il messaggio telegram 
-    conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json' 
+    conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json' #non ci andrebbe quello del dottore? quindi usiam quello già preso sopra 
     conf = json.load(open(conf_fn2))
-    broker = conf["broker"]
-    port = conf["port"]
+    broker = conf["brokerIP"]
+    port = conf["brokerPort"]
     MQTTpubsub = dataAnalysisClass("rpiSub", "P4IoT/SmartHealth/#", broker, port)
     MQTTpubsub.start()    
 
