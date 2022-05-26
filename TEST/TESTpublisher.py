@@ -36,11 +36,11 @@ if __name__ == '__main__':
 
     while True:
         monitoring = "OFF"
-        message = {"measureType": measureToBeMonitored, "status": monitoring}
+        message = {"status": monitoring}
         TEST.myPublish(topic, message)
         sleep(30)
         monitoring = "ON"
-        message = {"measureType": measureToBeMonitored, "status": monitoring}
+        message  =  {"status": monitoring}
         TEST.myPublish(topic, message)
         sleep(30)
 
