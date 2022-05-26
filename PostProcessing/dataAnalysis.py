@@ -213,7 +213,8 @@ class SwitchBot:
         # DA TESTARE
         if message == "/peso": 
             self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
-            patient_ID = telepot.glance(msg)
+            
+            content_type, chat_type, patient_ID = telepot.glance(msg)
             peso = msg['text']
             self.bot.sendMessage(patient_ID, text=f"Il tuo peso: {peso}")
 

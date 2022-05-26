@@ -158,26 +158,7 @@ if __name__ == "__main__":
     filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
     f = open(filename)
     catalog = json.load(f)
- 
-    # FUNZIONA
-    # patientID1 = str(123)
-    # thread1 = Thread(target=rpiPub, args=(patientID1,))
-    # patientID2 = str(456)
-    # thread2 = Thread(target=rpiPub, args=(patientID2,))
-    # thread1.start()
-    # time.sleep(2)
-    # thread2.start()
 
-    # FUNZIONA con stesso nome
-    # patientID1 = str(123)
-    # thread = Thread(target=rpiPub, args=(patientID1,))
-    # thread.start()
-    # time.sleep(2)
-    # patientID2 = str(456)
-    # thread = Thread(target=rpiPub, args=(patientID2,))
-    # thread.start()
-
-    # FUNZIONA con for
     doctorList = catalog["doctorList"]
     for doctorObject in doctorList:
         patientList = doctorObject["patientList"]
