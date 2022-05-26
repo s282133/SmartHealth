@@ -1,7 +1,7 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
   "baseTopic": "/MySmartHealth",
-  "telegramToken": "5031985695:AAFIu371DNzmCQ644R2JsWZWftCSOyNd9NU",
+  "telegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
   "broker": {
     "IPadress": "test.mosquitto.org",
     "port": 1883
@@ -13,7 +13,7 @@
       "doctorID": 1,
       "doctorName": "Giulia",
       "doctorSurname": "Codagnone",
-      "doctorMail": "laura.cubeddu@gmail.com",
+      "doctorMail": "laura.cubeddu1@gmail.com",
       "lastUpdate": "2022-03-31 12:58",
       "connectedDevice": {
         "telegramID": "786029508"
