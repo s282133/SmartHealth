@@ -37,7 +37,7 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        if topic != "P4IoT/SmartHealth/clientID/monitoring":
+        if topic != "P4IoT/SmartHealth/clientID/monitoring" and topic != "P4IoT/SmartHealth/peso":
             d = json.loads(msg)
             self.bn = d["bn"]
             self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
@@ -227,17 +227,19 @@ class SwitchBot:
             self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
             self.previous_message="/peso"
         
-        if  self.previous_message == "/peso":
+        elif  self.previous_message == "/peso":
             if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(patient_ID, text=f"Il tuo peso è impossibile")
+                self.bot.sendMessage(patient_ID, text=f"Il tuo peso è impossibile")  
             else:
                 self.bot.sendMessage(patient_ID, text=f"Il tuo peso è: {message} Kg")
-            self.previous_message="qualcosa"
+                topicc="P4IoT/SmartHealth/peso"
+                peso =  {"status": message}
+                MQTTpubsub.myPublish(topicc, peso)
+                print("published")
+                self.previous_message="qualcosa"
+            
 
-            # self.on_chat_weight_message()
-            # self.bot.sendMessage(patient_ID, text=f"Il tuo peso è: {self.weight} Kg") 
-
-
+          
 # self.telegramID=491287865 #telegramID Laura                  
 # messaggio = "Ricorda di pesarti oggi e di mandare a questo bot il tuo peso in kg scrivendo /pesati e poi il tuo peso, senza lasciare spazi, conserva due cifre dopo la virgola (Esempio: \pesati54)"
 # mybot.send_weight(self.telegramID,messaggio)
