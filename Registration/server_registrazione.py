@@ -7,14 +7,12 @@ import telepot
 import cherrypy
 from MyMQTT import *
 from time import sleep
-from threading import Thread
 from collections import UserList
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
-from DeviceConnectorAndSensors.rpiPublisher import rpiPub
 from PageHTML import *
 
 class Registrazione(object):
@@ -52,6 +50,8 @@ class Registrazione(object):
           
             self.clientID = 1 # DA AGGIORNARE IN REAL TIME
             chat_ID = "786029508"
+            #usa questo
+            #self.doctortelegramID = params["chat_ID"]
 
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
