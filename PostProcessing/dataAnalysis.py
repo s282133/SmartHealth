@@ -1,4 +1,5 @@
 ### Description: MQTT subscriber that processes data from the MQTT broker, evaluating if it is according to thresholds
+#se dovesse servire: self.telegramID=491287865 #telegramID Laura
 
 from gettext import Catalog
 from MyMQTT import *
@@ -9,6 +10,8 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from unicodedata import name
 from telepot.loop import MessageLoop
 import sys, os
+from pprint import pprint
+
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -80,7 +83,6 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = self.findDoctor(self.clientID)
-                    #self.telegramID=491287865 #telegramID Laura
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                     else:
@@ -106,7 +108,6 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = self.findDoctor(self.clientID)
-                    #self.telegramID=491287865 #telegramID Laura
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID,messaggio, "pression on", "pression off")
                     else:
@@ -127,7 +128,6 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = self.findDoctor(self.clientID)
-                    #self.telegramID=491287865 #telegramID Laura
                     if self.telegramID > 0:
                         mybot.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
@@ -157,6 +157,7 @@ class SwitchBot:
         self.client = MyMQTT("telegramBot", broker, port, None)
         self.client.start()
         self.topic = topic
+        self.previous_message="qualcosa"
         self.__message = {'bn': "telegramBot",
                           'e':
                           [
@@ -168,6 +169,7 @@ class SwitchBot:
             MessageLoop(self.bot, {'chat': self.on_chat_message,
                                 'callback_query': self.on_callback_query}).run_as_thread()
             print(f"token if is {self.tokenBot}")
+            
         else:
             MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
                     'callback_query': self.on_callback_query}).run_as_thread()
@@ -207,7 +209,12 @@ class SwitchBot:
         message =  {"status": monitoring}
         MQTTpubsub.myPublish(top, message)
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
-        
+    
+    # def on_chat_weight_message(self, msg):
+    #     content_type, chat_type, patient_ID= telepot.glance(msg)
+    #     self.weight = msg['text']        
+
+ 
     def on_chat_patient_message(self, msg):
         content_type, chat_type, patient_ID = telepot.glance(msg)
         message = msg['text']
@@ -215,19 +222,24 @@ class SwitchBot:
         if message == "/start": 
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
             self.bot.sendMessage(patient_ID, text="Bot avviato correttamente, riceverai presto dei promemoria")
-
-        # DA TESTARE
+   
         if message == "/peso": 
             self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
-            patient_ID = telepot.glance(msg)
-            peso = msg['text']
-            self.bot.sendMessage(patient_ID, text=f"Il tuo peso: {peso}")
+            self.previous_message="/peso"
+        
+        if  self.previous_message == "/peso":
+            if(int(message) < 0 or (int(message) > 100)):
+                self.bot.sendMessage(patient_ID, text=f"Il tuo peso è impossibile")
+            else:
+                self.bot.sendMessage(patient_ID, text=f"Il tuo peso è: {message} Kg")
+            self.previous_message="qualcosa"
 
-#     def send_weight(self,telegramID,messaggio): 
-#             self.bot.sendMessage(telegramID, text=messaggio)
+            # self.on_chat_weight_message()
+            # self.bot.sendMessage(patient_ID, text=f"Il tuo peso è: {self.weight} Kg") 
+
 
 # self.telegramID=491287865 #telegramID Laura                  
-# messaggio = "Ricorda di pesarti oggi e di mandare a questo bot il tuo peso in kg, conserva due cifre dopo la virgola"
+# messaggio = "Ricorda di pesarti oggi e di mandare a questo bot il tuo peso in kg scrivendo /pesati e poi il tuo peso, senza lasciare spazi, conserva due cifre dopo la virgola (Esempio: \pesati54)"
 # mybot.send_weight(self.telegramID,messaggio)
 
 if __name__ == "__main__":
