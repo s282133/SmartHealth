@@ -31,7 +31,7 @@
         "max": "106"
         }
     ],
-    "pressure":[
+    "pressureHigh":[
         {
             "weekrange": "1-8",
             "min": "60",
@@ -61,6 +61,38 @@
             "weekrange": "31-36",
             "min": "65",
             "max": "106"
+            }
+    ],
+    "pressureLow":[
+        {
+            "weekrange": "1-8",
+            "min": "35",
+            "max": "55"
+            },
+            {
+            "weekrange": "9-12",
+            "min": "35",
+            "max": "55"
+            },
+            {
+            "weekrange": "13-18",
+            "min": "35",
+            "max": "55"
+            }, 
+            {
+            "weekrange": "19-24",
+            "min": "35",
+            "max": "55"
+            },
+            {
+            "weekrange": "25-30",
+            "min": "35",
+            "max": "55"
+            },
+            {
+            "weekrange": "31-36",
+            "min": "35",
+            "max": "55"
             }
     ],
     "glycemia":[
