@@ -6,8 +6,8 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 6,
-  "LastDoctorID": 4,
+  "LastPatientID": 9,
+  "LastDoctorID": 5,
   "doctorList": [
     {
       "doctorID": 1,
@@ -114,6 +114,81 @@
             "mesureType": [
               "Heart Rate",
               "Pression",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 7,
+          "patientName": "Gigia",
+          "patientSurname": "Gigiona",
+          "personalData": {
+            "taxIDcode": "9098",
+            "userEmail": "gigiona@gmail.com",
+            "pregnancyDayOne": "2022-05-02"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry9",
+            "onlineSince": "2022/05/26",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 8,
+          "patientName": "Gigia",
+          "patientSurname": "Gigiona",
+          "personalData": {
+            "taxIDcode": "9098",
+            "userEmail": "gigiona@gmail.com",
+            "pregnancyDayOne": "2022-05-02"
+          },
+          "connectedDevice": {
+            "devicesID": "raspberry9",
+            "onlineSince": "2022/05/26",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 9,
+          "patientName": "lucia",
+          "patientSurname": "sfjoe",
+          "personalData": {
+            "taxIDcode": "eiurweurwe",
+            "userEmail": "adjuadhd",
+            "pregnancyDayOne": "2022-05-01"
+          },
+          "connectedDevice": {
+            "devicesID": "rpi1",
+            "onlineSince": "2022-05-26",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
               "Temperature",
               "Glycemia"
             ],
@@ -298,6 +373,17 @@
       "doctorSurname": "Codagnone",
       "doctorMail": "giulia.codagnone@gmail.com",
       "lastUpdate": "",
+      "connectedDevice": {
+        "telegramID": "786029508"
+      },
+      "patientList": []
+    },
+    {
+      "doctorID": 5,
+      "doctorName": "Pierluigi",
+      "doctorSurname": "De Luca",
+      "doctorMail": "pierdeluca99@gmail.com",
+      "lastUpdate": "2022-05-26",
       "connectedDevice": {
         "telegramID": "786029508"
       },

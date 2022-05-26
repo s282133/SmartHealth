@@ -79,7 +79,7 @@ class Registrazione(object):
                 "doctorName": self.record["doctorName"],
                 "doctorSurname": self.record["doctorSurname"],
                 "doctorMail": self.record["doctorMail"],
-                "lastUpdate": "",
+                "lastUpdate": time.strftime("%Y-%m-%d"),
                 "connectedDevice": {
                     "telegramID": self.telegramID
                 },
@@ -121,14 +121,14 @@ class Registrazione(object):
                 },
                 "connectedDevice": {
                     "devicesID": self.record["devicesID"],
-                    "onlineSince": "",
+                    "onlineSince": time.strftime("%Y-%m-%d"),
                     "mesureType": [
                     "Heart Rate",
-                    "Pression",
+                    "Pressure",
                     "Temperature",
                     "Glycemia"
                     ],
-                    "telegramID": 0,
+                    "telegramID": 0,        # in realta è del paziente forse
                     "thingspeakInfo": {
                     "channel": 0,
                     "apikeys": []
