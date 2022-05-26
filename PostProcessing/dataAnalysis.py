@@ -38,18 +38,20 @@ class dataAnalysisClass():
             d = json.loads(msg)
             self.bn = d["bn"]
             self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
-            e = d["e"]
-            self.measureType = e[0]["n"]
-            self.unit = e[0]["u"]
-            self.timestamp = e[0]["t"]
-            self.value = e[0]["v"]
+            self.e = d["e"]
+            self.measureType = self.e[0]["n"]
+            self.unit = self.e[0]["u"]
+            self.timestamp = self.e[0]["t"]
+            self.value = self.e[0]["v"]
 
         if (self.measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}")
             week = "35"
             self.manageHeartRate(week)
-        elif (self.measureType == "pressureHigh")or(self.measureType == "pressureLow"):
-            print(f"DataAnalysisBlock received PRESSURE measure of: {self.value} at time {self.timestamp}")
+        elif (self.measureType == "pressureHigh"):
+            self.sensed_pressureHigh=self.e[0]["v"]
+            self.sensed_pressureLow=self.e[1]["v"]
+            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}")
             week = "1"
             self.managePressure(week)            
         elif (self.measureType == "glycemia"):
@@ -67,23 +69,22 @@ class dataAnalysisClass():
         thresholdsHR = self.thresholdsFile["heartrate"]
         for rangeHR in thresholdsHR:
             weekmin = rangeHR["weekrange"].split("-")[0]
-            weekmax = rangeHR["weekrange"].split("-")[1]
-   
-        if (week >= weekmin and week <= weekmax):
-            if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
-                print(f"DataAnalysisBlock: heart rate is in range")
-            else:
-                print(f"DataAnalysisBlock: heart rate is NOT in range") 
-                catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
-                self.catalog = json.load(open(catalog_fn))
-                self.lista = self.catalog["doctorList"]
-                messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                self.telegramID = self.findDoctor(self.clientID)
-                #self.telegramID=491287865 #telegramID Laura
-                if self.telegramID > 0:
-                    mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
+            weekmax = rangeHR["weekrange"].split("-")[1]   
+            if (week >= weekmin and week <= weekmax):
+                if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
+                    print(f"DataAnalysisBlock: heart rate is in range")
                 else:
-                    print("Doctor not found for this patient")
+                    print(f"DataAnalysisBlock: heart rate is NOT in range") 
+                    catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                    self.catalog = json.load(open(catalog_fn))
+                    self.lista = self.catalog["doctorList"]
+                    messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
+                    self.telegramID = self.findDoctor(self.clientID)
+                    #self.telegramID=491287865 #telegramID Laura
+                    if self.telegramID > 0:
+                        mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
+                    else:
+                        print("Doctor not found for this patient")
 
     def managePressure(self, week):
         thresholdsPR = self.thresholdsFile["pressure"]
@@ -91,7 +92,12 @@ class dataAnalysisClass():
             weekmin = rangePR["weekrange"].split("-")[0]
             weekmax = rangePR["weekrange"].split("-")[1]
             if (week >= weekmin and week <= weekmax):
-                if (int(self.value) >= int(rangePR["min"]) and int(self.value) <= int(rangePR["max"])):
+                highmax=rangePR["high"]["max"]
+                highmin=rangePR["high"]["min"]
+                lowmax=rangePR["low"]["max"]
+                lowmin=rangePR["low"]["min"]
+                if (int(self.sensed_pressureHigh) >= int(highmax) and int(self.sensed_pressureHigh) <= int(highmin)) and  \
+                    (int(self.sensed_pressureLow) >= int(lowmax) and int(self.sensed_pressureLow) <= int(lowmin)) :
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
@@ -213,8 +219,7 @@ class SwitchBot:
         # DA TESTARE
         if message == "/peso": 
             self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
-            
-            content_type, chat_type, patient_ID = telepot.glance(msg)
+            patient_ID = telepot.glance(msg)
             peso = msg['text']
             self.bot.sendMessage(patient_ID, text=f"Il tuo peso: {peso}")
 

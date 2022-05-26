@@ -11,20 +11,26 @@ class Thingspeak():
 
     def notify(self,topic,payload): 
         message = json.loads(payload) #trasformiamo in json
-       
-        if message['e'][0]['n']=="heartrate":
+        print(message)
+        e=message['e']
+        self.measureType = e[0]['n']
+        if self.measureType=="heartrate":
             heart_rate=int(message['e'][0]['v'])
             r1 = requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field1={heart_rate}')
             print(f"Field1: {heart_rate}")
-        if message['e'][0]['n']=="glycemia":
+        elif message['e'][0]['n']=="glycemia":
             glycemia=int(message['e'][0]['v'])
-            r2 = requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field3={glycemia}')
+            r2=requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field3={glycemia}')
             print(f"Field3: {glycemia}")
-        
-        # # elif message['e'][0]['n']=="pressure":
-        # #     pressure=int(message['e'][0]['v'])
-        # #     r2 = requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field2={pressure}')    
-
+        elif message['e'][0]['n']=="pressureHigh":
+            pressure=int(message['e'][0]['v'])
+            self.sensed_pressureHigh=message['e'][0]['v']
+            self.sensed_pressureLow=message['e'][1]['v']
+            r2 = requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field2={self.sensed_pressureHigh}')
+            # r2 = requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field2={self.sensed_pressureLow}')     
+            print(f"Field2: {self.sensed_pressureHigh}")
+            
+            
     def start(self): 
         self.mqttClient.start() #mi connetto con mosquitto
 

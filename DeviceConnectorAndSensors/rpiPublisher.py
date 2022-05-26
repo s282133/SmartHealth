@@ -22,13 +22,13 @@ sys.path.insert(0, os.path.abspath('..'))
 from CatalogueAndSettings import *
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
-POLLING_PERIOD_PRESSURE = 3         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 4        # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_HR = 50               # chiedo una misurazione ogni 5 minuti
+POLLING_PERIOD_PRESSURE = 1         # chiedo una misurazione ogni 10 minuti
+POLLING_PERIOD_GLYCEMIA = 50       # chiedo una misurazione ogni 20 minuti
 
 ONE_MINUTE_IN_SEC = 1               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
-SEC_WAIT_NO_MONITORING = 10
+SEC_WAIT_NO_MONITORING = 90
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3;
 
 class rpiPub():
@@ -43,10 +43,10 @@ class rpiPub():
         print(f"{self.clientID} created")
         self.start()
         self.initSensors()
-        # while True:
-        #     self.routineFunction() 
-        for i in range(1,5):
+        while True:
             self.routineFunction() 
+        # for i in range(1,5):
+        #     self.routineFunction() 
 
     def start (self):
         self.client.start()
@@ -158,7 +158,26 @@ if __name__ == "__main__":
     filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
     f = open(filename)
     catalog = json.load(f)
+ 
+    # FUNZIONA
+    # patientID1 = str(123)
+    # thread1 = Thread(target=rpiPub, args=(patientID1,))
+    # patientID2 = str(456)
+    # thread2 = Thread(target=rpiPub, args=(patientID2,))
+    # thread1.start()
+    # time.sleep(2)
+    # thread2.start()
 
+    # FUNZIONA con stesso nome
+    # patientID1 = str(123)
+    # thread = Thread(target=rpiPub, args=(patientID1,))
+    # thread.start()
+    # time.sleep(2)
+    # patientID2 = str(456)
+    # thread = Thread(target=rpiPub, args=(patientID2,))
+    # thread.start()
+
+    # FUNZIONA con for
     doctorList = catalog["doctorList"]
     for doctorObject in doctorList:
         patientList = doctorObject["patientList"]
