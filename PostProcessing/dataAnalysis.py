@@ -37,7 +37,7 @@ class dataAnalysisClass():
         if topic != "P4IoT/SmartHealth/clientID/monitoring":
             d = json.loads(msg)
             self.bn = d["bn"]
-            self.clientID = self.bn.split("/")[2]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
+            self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
             e = d["e"]
             self.measureType = e[0]["n"]
             self.unit = e[0]["u"]
