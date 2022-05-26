@@ -187,9 +187,6 @@ class SwitchBot:
         if message == "/accesso_dati": 
             self.bot.sendMessage(chat_ID, text='Access to data at this link')
 
-        if message == "/monitora_paziente": 
-            self.bot.sendMessage(chat_ID, text='Start monitoring')
-
     def on_callback_query(self,msg):
         query_ID , chat_ID , query_data = telepot.glance(msg,flavor='callback_query')
         payload = self.__message.copy()
@@ -213,7 +210,19 @@ class SwitchBot:
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
             self.bot.sendMessage(patient_ID, text="Bot avviato correttamente, riceverai presto dei promemoria")
 
+        # DA TESTARE
+        if message == "/peso": 
+            self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
+            patient_ID = telepot.glance(msg)
+            peso = msg['text']
+            self.bot.sendMessage(patient_ID, text=f"Il tuo peso: {peso}")
 
+#     def send_weight(self,telegramID,messaggio): 
+#             self.bot.sendMessage(telegramID, text=messaggio)
+
+# self.telegramID=491287865 #telegramID Laura                  
+# messaggio = "Ricorda di pesarti oggi e di mandare a questo bot il tuo peso in kg, conserva due cifre dopo la virgola"
+# mybot.send_weight(self.telegramID,messaggio)
 
 if __name__ == "__main__":
     
