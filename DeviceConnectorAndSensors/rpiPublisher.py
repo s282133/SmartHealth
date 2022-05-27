@@ -22,11 +22,11 @@ sys.path.insert(0, os.path.abspath('..'))
 from CatalogueAndSettings import *
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR = 50               # chiedo una misurazione ogni 5 minuti
-POLLING_PERIOD_PRESSURE = 1         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 50       # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_HR = 20               # chiedo una misurazione ogni 5 minuti
+POLLING_PERIOD_PRESSURE = 20         # chiedo una misurazione ogni 10 minuti
+POLLING_PERIOD_GLYCEMIA = 20       # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 1               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
+ONE_MINUTE_IN_SEC = 30               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
 SEC_WAIT_NO_MONITORING = 90
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3;
@@ -67,7 +67,7 @@ class rpiPub():
         status = msg["status"]
         if status == "ON":
                 self.monitoring = True
-        else:
+        elif status=="OFF":
                 self.monitoring = False
         
 
