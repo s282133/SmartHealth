@@ -1,7 +1,8 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
-  "baseTopic": "/MySmartHealth",
   "telegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
+  "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
+  "mqttTopic": "IoT_project",
   "broker": {
     "IPadress": "test.mosquitto.org",
     "port": 1883

@@ -49,16 +49,12 @@ class Registrazione(object):
             # self.catalog = json.load(f4)
           
             #chat_ID = "786029508"
-            #usa questo
-            #self.doctortelegramID = params["chat_ID"]
-            
             #chat_ID = self.doctortelegramID
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
             for doctorObject in self.lista:
                 connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"] 
-                #if int(self.doctortelegramID) == telegramID: 
                 if self.doctortelegramID == telegramID: 
                     break
                 doctor_number += 1
@@ -70,11 +66,11 @@ class Registrazione(object):
 
         if uri[0] == "doctors": 
             
-            # 1))) prendere informazioni inserite 
+            # 1) prendere informazioni inserite 
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
 
-            # 2))) formare la struttura per il catalogo
+            # 2) formare la struttura per il catalogo
             doctor = {
                 "doctorID": 0,
                 "doctorName": self.record["doctorName"],
@@ -87,19 +83,19 @@ class Registrazione(object):
                 "patientList": []
             }
 
-            # 3))) apro il catalogo
+            # 3) apro il catalogo
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
 
-            # 4))) inserisco ID del dottore
+            # 4) inserisco ID del dottore
             self.LastDoctorID = self.dictionary["LastDoctorID"]
             doctor["doctorID"] = self.LastDoctorID + 1
             self.dictionary["LastDoctorID"] = self.LastDoctorID + 1
 
-            # 5))) inserisco il dottore nella lista
+            # 5) inserisco il dottore nella lista
             self.dictionary['doctorList'].append(doctor) 
 
-            # 6))) salvo il catalogo aggiornato
+            # 6) salvo il catalogo aggiornato
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
