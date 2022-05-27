@@ -246,6 +246,32 @@ class SwitchBot:
 
 if __name__ == "__main__":
     
+    # Broker e porta
+    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+    conf=json.load(open(conf_fn))
+    info = conf["broker"]
+    broker = info["IPadress"]
+    port = info["port"]
+    #topic = conf["mqttTopic"]
+
+    # SwitchBot per connettersi al Bot telegram del dottore
+    token = conf["telegramToken"]
+    mybot=SwitchBot(token,broker,port,"IoT_project")
+
+    # SwitchBot per connettersi al Bot telegram del paziente
+    token_pz = conf["telegramToken"]
+    mybot_pz=SwitchBot(token_pz,broker,port,"IoT_project")
+
+    MQTTpubsub = dataAnalysisClass("rpiSub", "P4IoT/SmartHealth/#", broker, port)
+    MQTTpubsub.start()    
+
+    while True:
+        time.sleep(1)
+
+
+
+
+
     # SwitchBot per connettersi al Bot telegram del dottore
     conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json'
     conf=json.load(open(conf_fn))
