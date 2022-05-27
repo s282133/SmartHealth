@@ -6,7 +6,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 9,
+  "LastPatientID": 10,
   "LastDoctorID": 5,
   "doctorList": [
     {
@@ -89,106 +89,6 @@
             "mesureType": [
               "Heart Rate",
               "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 0,
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 6,
-          "patientName": "Alessandra",
-          "patientSurname": "Codagnone",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "22/03/99"
-          },
-          "connectedDevice": {
-            "devicesID": "raspberry22",
-            "onlineSince": "",
-            "mesureType": [
-              "Heart Rate",
-              "Pression",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 0,
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 7,
-          "patientName": "Gigia",
-          "patientSurname": "Gigiona",
-          "personalData": {
-            "taxIDcode": "9098",
-            "userEmail": "gigiona@gmail.com",
-            "pregnancyDayOne": "2022-05-02"
-          },
-          "connectedDevice": {
-            "devicesID": "raspberry9",
-            "onlineSince": "2022/05/26",
-            "mesureType": [
-              "Heart Rate",
-              "Pressure",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 0,
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 8,
-          "patientName": "Gigia",
-          "patientSurname": "Gigiona",
-          "personalData": {
-            "taxIDcode": "9098",
-            "userEmail": "gigiona@gmail.com",
-            "pregnancyDayOne": "2022-05-02"
-          },
-          "connectedDevice": {
-            "devicesID": "raspberry9",
-            "onlineSince": "2022/05/26",
-            "mesureType": [
-              "Heart Rate",
-              "Pressure",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 0,
-              "apikeys": []
-            }
-          }
-        },
-        {
-          "patientID": 9,
-          "patientName": "lucia",
-          "patientSurname": "sfjoe",
-          "personalData": {
-            "taxIDcode": "eiurweurwe",
-            "userEmail": "adjuadhd",
-            "pregnancyDayOne": "2022-05-01"
-          },
-          "connectedDevice": {
-            "devicesID": "rpi1",
-            "onlineSince": "2022-05-26",
-            "mesureType": [
-              "Heart Rate",
-              "Pressure",
               "Temperature",
               "Glycemia"
             ],

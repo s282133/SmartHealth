@@ -267,6 +267,12 @@ class SwitchBot:
 
 if __name__ == "__main__":
 
+    # conf = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+    # broker = conf["broker"]
+    # broker = broker[0]
+    # port = broker[1]
+
+
     # SwitchBot per connettersi al Bot telegram del dottore
     conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json'
     conf=json.load(open(conf_fn))

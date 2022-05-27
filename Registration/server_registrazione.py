@@ -48,17 +48,18 @@ class Registrazione(object):
             # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
             # self.catalog = json.load(f4)
           
-            chat_ID = "786029508"
+            #chat_ID = "786029508"
             #usa questo
             #self.doctortelegramID = params["chat_ID"]
-
+            
+            #chat_ID = self.doctortelegramID
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
             for doctorObject in self.lista:
                 connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"] 
                 #if int(self.doctortelegramID) == telegramID: 
-                if chat_ID == telegramID: 
+                if self.doctortelegramID == telegramID: 
                     break
                 doctor_number += 1
             self.lista = self.catalog["doctorList"][doctor_number] 
