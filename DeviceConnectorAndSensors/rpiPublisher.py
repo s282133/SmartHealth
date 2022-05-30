@@ -26,7 +26,7 @@ POLLING_PERIOD_HR = 20               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 20         # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 20       # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 30               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
+ONE_MINUTE_IN_SEC = 0               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
 SEC_WAIT_NO_MONITORING = 90
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3;
@@ -50,7 +50,7 @@ class rpiPub():
 
     def start (self):
         self.client.start()
-        self.subTopic = f"P4IoT/SmartHealth/{self.clientID}/monitoring"
+        self.subTopic = f"P4IoT/SmartHealth/clientID/monitoring"
         self.client.mySubscribe(self.subTopic)
 
     def stop (self):
@@ -63,12 +63,14 @@ class rpiPub():
     def notify(self, topic, message):
         msg = json.loads(message)
         print(f"{self.clientID} received {msg} from topic: {topic}")
-        measureType = msg["measureType"]
-        status = msg["status"]
-        if status == "ON":
-                self.monitoring = True
-        elif status=="OFF":
-                self.monitoring = False
+        if topic != "P4IoT/SmartHealth/clientID/monitoring":
+            pass
+        else:
+            status = msg["status"]
+            if status == "ON":
+                    self.monitoring = True
+            elif status=="OFF":
+                    self.monitoring = False
         
 
     ##### SENSORS FUNCTIONS #####
@@ -120,6 +122,7 @@ class rpiPub():
 
     def routineFunction(self):
         if(self.monitoring == False):
+            print("Monitoraggio OFF")
             if self.counter % POLLING_PERIOD_HR == 0:
                 time.sleep(SEC_WAIT_NO_MONITORING)
                 newMeasureHR = int(self.getHRmeasure(self.counter))
@@ -135,6 +138,7 @@ class rpiPub():
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
         else:
+            print("Monitoraggio ON")
             if self.counter % POLLING_PERIOD_HR == 0:
                 time.sleep(SEC_WAIT_MONITORING)
                 newMeasureHR = int(self.getHRmeasure(self.counter))

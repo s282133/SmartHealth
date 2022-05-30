@@ -178,6 +178,7 @@ class SwitchBot:
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
                    InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
+        self.cmd_on=cmd_on
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         self.bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
 
@@ -195,19 +196,20 @@ class SwitchBot:
         if message == "/accesso_dati": 
             self.bot.sendMessage(chat_ID, text='Access to data at this link')
 
-    def on_callback_query(self,msg):
+    def on_callback_query(self, msg):
         query_ID , chat_ID , query_data = telepot.glance(msg,flavor='callback_query')
         payload = self.__message.copy()
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
         self.client.myPublish(self.topic, payload)
-        if query_data=="heartrate on":
+        if query_data==f"{self.cmd_on}":
             monitoring = "ON"      
         else:
             monitoring = "OFF"
         top = "P4IoT/SmartHealth/clientID/monitoring" 
         message =  {"status": monitoring}
         MQTTpubsub.myPublish(top, message)
+        print(f"{message}")
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
     
     # def on_chat_weight_message(self, msg):
@@ -259,7 +261,7 @@ if __name__ == "__main__":
     mybot=SwitchBot(token,broker,port,"IoT_project")
 
     # SwitchBot per connettersi al Bot telegram del paziente
-    token_pz = conf["telegramToken"]
+    token_pz = conf["patientTelegramToken"]
     mybot_pz=SwitchBot(token_pz,broker,port,"IoT_project")
 
     MQTTpubsub = dataAnalysisClass("rpiSub", "P4IoT/SmartHealth/#", broker, port)
