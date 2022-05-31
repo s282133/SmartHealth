@@ -230,7 +230,7 @@ class SwitchBot:
             if(int(message) < 0 or (int(message) > 100)):
                 self.bot.sendMessage(patient_ID, text=f"Il tuo codice identificativo è impossibile")  
             else:
-                self.bot.sendMessage(text=f"Il tuo codice identificativo è: {message}")  
+                self.bot.sendMessage(patient_ID, text=f"Il tuo codice identificativo è: {message}")  
                 self.patientID = message
                 #doctor = self.findDoctorwithtpatientID(self.patientID)
                  # RICERCA E INSERIMENTO NEL CATALOGO
