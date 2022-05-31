@@ -66,7 +66,7 @@
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": 123,
+            "telegramID": 491287865,
             "thingspeakInfo": {
               "channel": "123",
               "apikeys": [
@@ -94,7 +94,7 @@
               "Temperature",
               "Glycemia"
             ],
-            "telegramID": 0,
+            "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 0,
               "apikeys": []

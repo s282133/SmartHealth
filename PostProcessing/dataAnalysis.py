@@ -48,17 +48,17 @@ class dataAnalysisClass():
             self.value = self.e[0]["v"]
 
         if (self.measureType == "heartrate"):
-            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}")
+            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}")
             week = "35"
             self.manageHeartRate(week)
         elif (self.measureType == "pressureHigh"):
             self.sensed_pressureHigh=self.e[0]["v"]
             self.sensed_pressureLow=self.e[1]["v"]
-            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}")
+            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}")
             week = "1"
             self.managePressure(week)            
         elif (self.measureType == "glycemia"):
-            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}")
+            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}")
             week = "1"
             self.manageGlycemia(week)
         else:
@@ -218,35 +218,34 @@ class SwitchBot:
 
  
     def on_chat_patient_message(self, msg):
-        content_type, chat_type, patient_ID = telepot.glance(msg)
+        content_type, chat_type, chat_ID = telepot.glance(msg)
         message = msg['text']
 
         if message == "/start": 
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
-            self.bot.sendMessage(patient_ID, text="Bot avviato correttamente, manda il tuo codice identificativo fornito dal medico")
+            self.bot.sendMessage(chat_ID, text="Bot avviato correttamente, manda il tuo codice identificativo fornito dal medico")
             self.previous_message="/start"
         
         elif  self.previous_message == "/start":
             if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(patient_ID, text=f"Il tuo codice identificativo è impossibile")  
+                self.bot.sendMessage(chat_ID, text=f"Il tuo codice identificativo è impossibile")  
             else:
-                self.bot.sendMessage(patient_ID, text=f"Il tuo codice identificativo è: {message}")  
-                self.patientID = message
-                #doctor = self.findDoctorwithtpatientID(self.patientID)
+                self.bot.sendMessage(chat_ID, text=f"Il tuo codice identificativo è: {message}")                 
+                self.Update_PatientTelegramID(chat_ID,message)
                  # RICERCA E INSERIMENTO NEL CATALOGO
                  # da fare qui
 
 
    
         elif message == "/peso": 
-            self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
+            self.bot.sendMessage(chat_ID, text="Puoi inserire il tuo peso")
             self.previous_message="/peso"
         
         elif  self.previous_message == "/peso":
             if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(patient_ID, text=f"Il tuo peso è impossibile")  
+                self.bot.sendMessage(chat_ID, text=f"Il tuo peso è impossibile")  
             else:
-                self.bot.sendMessage(patient_ID, text=f"Il tuo peso è: {message} Kg")
+                self.bot.sendMessage(chat_ID, text=f"Il tuo peso è: {message} Kg")
                 topicc="P4IoT/SmartHealth/peso"
                 peso =  {"status": message}
                 MQTTpubsub.myPublish(topicc, peso)
@@ -254,16 +253,23 @@ class SwitchBot:
                 self.previous_message="qualcosa"
             
 
-    # def findDoctorwithtpatientID(self.patientID):
-
-    #     self.lista = self.dictionary["doctorList"]
-    #     for doctorObject in self.lista:
-    #         connectedDevice = doctorObject["connectedDevice"]
-    #         telegramID = connectedDevice["telegramID"] 
-    #         if doctortelegramID == telegramID: 
-    #             break
-    #         doctor_number += 1
-    #     return doctor_number        
+    def Update_PatientTelegramID (self,chat_ID, message):
+            filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+            f = open(filename)
+            self.catalog = json.load(f)
+            self.lista = self.catalog["doctorList"]
+            for doctorObject in self.lista:
+                patientList = doctorObject["patientList"]
+                for patientObject in patientList:
+                    patientID = patientObject["patientID"]
+                    if patientID == int(message):
+                        connectedDevice = patientObject["connectedDevice"]
+                        connectedDevice["telegramID"]=chat_ID
+                        print(f"{chat_ID}")
+            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                json.dump(self.catalog, f,indent=2)
+             
+                              
 
 
 
