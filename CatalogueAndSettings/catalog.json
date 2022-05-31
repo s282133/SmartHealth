@@ -7,7 +7,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 10,
+  "LastPatientID": 13,
   "LastDoctorID": 5,
   "doctorList": [
     {
@@ -30,7 +30,7 @@
             "pregnancyDayOne": "2022-02-31"
           },
           "connectedDevice": {
-            "devicesID": "raspberry1",
+            "deviceName": "raspberry1",
             "onlineSince": "2022-03-22",
             "mesureType": [
               "Heart Rate",
@@ -58,7 +58,7 @@
             "pregnancyDayOne": "2022-01-02"
           },
           "connectedDevice": {
-            "devicesID": "raspberry22",
+            "deviceName": "raspberry2",
             "onlineSince": "2022-02-01",
             "mesureType": [
               "Heart Rate",
@@ -77,19 +77,20 @@
           }
         },
         {
-          "patientID": 5,
-          "patientName": "Maria",
-          "patientSurname": "Rossi",
+          "patientID": 13,
+          "patientName": "Vasco",
+          "patientSurname": "Brondi",
           "personalData": {
             "taxIDcode": "ABCDEFGH",
             "userEmail": "mario.rossi@gmail.com",
             "pregnancyDayOne": "22/03/99"
           },
           "connectedDevice": {
-            "devicesID": "raspberry22",
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-05-31",
             "mesureType": [
               "Heart Rate",
-              "Pression",
+              "Pressure",
               "Temperature",
               "Glycemia"
             ],
@@ -103,8 +104,7 @@
       ],
       "devicesList": [
         {
-          "devicenName": "raspberry1",
-          "devicenID": 1,
+          "deviceName": "raspberry1",
           "patientID": 1,
           "measureType": [
             "Temperature",
@@ -126,8 +126,7 @@
           "lastUpdate": "2021-11-13 18:14"
         },
         {
-          "devicenName": "raspberry2",
-          "devicenID": 2,
+          "deviceName": "raspberry2",
           "patientID": 2,
           "measureType": [
             "Temperature",
@@ -143,6 +142,28 @@
               "serviceType": "MQTT",
               "topic": [
                 "/MySmartHealth/2/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 13,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
               ]
             }
           ],
@@ -171,7 +192,7 @@
             "pregnancyDayOne": "2022-02-31"
           },
           "connectedDevice": {
-            "devicesID": "raspberry1",
+            "deviceName": "raspberry1",
             "onlineSince": "2022-03-31",
             "mesureType": [
               "Heart Rate",
@@ -200,7 +221,7 @@
             "pregnancyDayOne": "2022-02-31"
           },
           "connectedDevice": {
-            "devicesID": "raspberry2",
+            "deviceName": "raspberry2",
             "onlineSince": "2022-03-31",
             "mesureType": [
               "Heart Rate",
@@ -221,8 +242,7 @@
       ],
       "devicesList": [
         {
-          "devicenName": "raspberry1",
-          "devicenID": 1,
+          "deviceName": "raspberry1",
           "patientID": 1,
           "measureType": [
             "Temperature",
@@ -244,8 +264,7 @@
           "lastUpdate": "2021-11-13 18:14"
         },
         {
-          "devicenName": "raspberry2",
-          "devicenID": 2,
+          "deviceName": "raspberry2",
           "patientID": 2,
           "measureType": [
             "Temperature",

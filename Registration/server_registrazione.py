@@ -104,6 +104,7 @@ class Registrazione(object):
 
         if uri[0] == "patients": 
 
+            # AGGIUNGERE NEI PAZIENTI IL NUOVO PAZIENTE
             body = cherrypy.request.body.read() 
             self.record = json.loads(body) 
 
@@ -117,7 +118,7 @@ class Registrazione(object):
                     "pregnancyDayOne": self.record["pregnancyDayOne"]
                 },
                 "connectedDevice": {
-                    "devicesID": self.record["devicesID"],
+                    "deviceName": self.record["deviceName"],
                     "onlineSince": time.strftime("%Y-%m-%d"),
                     "mesureType": [
                     "Heart Rate",
@@ -125,13 +126,13 @@ class Registrazione(object):
                     "Temperature",
                     "Glycemia"
                     ],
-                    "telegramID": 0,        # in realta è del paziente forse
+                    "telegramID": 0,        # DA AGGIORNARE FALLOOOOO
                     "thingspeakInfo": {
                     "channel": 0,
                     "apikeys": []
                     }
                 }
-                }
+                }    
 
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
@@ -144,11 +145,39 @@ class Registrazione(object):
             doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
 
+            # AGGIUNGERE NEI DEVICE IL NUOVO DEVICE
+            device = {
+                "deviceName": self.record["deviceName"],
+                "patientID": patient["patientID"],
+                "measureType": [
+                    "Temperature",
+                    "Battito cardiaco",
+                    "Pressione",
+                    "Glicemia"
+                ],
+                "availableServices": [
+                    "MQTT"
+                ],
+                "servicesDetails": [
+                    {
+                    "serviceType": "MQTT",
+                    "topic": [
+                        "/MySmartHealth/1/sensors/body"
+                    ]
+                    }
+                ],
+                "lastUpdate": "2021-11-13 18:14"
+            }
+
+            self.dictionary['doctorList'][doctor_number]['devicesList'].append(device)
+
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
+
+
 
 
     def findDoctorwithtelegramID(self, doctortelegramID):
