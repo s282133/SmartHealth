@@ -223,9 +223,22 @@ class SwitchBot:
 
         if message == "/start": 
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
-            self.bot.sendMessage(patient_ID, text="Bot avviato correttamente, riceverai presto dei promemoria")
+            self.bot.sendMessage(patient_ID, text="Bot avviato correttamente, manda il tuo codice identificativo fornito dal medico")
+            self.previous_message="/start"
+        
+        elif  self.previous_message == "/start":
+            if(int(message) < 0 or (int(message) > 100)):
+                self.bot.sendMessage(patient_ID, text=f"Il tuo codice identificativo è impossibile")  
+            else:
+                self.bot.sendMessage(text=f"Il tuo codice identificativo è: {message}")  
+                self.patientID = message
+                doctor = self.findDoctorwithtpatientID(self.patientID)
+                 # RICERCA E INSERIMENTO NEL CATALOGO
+                 
+
+
    
-        if message == "/peso": 
+        elif message == "/peso": 
             self.bot.sendMessage(patient_ID, text="Puoi inserire il tuo peso")
             self.previous_message="/peso"
         
@@ -241,10 +254,18 @@ class SwitchBot:
                 self.previous_message="qualcosa"
             
 
-          
-# self.telegramID=491287865 #telegramID Laura                  
-# messaggio = "Ricorda di pesarti oggi e di mandare a questo bot il tuo peso in kg scrivendo /pesati e poi il tuo peso, senza lasciare spazi, conserva due cifre dopo la virgola (Esempio: \pesati54)"
-# mybot.send_weight(self.telegramID,messaggio)
+    # def findDoctorwithtpatientID(self.patientID):
+
+    #     self.lista = self.dictionary["doctorList"]
+    #     for doctorObject in self.lista:
+    #         connectedDevice = doctorObject["connectedDevice"]
+    #         telegramID = connectedDevice["telegramID"] 
+    #         if doctortelegramID == telegramID: 
+    #             break
+    #         doctor_number += 1
+    #     return doctor_number        
+
+
 
 if __name__ == "__main__":
     
