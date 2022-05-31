@@ -232,9 +232,9 @@ class SwitchBot:
             else:
                 self.bot.sendMessage(text=f"Il tuo codice identificativo è: {message}")  
                 self.patientID = message
-                doctor = self.findDoctorwithtpatientID(self.patientID)
+                #doctor = self.findDoctorwithtpatientID(self.patientID)
                  # RICERCA E INSERIMENTO NEL CATALOGO
-                 
+                 # da fare qui
 
 
    
