@@ -17,6 +17,7 @@ class Thingspeak():
         elif topic!="P4IoT/SmartHealth/clientID/monitoring": #da cambiare    
             print(f"Topic is (else){topic}")
             self.measureType = message['e'][0]['n']
+            
             if self.measureType=="heartrate":
                 heart_rate=int(message['e'][0]['v'])
                 r1 = requests.get(f'https://api.thingspeak.com/update?api_key=FRN2A7XGJHIUSN24&field1={heart_rate}')

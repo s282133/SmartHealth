@@ -48,23 +48,23 @@ class dataAnalysisClass():
             self.timestamp = self.e[0]["t"]
             self.value = self.e[0]["v"]
 
-            currY = self.timestamp.split("-")[0]
-            currM = self.timestamp.split("-")[1]
-            currD = self.timestamp.split("-")[2]
-            currDays = int(currY)*365 + int(currM)*30 + int(currD)
+            # currY = self.timestamp.split("-")[0]
+            # currM = self.timestamp.split("-")[1]
+            # currD = self.timestamp.split("-")[2]
+            # currDays = int(currY)*365 + int(currM)*30 + int(currD)
 
-            print(f"DataAnalysisBlock: clientID : {self.clientID}")
-            dayOne = retrievePregnancyDayOne(int(self.clientID))            # @todo DA TESTARE
-            dayoneY = dayOne.split("-")[0]
-            dayoneM = dayOne.split("-")[1]
-            dayoneD = dayOne.split("-")[2]
-            dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
+            # print(f"DataAnalysisBlock: clientID : {self.clientID}")
+            # dayOne = retrievePregnancyDayOne(int(self.clientID))            # @todo DA TESTARE
+            # dayoneY = dayOne.split("-")[0]
+            # dayoneM = dayOne.split("-")[1]
+            # dayoneD = dayOne.split("-")[2]
+            # dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
 
-            week = (currDays - dayoneDays) / 7
-            if(week == 0): 
-                week = 1;
+            # week = (currDays - dayoneDays) / 7
+            # if(week == 0): 
+            #     week = 1;
 
-            print(f"TEST: week is {week}")
+            # print(f"TEST: week is {week}")
 
             #print(f"DataAnalysisBlock: patient dayOne is {dayOne}")
             #week = self.timestamp

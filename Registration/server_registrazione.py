@@ -9,6 +9,7 @@ from MyMQTT import *
 from time import sleep
 from collections import UserList
 from telepot.loop import MessageLoop
+import requests
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 import sys, os
@@ -106,8 +107,28 @@ class Registrazione(object):
 
             # AGGIUNGERE NEI PAZIENTI IL NUOVO PAZIENTE
             body = cherrypy.request.body.read() 
-            self.record = json.loads(body) 
-
+            self.record = json.loads(body)
+            channel={
+                "api_key":"OEUWTU8AH5MOIMKZ",
+                "name":"lillo",
+                "Field 1":"heart rate",
+                "Field 2":"pressure_high",
+                "Field 3":"glycemia",    
+                "Field 4":"pressure_low",            
+                "Field 5":"peso" 
+                }   
+            r=requests.post("https://api.thingspeak.com/channels.json",channel)
+            
+            print(f"Questo è il channel: {r.json()}")
+            
+            #print(r.json())
+            self.dicty=r.json()
+            self.api_key_w=self.dicty["api_keys"][0]
+            self.api_keys_write=self.api_key_w["api_key"]
+            self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
+            chennel_id=self.dicty["id"]
+            
+            
             patient = {
                 "patientID": 0,
                 "patientName": self.record["patientName"],
@@ -126,10 +147,13 @@ class Registrazione(object):
                     "Temperature",
                     "Glycemia"
                     ],
-                    "telegramID": 0,        # DA AGGIORNARE FALLOOOOO
+                    "telegramID": 0,        
                     "thingspeakInfo": {
-                    "channel": 0,
-                    "apikeys": []
+                    "channel": chennel_id,
+                    "apikeys": [
+                          self.api_keys_write,
+                          self.api_keys_read
+                    ]
                     }
                 }
                 }    

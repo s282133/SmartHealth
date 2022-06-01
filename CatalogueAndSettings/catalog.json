@@ -7,7 +7,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 13,
+  "LastPatientID": 22,
   "LastDoctorID": 5,
   "doctorList": [
     {
@@ -100,6 +100,236 @@
               "apikeys": []
             }
           }
+        },
+        {
+          "patientID": 14,
+          "patientName": "hh",
+          "patientSurname": "rgtgt",
+          "personalData": {
+            "taxIDcode": "ddd",
+            "userEmail": "ddd",
+            "pregnancyDayOne": "dd"
+          },
+          "connectedDevice": {
+            "deviceName": "3",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 15,
+          "patientName": "hh",
+          "patientSurname": "dvfrvg",
+          "personalData": {
+            "taxIDcode": "bbtvhivebe",
+            "userEmail": "rftg",
+            "pregnancyDayOne": "tg"
+          },
+          "connectedDevice": {
+            "deviceName": "5",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 16,
+          "patientName": "s",
+          "patientSurname": "f",
+          "personalData": {
+            "taxIDcode": "v",
+            "userEmail": "t",
+            "pregnancyDayOne": "t"
+          },
+          "connectedDevice": {
+            "deviceName": "4",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 17,
+          "patientName": "z",
+          "patientSurname": "a",
+          "personalData": {
+            "taxIDcode": "d",
+            "userEmail": "f",
+            "pregnancyDayOne": "t"
+          },
+          "connectedDevice": {
+            "deviceName": "6",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 18,
+          "patientName": "az",
+          "patientSurname": "a",
+          "personalData": {
+            "taxIDcode": "az",
+            "userEmail": "za",
+            "pregnancyDayOne": "z"
+          },
+          "connectedDevice": {
+            "deviceName": "4",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 19,
+          "patientName": "7",
+          "patientSurname": "5",
+          "personalData": {
+            "taxIDcode": "r",
+            "userEmail": "f",
+            "pregnancyDayOne": "f"
+          },
+          "connectedDevice": {
+            "deviceName": "5",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 20,
+          "patientName": "f",
+          "patientSurname": "r",
+          "personalData": {
+            "taxIDcode": "w",
+            "userEmail": "r",
+            "pregnancyDayOne": "6"
+          },
+          "connectedDevice": {
+            "deviceName": "6",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 0,
+              "apikeys": []
+            }
+          }
+        },
+        {
+          "patientID": 21,
+          "patientName": "2",
+          "patientSurname": "2",
+          "personalData": {
+            "taxIDcode": "2",
+            "userEmail": "2",
+            "pregnancyDayOne": "2"
+          },
+          "connectedDevice": {
+            "deviceName": "2",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "",
+              "apikeys": [
+                "ODQTK05Q2RACQANA"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 22,
+          "patientName": "a",
+          "patientSurname": "aa",
+          "personalData": {
+            "taxIDcode": "aaa",
+            "userEmail": "aaaaa",
+            "pregnancyDayOne": "aaaaa"
+          },
+          "connectedDevice": {
+            "deviceName": "aaaa",
+            "onlineSince": "2022-06-01",
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 786029508,
+            "thingspeakInfo": {
+              "channel": 1755747,
+              "apikeys": [
+                "IMK9I70L36J37T5Y",
+                "NS2UAMV7UDD04QPU"
+              ]
+            }
+          }
         }
       ],
       "devicesList": [
@@ -150,6 +380,204 @@
         {
           "deviceName": "raspberry22",
           "patientID": 13,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "3",
+          "patientID": 14,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "5",
+          "patientID": 15,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "4",
+          "patientID": 16,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "6",
+          "patientID": 17,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "4",
+          "patientID": 18,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "5",
+          "patientID": 19,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "6",
+          "patientID": 20,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "2",
+          "patientID": 21,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "aaaa",
+          "patientID": 22,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
