@@ -11,9 +11,7 @@ from unicodedata import name
 from telepot.loop import MessageLoop
 import sys, os
 from pprint import pprint
-
 sys.path.insert(0, os.path.abspath('..'))
-
 from commons.functionsOnCatalogue import *
 
 class dataAnalysisClass():
@@ -89,7 +87,6 @@ class dataAnalysisClass():
 
 
     # Funzioni di varifica del superamento della soglia e invio di un messaggio automatico a telegram 
-    # TODO: per queste funzioni descritte sotto dovremmo anche farci passare la SETTIMANA DI GRAVIDANZA
 
     def manageHeartRate(self, week):
         thresholdsHR = self.thresholdsFile["heartrate"]
@@ -229,16 +226,11 @@ class SwitchBot:
             monitoring = "ON"      
         else:
             monitoring = "OFF"
-        top = "P4IoT/SmartHealth/clientID/monitoring" 
+        top = "P4IoT/SmartHealth/clientID/monitoring"   #da generalizzare
         message =  {"status": monitoring}
         MQTTpubsub.myPublish(top, message)
         print(f"{message}")
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
-    
-    # def on_chat_weight_message(self, msg):
-    #     content_type, chat_type, patient_ID= telepot.glance(msg)
-    #     self.weight = msg['text']        
-
  
     def on_chat_patient_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
@@ -255,11 +247,7 @@ class SwitchBot:
             else:
                 self.bot.sendMessage(chat_ID, text=f"Il tuo codice identificativo è: {message}")                 
                 self.Update_PatientTelegramID(chat_ID,message)
-                 # RICERCA E INSERIMENTO NEL CATALOGO
-                 # da fare qui
 
-
-   
         elif message == "/peso": 
             self.bot.sendMessage(chat_ID, text="Puoi inserire il tuo peso")
             self.previous_message="/peso"
@@ -274,7 +262,6 @@ class SwitchBot:
                 MQTTpubsub.myPublish(topicc, peso)
                 print("published")
                 self.previous_message="qualcosa"
-            
 
     def Update_PatientTelegramID (self,chat_ID, message):
             filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
@@ -293,8 +280,6 @@ class SwitchBot:
                 json.dump(self.catalog, f,indent=2)
              
                               
-
-
 
 if __name__ == "__main__":
     
@@ -319,40 +304,5 @@ if __name__ == "__main__":
 
     while True:
         time.sleep(1)
-
-
-
-
-
-    # SwitchBot per connettersi al Bot telegram del dottore
-    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json'
-    conf=json.load(open(conf_fn))
-    token = conf["telegramToken"]
-    broker = conf["brokerIP"]
-    port = conf["brokerPort"]
-    topic = conf["mqttTopic"]
-    mybot=SwitchBot(token,broker,port,topic)
-
-    # SwitchBot per connettersi al Bot telegram del paziente
-    # token="5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U" #token Laura 
-    conf_pz = sys.path[0] + '\\CatalogueAndSettings\\settingsPatientTelegram.json'
-    conf=json.load(open(conf_pz))
-    token_pz = conf["telegramToken"]
-    broker_pz = conf["brokerIP"]
-    port_pz = conf["brokerPort"]
-    topic_pz = conf["mqttTopic"]
-    mybot_pz=SwitchBot(token_pz,broker_pz,port_pz,topic_pz)
-
-    # dataAnalysis per analizzare le soglie e mandare il messaggio telegram 
-    conf_fn2 = sys.path[0] + '\\CatalogueAndSettings\\settingsDoctorTelegram.json' #non ci andrebbe quello del dottore? quindi usiam quello già preso sopra 
-    conf = json.load(open(conf_fn2))
-    broker = conf["brokerIP"]
-    port = conf["brokerPort"]
-    MQTTpubsub = dataAnalysisClass("rpiSub", "P4IoT/SmartHealth/#", broker, port)
-    MQTTpubsub.start()    
-
-    while True:
-        time.sleep(1)
-
 
 

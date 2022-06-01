@@ -48,9 +48,6 @@ class Registrazione(object):
             self.catalog = json.load(f4)
             # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
             # self.catalog = json.load(f4)
-          
-            #chat_ID = "786029508"
-            #chat_ID = self.doctortelegramID
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
             for doctorObject in self.lista:
@@ -67,11 +64,9 @@ class Registrazione(object):
 
         if uri[0] == "doctors": 
             
-            # 1) prendere informazioni inserite 
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
 
-            # 2) formare la struttura per il catalogo
             doctor = {
                 "doctorID": 0,
                 "doctorName": self.record["doctorName"],
@@ -84,19 +79,18 @@ class Registrazione(object):
                 "patientList": []
             }
 
-            # 3) apro il catalogo
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
 
-            # 4) inserisco ID del dottore
+            # inserisco ID del dottore
             self.LastDoctorID = self.dictionary["LastDoctorID"]
             doctor["doctorID"] = self.LastDoctorID + 1
             self.dictionary["LastDoctorID"] = self.LastDoctorID + 1
 
-            # 5) inserisco il dottore nella lista
+            # inserisco il dottore nella lista
             self.dictionary['doctorList'].append(doctor) 
 
-            # 6) salvo il catalogo aggiornato
+            # salvo il catalogo aggiornato
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
@@ -105,9 +99,9 @@ class Registrazione(object):
 
         if uri[0] == "patients": 
 
-            # AGGIUNGERE NEI PAZIENTI IL NUOVO PAZIENTE
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
+
             channel={
                 "api_key":"OEUWTU8AH5MOIMKZ",
                 "name":"lillo",
@@ -120,14 +114,11 @@ class Registrazione(object):
             r=requests.post("https://api.thingspeak.com/channels.json",channel)
             
             print(f"Questo è il channel: {r.json()}")
-            
-            #print(r.json())
             self.dicty=r.json()
             self.api_key_w=self.dicty["api_keys"][0]
             self.api_keys_write=self.api_key_w["api_key"]
             self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
             chennel_id=self.dicty["id"]
-            
             
             patient = {
                 "patientID": 0,
@@ -169,7 +160,7 @@ class Registrazione(object):
             doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
 
-            # AGGIUNGERE NEI DEVICE IL NUOVO DEVICE
+            # aggiunta del device contemporaneamente al paziente
             device = {
                 "deviceName": self.record["deviceName"],
                 "patientID": patient["patientID"],
@@ -202,8 +193,6 @@ class Registrazione(object):
             return json.dumps(self.lista) 
 
 
-
-
     def findDoctorwithtelegramID(self, doctortelegramID):
         doctor_number = 0
         self.lista = self.dictionary["doctorList"]
@@ -228,7 +217,6 @@ class EchoBot():
         self.bot.sendMessage(chat_ID, str(chat_ID))
    
 
-#MAIN
 if __name__=="__main__":
 
     # Server per la registrazione

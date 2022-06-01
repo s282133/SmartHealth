@@ -1,8 +1,7 @@
 ### Description: This script runs on the Raspberry Pi and publishes the data collected from the sensors to the MQTT broker
 ###              You can regulate the polling period by changing the PERIODO_HR and PERIODO_PRESSURE variables
 ###              You can add more sensors easily, check the code below
-
-# ORA E' ANCHE UN SUBSCRIBER !
+###              It's also a subscriber cause recives data from "monitoring" command       
 
 from MyMQTT import *
 import time
@@ -24,7 +23,7 @@ from CatalogueAndSettings import *
 # periodo di polling in minuti
 POLLING_PERIOD_HR = 20               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 20         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 20       # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_GLYCEMIA = 20         # chiedo una misurazione ogni 20 minuti
 
 ONE_MINUTE_IN_SEC = 60              # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
@@ -45,12 +44,10 @@ class rpiPub():
         self.initSensors()
         while True:
             self.routineFunction() 
-        # for i in range(1,5):
-        #     self.routineFunction() 
 
     def start (self):
         self.client.start()
-        self.subTopic = f"P4IoT/SmartHealth/clientID/monitoring"
+        self.subTopic = f"P4IoT/SmartHealth/clientID/monitoring"      #da generalizzare
         self.client.mySubscribe(self.subTopic)
 
     def stop (self):
@@ -63,7 +60,7 @@ class rpiPub():
     def notify(self, topic, message):
         msg = json.loads(message)
         print(f"{self.clientID} received {msg} from topic: {topic}")
-        if topic != "P4IoT/SmartHealth/clientID/monitoring":
+        if topic != "P4IoT/SmartHealth/clientID/monitoring":           #da generalizzare
             pass
         else:
             status = msg["status"]
@@ -154,7 +151,6 @@ class rpiPub():
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
 
-    # altri sensori possono essere aggiunti qua
 
 if __name__ == "__main__":
 
@@ -162,26 +158,7 @@ if __name__ == "__main__":
     filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
     f = open(filename)
     catalog = json.load(f)
- 
-    # FUNZIONA
-    # patientID1 = str(123)
-    # thread1 = Thread(target=rpiPub, args=(patientID1,))
-    # patientID2 = str(456)
-    # thread2 = Thread(target=rpiPub, args=(patientID2,))
-    # thread1.start()
-    # time.sleep(2)
-    # thread2.start()
 
-    # FUNZIONA con stesso nome
-    # patientID1 = str(123)
-    # thread = Thread(target=rpiPub, args=(patientID1,))
-    # thread.start()
-    # time.sleep(2)
-    # patientID2 = str(456)
-    # thread = Thread(target=rpiPub, args=(patientID2,))
-    # thread.start()
-
-    # FUNZIONA con for
     doctorList = catalog["doctorList"]
     for doctorObject in doctorList:
         patientList = doctorObject["patientList"]
@@ -190,50 +167,3 @@ if __name__ == "__main__":
             thread = Thread(target=rpiPub, args=(str(patientID),))
             thread.start()
             time.sleep(5)
-
-
-
-
-    #rpi = rpiPub(patientID)      # qui devo definire il patientID, parla con le ragazze
-
-    # # ho spostato tutta la parte di sotto nella funzione "routineFunction"
-
-    # rpi.start()
-
-    # rpi.initSensors()
-
-    # counter = 0
-    
-    # monitoring = False
-
-    # while True:
-    #     if(monitoring == False):
-    #         if counter % POLLING_PERIOD_HR == 0:
-    #             time.sleep(SEC_WAIT_NO_MONITORING)
-    #             newMeasureHR = int(rpi.getHRmeasure(counter))
-    #             rpi.publishHR(newMeasureHR)
-    #         if counter % POLLING_PERIOD_PRESSURE == 0:
-    #             time.sleep(SEC_WAIT_NO_MONITORING)
-    #             newMeasurePressureDict = rpi.getPressuremeasure(counter)
-    #             rpi.publishPressure(newMeasurePressureDict)
-    #         if counter % POLLING_PERIOD_GLYCEMIA == 0:
-    #             time.sleep(SEC_WAIT_NO_MONITORING)
-    #             newMeasureGlycemia = int(rpi.getGlycemia(counter))
-    #             rpi.publishGlycemia(newMeasureGlycemia)
-    #         counter = counter + 1
-    #         time.sleep(ONE_MINUTE_IN_SEC)
-    #     else:
-    #         if counter % POLLING_PERIOD_HR == 0:
-    #             time.sleep(SEC_WAIT_MONITORING)
-    #             newMeasureHR = int(rpi.getHRmeasure(counter))
-    #             rpi.publishHR(newMeasureHR)
-    #         if counter % POLLING_PERIOD_PRESSURE == 0:
-    #             time.sleep(SEC_WAIT_MONITORING)
-    #             newMeasurePressureDict = rpi.getPressuremeasure(counter)
-    #             rpi.publishPressure(newMeasurePressureDict)
-    #         if counter % POLLING_PERIOD_GLYCEMIA == 0:
-    #             time.sleep(SEC_WAIT_MONITORING)
-    #             newMeasureGlycemia = int(rpi.getGlycemia(counter))
-    #             rpi.publishGlycemia(newMeasureGlycemia)
-    #         counter = counter + 1
-    #         time.sleep(ONE_MINUTE_IN_SEC)
