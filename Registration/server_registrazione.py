@@ -119,7 +119,7 @@ class Registrazione(object):
             self.api_keys_write=self.api_key_w["api_key"]
             self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
             chennel_id=self.dicty["id"]
-            
+            #bo
             patient = {
                 "patientID": 0,
                 "patientName": self.record["patientName"],

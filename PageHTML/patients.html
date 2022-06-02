@@ -36,19 +36,19 @@
                         <input type="text" class="form-control" id="surname">
                     </div>
                     <div class="form-group">
-                        <label for="measureType">TaxIDcode</label>
+                        <label for="measureType">Tax ID code</label>
                         <input type="text" class="form-control" id="taxidcode">
                     </div>
                     <div class="form-group">
-                        <label for="unit">Mail</label>
+                        <label for="unit">Patient Mail</label>
                         <input type="text" class="form-control" id="mail">
                     </div>
                     <div class="form-group">
-                        <label for="unit">Data</label>
+                        <label for="unit">First Pregnancy Day (aaaa-mm-gg) </label>
                         <input type="text" class="form-control" id="data">
                     </div>
                     <div class="form-group">
-                        <label for="unit">Device</label>
+                        <label for="unit">Device Name</label>
                         <input type="text" class="form-control" id="device">
                     </div>
                     
@@ -66,10 +66,10 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Surname</th>
-                            <th scope="col">TaxIDcode</th>
-                            <th scope="col">Mail</th>
-							<th scope="col">Data(aaaa-mm-gg)</th>
-							<th scope="col">Device</th>							
+                            <th scope="col">Tax ID code</th>
+                            <th scope="col">Patient Mail</th>
+							<th scope="col">First Pregnancy Day</th>
+							<th scope="col">Device Name</th>							
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -154,7 +154,7 @@
 					patient.personalData.pregnancyDayOne +
 					"</td>" +
 					"<td>" +
-					patient.connectedDevice.devicesID +
+					patient.connectedDevice.deviceName +
 					"</td>";
                 updatedTableBody += "</tr>";
             }
