@@ -46,27 +46,35 @@ class dataAnalysisClass():
             self.timestamp = self.e[0]["t"]
             self.value = self.e[0]["v"]
 
-            # currY = self.timestamp.split("-")[0]
-            # currM = self.timestamp.split("-")[1]
-            # currD = self.timestamp.split("-")[2]
-            # currDays = int(currY)*365 + int(currM)*30 + int(currD)
+            currY = self.timestamp.split("-")[0]
+            currM = self.timestamp.split("-")[1]
+            currD_hms = self.timestamp.split("-")[2]
+            currD = currD_hms.split(" ")[0]
+            #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
+            currDays = int(currY)*365 + int(currM)*30 + int(currD)
+            #print(f"DataAnalysisBlock: current day is {currDays}")
 
-            # print(f"DataAnalysisBlock: clientID : {self.clientID}")
-            # dayOne = retrievePregnancyDayOne(int(self.clientID))            # @todo DA TESTARE
-            # dayoneY = dayOne.split("-")[0]
-            # dayoneM = dayOne.split("-")[1]
-            # dayoneD = dayOne.split("-")[2]
-            # dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
+            #print(f"DataAnalysisBlock: clientID : {self.clientID}")
+            dayOne = retrievePregnancyDayOne(int(self.clientID))            
+            #print(f"DataAnalysisBlock: dayOne : {dayOne}")
+            dayoneY = dayOne.split("-")[0]
+            dayoneM = dayOne.split("-")[1]
+            dayoneD = dayOne.split("-")[2]
+            #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
+            dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
+            #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
 
-            # week = (currDays - dayoneDays) / 7
-            # if(week == 0): 
-            #     week = 1;
+            elapsedDays = currDays - dayoneDays
+            week = int(elapsedDays / 7)
+            if(week == 0): 
+                week = 1;
 
-            # print(f"TEST: week is {week}")
+            print(f"TEST: week of pregnancy of patient {self.clientID} is {week}, from {dayOne} to {currY}-{currM}-{currD}, {elapsedDays} elapsed days")
 
             #print(f"DataAnalysisBlock: patient dayOne is {dayOne}")
-            #week = self.timestamp
-            print(f"DataAnalysisBlock: timestamp is {self.timestamp}")
+            #print(f"DataAnalysisBlock: timestamp is {self.timestamp}")
+            #print(f"week of pregnancy of patient {self.clientID} is {week}")
+
 
         if (self.measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}")

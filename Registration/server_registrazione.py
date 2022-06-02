@@ -89,6 +89,7 @@ class Registrazione(object):
 
             # inserisco il dottore nella lista
             self.dictionary['doctorList'].append(doctor) 
+            # PROBLEMA (02-06-2022) : se parto dal catalog.json vuoto, non riesco a salvare il dottore
 
             # salvo il catalogo aggiornato
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
