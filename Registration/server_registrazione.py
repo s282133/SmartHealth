@@ -183,7 +183,7 @@ class Registrazione(object):
                     ]
                     }
                 ],
-                "lastUpdate": "2021-11-13 18:14"
+                "lastUpdate": time.strftime("%Y-%m-%d")
             }
 
             self.dictionary['doctorList'][doctor_number]['devicesList'].append(device)
