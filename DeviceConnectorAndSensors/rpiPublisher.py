@@ -152,6 +152,28 @@ class rpiPub():
             time.sleep(ONE_MINUTE_IN_SEC)
 
 
+def getWeek(dayOne):
+    currTime = time.strftime("%Y-%m-%d")
+    currY = currTime.split("-")[0]
+    currM = currTime.split("-")[1]
+    currD = currTime.split("-")[2]
+    #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
+    currDays = int(currY)*365 + int(currM)*30 + int(currD)
+    #print(f"DataAnalysisBlock: current day is {currDays}")
+
+    #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
+    #print(f"DataAnalysisBlock: dayOne : {dayOne}")
+    dayoneY = dayOne.split("-")[0]
+    dayoneM = dayOne.split("-")[1]
+    dayoneD = dayOne.split("-")[2]
+    #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
+    dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
+    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
+
+    elapsedDays = currDays - dayoneDays
+    week = int(elapsedDays / 7)
+
+
 if __name__ == "__main__":
 
 #aggiungere un while
@@ -165,7 +187,7 @@ if __name__ == "__main__":
 
         doctorList = catalog["doctorList"]
         if len(doctorList) > 0:
-            
+
             for doctorObject in doctorList:
                 patientList = doctorObject["patientList"]
                 if len(patientList) > 0:
@@ -183,5 +205,14 @@ if __name__ == "__main__":
                             patientID = userObject["patientID"] 
                             thread = Thread(target=rpiPub, args=(str(patientID),))
                             thread.start()
+
+                            # da testare
+                            dayOne = userObject["dayOne"] 
+                            week = getWeek(dayOne)
+                            if week >= 36:
+                                patientList.remove(userObject)
+                                with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                                    json.dump(catalog, f, indent=2)
+                            # fine da testare
 
         time.sleep(60)
