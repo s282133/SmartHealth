@@ -157,25 +157,31 @@ if __name__ == "__main__":
 #aggiungere un while
 
     #f = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
-    filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
-    f = open(filename)
-    catalog = json.load(f)
+    while True:
 
-    doctorList = catalog["doctorList"]
-    for doctorObject in doctorList:
-        patientList = doctorObject["patientList"]
+        filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+        f = open(filename)
+        catalog = json.load(f)
 
-        for userObject in patientList:
-            connectedDevice = userObject["connectedDevice"]
+        doctorList = catalog["doctorList"]
+        if len(doctorList) > 0:
+            
+            for doctorObject in doctorList:
+                patientList = doctorObject["patientList"]
+                if len(patientList) > 0:
 
-            if connectedDevice["onlineSince"] == -1:
-                connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
-                #f.close
+                    for userObject in patientList:
+                        connectedDevice = userObject["connectedDevice"]
 
-                with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
-                    json.dump(catalog, f, indent=2)
+                        if connectedDevice["onlineSince"] == -1:
+                            connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
+                            #f.close
 
-                patientID = userObject["patientID"] 
-                thread = Thread(target=rpiPub, args=(str(patientID),))
-                thread.start()
-                time.sleep(5)
+                            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                                json.dump(catalog, f, indent=2)
+
+                            patientID = userObject["patientID"] 
+                            thread = Thread(target=rpiPub, args=(str(patientID),))
+                            thread.start()
+
+        time.sleep(60)
