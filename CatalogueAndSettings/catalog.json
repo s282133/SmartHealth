@@ -31,7 +31,7 @@
           },
           "connectedDevice": {
             "deviceName": "raspberry1",
-            "onlineSince": "2022-03-22",
+            "onlineSince": "2022-06-03",
             "mesureType": [
               "Heart Rate",
               "Pression",
@@ -59,7 +59,7 @@
           },
           "connectedDevice": {
             "deviceName": "raspberry2",
-            "onlineSince": "2022-02-01",
+            "onlineSince": "2022-06-03",
             "mesureType": [
               "Heart Rate",
               "Pression",

@@ -213,13 +213,13 @@ class SwitchBot:
 
         if message == "/start": 
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
-            self.bot.sendMessage(chat_ID, text=f"Crea un tuo account personale a questo link: http://127.0.0.1:8080/start?chat_ID={chat_ID}")
+            self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: http://127.0.0.1:8080/start?chat_ID={chat_ID}")
 
         if message == "/registrazione_paziente": 
-            self.bot.sendMessage(chat_ID, text=f"Registra un nuovo paziente a questo link: http://127.0.0.1:8080/registrazione_paziente?chat_ID={chat_ID}")
+            self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: http://127.0.0.1:8080/registrazione_paziente?chat_ID={chat_ID}")
 
         if message == "/accesso_dati": 
-            self.bot.sendMessage(chat_ID, text='Access to data at this link')
+            self.bot.sendMessage(chat_ID, text='Access to data at this link: ')
 
     def on_callback_query(self, msg):
         query_ID , chat_ID , query_data = telepot.glance(msg,flavor='callback_query')
@@ -243,25 +243,25 @@ class SwitchBot:
 
         if message == "/start": 
             #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
-            self.bot.sendMessage(chat_ID, text="Bot avviato correttamente, manda il tuo codice identificativo fornito dal medico")
+            self.bot.sendMessage(chat_ID, text="Bot successfully started, send your patientID given you by doctor")
             self.previous_message="/start"
         
         elif  self.previous_message == "/start":
             if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(chat_ID, text=f"Il tuo codice identificativo è impossibile")  
+                self.bot.sendMessage(chat_ID, text=f"Your patientID is not possible")  
             else:
-                self.bot.sendMessage(chat_ID, text=f"Il tuo codice identificativo è: {message}")                 
+                self.bot.sendMessage(chat_ID, text=f"Your patientID is: {message}")                 
                 self.Update_PatientTelegramID(chat_ID,message)
 
         elif message == "/peso": 
-            self.bot.sendMessage(chat_ID, text="Puoi inserire il tuo peso")
+            self.bot.sendMessage(chat_ID, text="Please send your weight in kg")
             self.previous_message="/peso"
         
         elif  self.previous_message == "/peso":
             if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(chat_ID, text=f"Il tuo peso è impossibile")  
+                self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
             else:
-                self.bot.sendMessage(chat_ID, text=f"Il tuo peso è: {message} Kg")
+                self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
                 topicc="P4IoT/SmartHealth/peso"
                 peso =  {"status": message}
                 MQTTpubsub.myPublish(topicc, peso)
