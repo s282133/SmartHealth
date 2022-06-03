@@ -77,18 +77,15 @@ class dataAnalysisClass():
 
 
         if (self.measureType == "heartrate"):
-            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}")
-            week = "35"
+            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
             self.manageHeartRate(week)
         elif (self.measureType == "pressureHigh"):
             self.sensed_pressureHigh=self.e[0]["v"]
             self.sensed_pressureLow=self.e[1]["v"]
-            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}")
-            week = "1"
+            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
             self.managePressure(week)            
         elif (self.measureType == "glycemia"):
-            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}")
-            week = "1"
+            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
             self.manageGlycemia(week)
         else:
             print("Measure type not recognized")
