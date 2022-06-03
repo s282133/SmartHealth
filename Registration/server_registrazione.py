@@ -133,7 +133,7 @@ class Registrazione(object):
                 },
                 "connectedDevice": {
                     "deviceName": self.record["deviceName"],
-                    "onlineSince": time.strftime("%Y-%m-%d"),
+                    "onlineSince": -1,
                     "mesureType": [
                     "Heart Rate",
                     "Pressure",
