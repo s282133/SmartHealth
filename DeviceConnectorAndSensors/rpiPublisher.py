@@ -154,6 +154,8 @@ class rpiPub():
 
 if __name__ == "__main__":
 
+#aggiungere un while
+
     #f = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
     filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
     f = open(filename)
@@ -162,8 +164,18 @@ if __name__ == "__main__":
     doctorList = catalog["doctorList"]
     for doctorObject in doctorList:
         patientList = doctorObject["patientList"]
+
         for userObject in patientList:
-            patientID = userObject["patientID"] 
-            thread = Thread(target=rpiPub, args=(str(patientID),))
-            thread.start()
-            time.sleep(5)
+            connectedDevice = userObject["connectedDevice"]
+
+            if connectedDevice["onlineSince"] == -1:
+                connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
+                #f.close
+
+                with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                    json.dump(catalog, f, indent=2)
+
+                patientID = userObject["patientID"] 
+                thread = Thread(target=rpiPub, args=(str(patientID),))
+                thread.start()
+                time.sleep(5)
