@@ -76,7 +76,8 @@ class Registrazione(object):
                 "connectedDevice": {
                     "telegramID": self.telegramID
                 },
-                "patientList": []
+                "patientList": [],
+                "devicesList":[]
             }
 
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
@@ -203,6 +204,7 @@ class Registrazione(object):
             if doctortelegramID == telegramID: 
                 break
             doctor_number += 1
+            print(f"{doctor_number} belongs to {telegramID}")
         return doctor_number
 
 
