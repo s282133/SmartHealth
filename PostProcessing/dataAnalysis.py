@@ -36,7 +36,7 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        if topic != "P4IoT/SmartHealth/clientID/monitoring" and topic != "P4IoT/SmartHealth/peso":
+        if topic != f"P4IoT/SmartHealth/+/monitoring" and topic != "P4IoT/SmartHealth/peso": #da generalizzare
             d = json.loads(msg)
             self.bn = d["bn"]
             self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
@@ -67,7 +67,7 @@ class dataAnalysisClass():
             elapsedDays = currDays - dayoneDays
             week = int(elapsedDays / 7)
             if(week == 0): 
-                week = 1;
+                week = 1
 
             print(f"TEST: week of pregnancy of patient {self.clientID} is {week}, from {dayOne} to {currY}-{currM}-{currD}, {elapsedDays} elapsed days")
 
@@ -75,20 +75,20 @@ class dataAnalysisClass():
             #print(f"DataAnalysisBlock: timestamp is {self.timestamp}")
             #print(f"week of pregnancy of patient {self.clientID} is {week}")
 
-
-        if (self.measureType == "heartrate"):
-            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-            self.manageHeartRate(week)
-        elif (self.measureType == "pressureHigh"):
-            self.sensed_pressureHigh=self.e[0]["v"]
-            self.sensed_pressureLow=self.e[1]["v"]
-            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-            self.managePressure(week)            
-        elif (self.measureType == "glycemia"):
-            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-            self.manageGlycemia(week)
-        else:
-            print("Measure type not recognized")
+        
+            if (self.measureType == "heartrate"):
+                print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+                self.manageHeartRate(week)
+            elif (self.measureType == "pressureHigh"):
+                self.sensed_pressureHigh=self.e[0]["v"]
+                self.sensed_pressureLow=self.e[1]["v"]
+                print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+                self.managePressure(week)            
+            elif (self.measureType == "glycemia"):
+                print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+                self.manageGlycemia(week)
+            else:
+                print("Measure type not recognized")
 
 
     # Funzioni di varifica del superamento della soglia e invio di un messaggio automatico a telegram 
@@ -98,7 +98,7 @@ class dataAnalysisClass():
         for rangeHR in thresholdsHR:
             weekmin = rangeHR["weekrange"].split("-")[0]
             weekmax = rangeHR["weekrange"].split("-")[1]   
-            if (week >= weekmin and week <= weekmax):
+            if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
                     print(f"DataAnalysisBlock: heart rate is in range")
                 else:
@@ -118,7 +118,7 @@ class dataAnalysisClass():
         for rangePR in thresholdsPR:
             weekmin = rangePR["weekrange"].split("-")[0]
             weekmax = rangePR["weekrange"].split("-")[1]
-            if (week >= weekmin and week <= weekmax):
+            if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 highmax=rangePR["high"]["max"]
                 highmin=rangePR["high"]["min"]
                 lowmax=rangePR["low"]["max"]
@@ -143,7 +143,7 @@ class dataAnalysisClass():
         for rangeGL in thresholdsGL:
             weekmin = rangeGL["weekrange"].split("-")[0]
             weekmax = rangeGL["weekrange"].split("-")[1]
-            if (week >= weekmin and week <= weekmax):
+            if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (int(self.value) >= int(rangeGL["min"]) and int(self.value) <= int(rangeGL["max"])):
                     print(f"DataAnalysisBlock: glycemia is in range")
                 else:
@@ -221,8 +221,8 @@ class SwitchBot:
         if message == "/accesso_dati": 
             self.bot.sendMessage(chat_ID, text='Access to data at this link: ')
 
-    def on_callback_query(self, msg):
-        query_ID , chat_ID , query_data = telepot.glance(msg,flavor='callback_query')
+    def on_callback_query(self, messaggio):
+        query_ID , chat_ID , query_data = telepot.glance(messaggio,flavor='callback_query')
         payload = self.__message.copy()
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
@@ -231,7 +231,13 @@ class SwitchBot:
             monitoring = "ON"      
         else:
             monitoring = "OFF"
-        top = "P4IoT/SmartHealth/clientID/monitoring"   #da generalizzare
+
+        mes=messaggio["message"]["text"]
+        print(mes)
+        self.patientID = mes.split(" ")[2]
+        print(self.patientID)
+        
+        top = f"P4IoT/SmartHealth/{self.patientID}/monitoring"   #da generalizzare
         message =  {"status": monitoring}
         MQTTpubsub.myPublish(top, message)
         print(f"{message}")
@@ -262,11 +268,13 @@ class SwitchBot:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
             else:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
-                topicc="P4IoT/SmartHealth/peso"
+                #patientID = self.findPatient(chat_ID)
+                #topicc=f"P4IoT/SmartHealth/{patientID}/peso"
+                topicc=f"P4IoT/SmartHealth/peso"
                 peso =  {"status": message}
                 MQTTpubsub.myPublish(topicc, peso)
                 print("published")
-                self.previous_message="qualcosa"
+                self.previous_message=""
 
     def Update_PatientTelegramID (self,chat_ID, message):
             filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
@@ -284,6 +292,19 @@ class SwitchBot:
             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
              
+    def findPatient(self, chat_ID):
+        #telegramID = 0
+        for doctorObject in self.lista:
+            patientList = doctorObject["patientList"]
+            for userObject in patientList:
+                connectedDevice = userObject["connectedDevice"] 
+                telegramID = connectedDevice["telegramID"]
+                if  chat_ID == telegramID:
+                    patientID = userObject["patientID"] 
+                    break
+            if telegramID > 0: 
+                break
+        return patientID   
                               
 
 if __name__ == "__main__":

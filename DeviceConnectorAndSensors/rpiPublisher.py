@@ -47,7 +47,7 @@ class rpiPub():
 
     def start (self):
         self.client.start()
-        self.subTopic = f"P4IoT/SmartHealth/clientID/monitoring"      #da generalizzare
+        self.subTopic = f"P4IoT/SmartHealth/{self.client}/monitoring"      #da generalizzare
         self.client.mySubscribe(self.subTopic)
 
     def stop (self):
@@ -60,7 +60,7 @@ class rpiPub():
     def notify(self, topic, message):
         msg = json.loads(message)
         print(f"{self.clientID} received {msg} from topic: {topic}")
-        if topic != "P4IoT/SmartHealth/clientID/monitoring":           #da generalizzare
+        if topic != f"P4IoT/SmartHealth/{self.client}/monitoring":           #da generalizzare
             pass
         else:
             status = msg["status"]
