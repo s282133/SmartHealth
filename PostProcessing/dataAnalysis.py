@@ -36,7 +36,7 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        if topic != f"P4IoT/SmartHealth/+/monitoring" and topic != "P4IoT/SmartHealth/peso": #da generalizzare
+        if topic != f"P4IoT/SmartHealth/+/monitoring" and topic != "P4IoT/SmartHealth/+/peso": #da generalizzare
             d = json.loads(msg)
             self.bn = d["bn"]
             self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
@@ -268,9 +268,8 @@ class SwitchBot:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
             else:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
-                #patientID = self.findPatient(chat_ID)
-                #topicc=f"P4IoT/SmartHealth/{patientID}/peso"
-                topicc=f"P4IoT/SmartHealth/peso"
+                patientID = self.findPatient(chat_ID)
+                topicc=f"P4IoT/SmartHealth/{patientID}/peso"
                 peso =  {"status": message}
                 MQTTpubsub.myPublish(topicc, peso)
                 print("published")
@@ -294,6 +293,10 @@ class SwitchBot:
              
     def findPatient(self, chat_ID):
         #telegramID = 0
+        filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+        f = open(filename)
+        self.catalog = json.load(f)
+        self.lista = self.catalog["doctorList"]
         for doctorObject in self.lista:
             patientList = doctorObject["patientList"]
             for userObject in patientList:
