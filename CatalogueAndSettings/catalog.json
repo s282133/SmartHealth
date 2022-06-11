@@ -75,62 +75,6 @@
               ]
             }
           }
-        },
-        {
-          "patientID": 6,
-          "patientName": "Margarida",
-          "patientSurname": "Pereira Marques",
-          "personalData": {
-            "taxIDcode": "noncelho",
-            "userEmail": "mpm@gmail.com",
-            "pregnancyDayOne": "2022-05-30"
-          },
-          "connectedDevice": {
-            "deviceName": "raspberry3",
-            "onlineSince": "2022-06-02",
-            "mesureType": [
-              "Heart Rate",
-              "Pressure",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 298694124,
-            "thingspeakInfo": {
-              "channel": 1756519,
-              "apikeys": [
-                "92MUP25DN5GQHFOM",
-                "JFJYSNH4K5LF8KOK"
-              ]
-            }
-          }
-        },
-        {
-          "patientID": 7,
-          "patientName": "Paola",
-          "patientSurname": "Brondi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "vasco.brondi@gmail.com",
-            "pregnancyDayOne": "2022-99-03"
-          },
-          "connectedDevice": {
-            "deviceName": "raspberry22",
-            "onlineSince": "2022-06-02",
-            "mesureType": [
-              "Heart Rate",
-              "Pressure",
-              "Temperature",
-              "Glycemia"
-            ],
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 1756607,
-              "apikeys": [
-                "T7OXD4FVAJ29A5CY",
-                "JALF8565M52AY65X"
-              ]
-            }
-          }
         }
       ],
       "devicesList": [

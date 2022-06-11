@@ -172,6 +172,7 @@ def getWeek(dayOne):
 
     elapsedDays = currDays - dayoneDays
     week = int(elapsedDays / 7)
+    return week
 
 
 if __name__ == "__main__":
@@ -206,13 +207,16 @@ if __name__ == "__main__":
                             thread = Thread(target=rpiPub, args=(str(patientID),))
                             thread.start()
 
-                            # da testare
-                            dayOne = userObject["dayOne"] 
-                            week = getWeek(dayOne)
-                            if week >= 36:
-                                patientList.remove(userObject)
-                                with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
-                                    json.dump(catalog, f, indent=2)
-                            # fine da testare
+                            print(f"{patientID} is online")
+
+                        # da testare
+                        dayOne = userObject["personalData"]["pregnancyDayOne"] 
+                        week = getWeek(dayOne)
+                        print(f'Patient {userObject["patientID"]} is in week {week}')
+                        if int(week) >= 36:
+                            patientList.remove(userObject)
+                            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                                json.dump(catalog, f, indent=2)
+                        # fine da testare
 
         time.sleep(60)
