@@ -1,3 +1,0 @@
-1) Estendere il file dataAnalysis con funzioni da publisher MQTT;
-2) Creare una sola istanza del file MyMQTT;
-3) Mettere vettori sensati di misure simulate nei sensori di pressure e glycemia.
