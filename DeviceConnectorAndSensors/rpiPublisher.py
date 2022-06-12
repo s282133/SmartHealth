@@ -3,7 +3,7 @@
 ###              You can add more sensors easily, check the code below
 ###              It's also a subscriber cause recives data from "monitoring" command       
 
-from MyMQTT import *
+# from MyMQTT import *
 import time
 import json
 import paho.mqtt.client as PahoMQTT
@@ -19,6 +19,7 @@ from glycemiaSensor import glycemiaSensorClass
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 from CatalogueAndSettings import *
+from commons.MyMQTT import *
 
 # periodo di polling in minuti
 POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
@@ -209,7 +210,7 @@ if __name__ == "__main__":
 
                             print(f"{patientID} is online")
 
-                        # da testare
+                        # remove entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
                         dayOne = userObject["personalData"]["pregnancyDayOne"] 
                         week = getWeek(dayOne)
                         print(f'Patient {userObject["patientID"]} is in week {week}')
@@ -217,6 +218,5 @@ if __name__ == "__main__":
                             patientList.remove(userObject)
                             with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
                                 json.dump(catalog, f, indent=2)
-                        # fine da testare
 
         time.sleep(60)

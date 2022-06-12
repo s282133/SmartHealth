@@ -1,8 +1,13 @@
-from MyMQTT import *
+# from MyMQTT import *
 import json
 import time
 import requests
-import sys
+# import sys
+
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
+from commons.MyMQTT import *
+
 
 class Thingspeak():
     def __init__(self,broker,port):

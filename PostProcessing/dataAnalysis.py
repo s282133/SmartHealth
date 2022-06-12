@@ -2,7 +2,7 @@
 #se dovesse servire: self.telegramID=491287865 #telegramID Laura
 
 from gettext import Catalog
-from MyMQTT import *
+# from MyMQTT import *
 import time
 import json
 import telepot
@@ -13,6 +13,7 @@ import sys, os
 from pprint import pprint
 sys.path.insert(0, os.path.abspath('..'))
 from commons.functionsOnCatalogue import *
+from commons.MyMQTT import *
 
 class dataAnalysisClass():
 

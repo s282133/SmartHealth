@@ -3,7 +3,11 @@ import telepot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 import json
 import time
-from MyMQTT import *
+# from MyMQTT import *
+
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
+from commons.MyMQTT import *
 
 #creare classe per successivo oggetto cherrypy
 class telegram_subscriber():

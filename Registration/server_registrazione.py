@@ -5,7 +5,7 @@ import json
 import time
 import telepot
 import cherrypy
-from MyMQTT import *
+# from MyMQTT import *
 from time import sleep
 from collections import UserList
 from telepot.loop import MessageLoop
@@ -15,6 +15,7 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 from PageHTML import *
+from commons.MyMQTT import *
 
 class Registrazione(object):
     exposed=True
