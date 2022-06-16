@@ -12,9 +12,18 @@ from unicodedata import name
 from telepot.loop import MessageLoop
 import sys, os
 from pprint import pprint
+
 sys.path.insert(0, os.path.abspath('..'))
-from commons.functionsOnCatalogue import *
+
+#my_lib_path = os.path.abspath('../../../mypackage')
+#sys.path.append(my_lib_path)
+
+
+#sys.path.insert(0, os.path.abspath('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso'))
+#sys.path.insert(0, os.path.abspath('commons'))
+
 from commons.MyMQTT import *
+from commons.functionsOnCatalogue import *
 
 class dataAnalysisClass():
 
