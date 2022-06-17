@@ -13,11 +13,7 @@ import requests
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 import sys, os
-sys.path.insert(0, os.path.abspath('.'))
-print(sys.path[0])
-#print(sys.path)
-
-quit()
+sys.path.insert(0, os.path.abspath('..'))
 
 from PageHTML import *
 from commons.MyMQTT import *

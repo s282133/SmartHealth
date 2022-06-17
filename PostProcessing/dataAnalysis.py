@@ -15,13 +15,6 @@ from pprint import pprint
 
 sys.path.insert(0, os.path.abspath('..'))
 
-#my_lib_path = os.path.abspath('../../../mypackage')
-#sys.path.append(my_lib_path)
-
-
-#sys.path.insert(0, os.path.abspath('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso'))
-#sys.path.insert(0, os.path.abspath('commons'))
-
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
@@ -47,7 +40,8 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        if topic != f"P4IoT/SmartHealth/+/monitoring" and topic != "P4IoT/SmartHealth/+/peso": #da generalizzare
+        if topic != f"P4IoT/SmartHealth/+/peso" and topic != f"P4IoT/SmartHealth/+/monitoring" :
+            print(f"sono finito qui {topic}")
             d = json.loads(msg)
             self.bn = d["bn"]
             self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
@@ -101,7 +95,8 @@ class dataAnalysisClass():
             else:
                 print("Measure type not recognized")
 
-
+        elif topic==f"P4IoT/SmartHealth/+/peso":
+            print(f"sono finito qui {topic}")
     # Funzioni di varifica del superamento della soglia e invio di un messaggio automatico a telegram 
 
     def manageHeartRate(self, week):
@@ -255,6 +250,7 @@ class SwitchBot:
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
  
     def on_chat_patient_message(self, msg):
+        #capire come gestire il previous message
         content_type, chat_type, chat_ID = telepot.glance(msg)
         message = msg['text']
 
@@ -265,10 +261,21 @@ class SwitchBot:
         
         elif  self.previous_message == "/start":
             if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(chat_ID, text=f"Your patientID is not possible")  
+                self.bot.sendMessage(chat_ID, text=f"Your patientID is not possible") 
+                self.previous_message="" 
             else:
                 self.bot.sendMessage(chat_ID, text=f"Your patientID is: {message}")                 
                 self.Update_PatientTelegramID(chat_ID,message)
+                self.previous_message=""
+
+        elif message == "/help":
+            self.bot.sendMessage(chat_ID, text="You can send /start to log in\n You can send /peso toregister your weight\n You can send /survey to complete a survey") 
+            self.previous_message="/help"
+
+
+        elif message == "/survey":
+            self.bot.sendMessage(chat_ID, text="You can complete the survey at this link: ")
+            self.previous_message="/survey"
 
         elif message == "/peso": 
             self.bot.sendMessage(chat_ID, text="Please send your weight in kg")
@@ -279,10 +286,12 @@ class SwitchBot:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
             else:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
-                patientID = self.findPatient(chat_ID)
-                topicc=f"P4IoT/SmartHealth/{patientID}/peso"
+                self.patientID = self.findPatient(chat_ID)
+                #topicc= f"P4IoT/SmartHealth/peso"
+                self.patientID=str(self.patientID)
+                topic=f"P4IoT/SmartHealth/{self.patientID}/peso" 
                 peso =  {"status": message}
-                MQTTpubsub.myPublish(topicc, peso)
+                MQTTpubsub.myPublish(topic, peso)
                 print("published")
                 self.previous_message=""
 
@@ -343,6 +352,6 @@ if __name__ == "__main__":
     MQTTpubsub.start()    
 
     while True:
-        time.sleep(1)
+        time.sleep(10)
 
 
