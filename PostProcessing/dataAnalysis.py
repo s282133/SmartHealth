@@ -40,7 +40,10 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        if topic != f"P4IoT/SmartHealth/+/peso" and topic != f"P4IoT/SmartHealth/+/monitoring" :
+        #if topic != f"P4IoT/SmartHealth/+/peso" and topic != f"P4IoT/SmartHealth/+/monitoring" :
+        subtopic = topic.split("/")[3]
+        print(f"subtopic: {subtopic}")
+        if subtopic != "peso" and subtopic != "monitoring":
             print(f"sono finito qui {topic}")
             d = json.loads(msg)
             self.bn = d["bn"]
@@ -282,13 +285,18 @@ class SwitchBot:
             self.previous_message="/peso"
         
         elif  self.previous_message == "/peso":
+            
             if(int(message) < 0 or (int(message) > 100)):
                 self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
             else:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
+                print (f"Chat ID: {chat_ID}")
                 self.patientID = self.findPatient(chat_ID)
-                #topicc= f"P4IoT/SmartHealth/peso"
-                self.patientID=str(self.patientID)
+                
+                if self.patientID == 0:
+                    print("Paziente non trovato")
+                    exit
+                
                 topic=f"P4IoT/SmartHealth/{self.patientID}/peso" 
                 peso =  {"status": message}
                 MQTTpubsub.myPublish(topic, peso)
@@ -312,10 +320,11 @@ class SwitchBot:
                 json.dump(self.catalog, f,indent=2)
              
     def findPatient(self, chat_ID):
-        #telegramID = 0
         filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
         f = open(filename)
         self.catalog = json.load(f)
+
+        patientID=0
         self.lista = self.catalog["doctorList"]
         for doctorObject in self.lista:
             patientList = doctorObject["patientList"]
@@ -325,7 +334,7 @@ class SwitchBot:
                 if  chat_ID == telegramID:
                     patientID = userObject["patientID"] 
                     break
-            if telegramID > 0: 
+            if patientID > 0: 
                 break
         return patientID   
                               
