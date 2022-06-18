@@ -118,6 +118,8 @@ class rpiPub():
         self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/glycemia", messageGL)
         print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/glycemia")
 
+
+
     def routineFunction(self):
         if(self.monitoring == False):
             print("Monitoraggio OFF")
@@ -151,6 +153,21 @@ class rpiPub():
                 self.publishGlycemia(newMeasureGlycemia)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
+
+    # TEMPERATURE
+    
+    def getTemperature(self):
+        newMeasureTemperature = self.temperatureSensor.getGlycemia()
+        return newMeasureTemperature
+
+    def publishTemperature(self, measureTemp):
+        timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        temperature = measureTemp["pressureHigh"]
+        messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": temperature}]}
+        self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/temperature", messagePR)
+        print(f"{self.clientID} published {temperature} with topic: P4IoT/SmartHealth/{self.clientID}/temperature")
+
+
 
 
 def getWeek(dayOne):
