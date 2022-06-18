@@ -156,16 +156,16 @@ class rpiPub():
 
     # TEMPERATURE
     
-    def getTemperature(self):
-        newMeasureTemperature = self.temperatureSensor.getGlycemia()
-        return newMeasureTemperature
+    # def getTemperature(self):
+    #     newMeasureTemperature = self.temperatureSensor.getTemperature()
+    #     return newMeasureTemperature
 
-    def publishTemperature(self, measureTemp):
-        timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        temperature = measureTemp["pressureHigh"]
-        messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": temperature}]}
-        self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/temperature", messagePR)
-        print(f"{self.clientID} published {temperature} with topic: P4IoT/SmartHealth/{self.clientID}/temperature")
+    # def publishTemperature(self, measureTemp):
+    #     timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #     temperature = measureTemp["temperature"]
+    #     messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": temperature}]}
+    #     self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/temperature", messagePR)
+    #     print(f"{self.clientID} published {temperature} with topic: P4IoT/SmartHealth/{self.clientID}/temperature")
 
 
 
