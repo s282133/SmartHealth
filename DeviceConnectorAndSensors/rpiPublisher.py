@@ -4,6 +4,7 @@
 ###              It's also a subscriber cause recives data from "monitoring" command       
 
 # from MyMQTT import *
+from ipaddress import ip_address
 import time
 import json
 import paho.mqtt.client as PahoMQTT
@@ -15,6 +16,9 @@ import sys
 from heartrateSensor import heartrateSensorClass
 from pressureSensor import pressureSensorClass
 from glycemiaSensor import glycemiaSensorClass
+from temperatureSensor import temperatureSensorClass
+
+
 
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
@@ -25,6 +29,7 @@ from commons.MyMQTT import *
 POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 3         # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 4         # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_TEMPERATURE = 2      # chiedo una misurazione ogni 5 minuti
 
 ONE_MINUTE_IN_SEC = 0              # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
@@ -77,7 +82,8 @@ class rpiPub():
         self.heartrateSensor = heartrateSensorClass()
         self.pressureSensor = pressureSensorClass()
         self.glycemiaSensor = glycemiaSensorClass()
-
+        self.temperatureSensor = temperatureSensorClass()
+ 
     # HEARTRATE
 
     def getHRmeasure(self, counter):
@@ -119,6 +125,19 @@ class rpiPub():
         print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/glycemia")
 
 
+    # TEMPERATURE
+    
+    def getTemperature(self):
+        self.ipAddress = self.getIpAddress(self.clientID)
+        newMeasureTemperature = self.temperatureSensor.getTemperature(self.ipAddress)
+        return newMeasureTemperature
+
+    def publishTemperature(self, measureTemp):
+        timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
+        self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/temperature", messagePR)
+        print(f"{self.clientID} published {measureTemp} with topic: P4IoT/SmartHealth/{self.clientID}/temperature")
+
 
     def routineFunction(self):
         if(self.monitoring == False):
@@ -135,6 +154,10 @@ class rpiPub():
                 time.sleep(SEC_WAIT_NO_MONITORING)
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
+            if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
+                time.sleep(SEC_WAIT_NO_MONITORING)
+                newMeasureTemperature = int(self.getTemperature())
+                self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
         else:
@@ -151,24 +174,16 @@ class rpiPub():
                 time.sleep(SEC_WAIT_MONITORING)
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
+            if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
+                time.sleep(SEC_WAIT_MONITORING)
+                newMeasureTemperature = int(self.getTemperature())
+                self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
 
-    # TEMPERATURE
-    
-    # def getTemperature(self):
-    #     newMeasureTemperature = self.temperatureSensor.getTemperature()
-    #     return newMeasureTemperature
-
-    # def publishTemperature(self, measureTemp):
-    #     timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    #     temperature = measureTemp["temperature"]
-    #     messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": temperature}]}
-    #     self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/temperature", messagePR)
-    #     print(f"{self.clientID} published {temperature} with topic: P4IoT/SmartHealth/{self.clientID}/temperature")
-
-
-
+    def getIpAddress(self, clientID):
+        ipAdress = "192.168.1.254"
+        return ipAdress
 
 def getWeek(dayOne):
     currTime = time.strftime("%Y-%m-%d")
@@ -224,6 +239,8 @@ if __name__ == "__main__":
                             patientID = userObject["patientID"] 
                             thread = Thread(target=rpiPub, args=(str(patientID),))
                             thread.start()
+                            #self.rpiPub = rpiPub()
+                            
 
                             print(f"{patientID} is online")
 
