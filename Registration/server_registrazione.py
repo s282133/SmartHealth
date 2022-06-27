@@ -103,6 +103,10 @@ class Registrazione(object):
 
         if uri[0] == "patients": 
 
+            # macaddress
+            macaddress = requests.get("http://192.168.1.254:8080/macaddress")
+
+
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
 
@@ -123,7 +127,7 @@ class Registrazione(object):
             self.api_keys_write=self.api_key_w["api_key"]
             self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
             chennel_id=self.dicty["id"]
-            #bo
+            
             patient = {
                 "patientID": 0,
                 "patientName": self.record["patientName"],
