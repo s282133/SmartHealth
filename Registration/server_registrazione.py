@@ -168,6 +168,7 @@ class Registrazione(object):
             device = {
                 "deviceName": self.record["deviceName"],
                 "patientID": patient["patientID"],
+                "ipAddress": "0.0.0.0",
                 "measureType": [
                     "Temperature",
                     "Battito cardiaco",
