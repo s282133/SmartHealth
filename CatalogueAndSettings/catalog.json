@@ -7,7 +7,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 7,
+  "LastPatientID": 8,
   "LastDoctorID": 2,
   "doctorList": [
     {
@@ -75,6 +75,34 @@
               ]
             }
           }
+        },
+        {
+          "patientID": 8,
+          "patientName": "aaaa",
+          "patientSurname": "bbbb",
+          "personalData": {
+            "taxIDcode": "cccc",
+            "userEmail": "dddd",
+            "pregnancyDayOne": "eeee"
+          },
+          "connectedDevice": {
+            "deviceName": "f",
+            "onlineSince": -1,
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
         }
       ],
       "devicesList": [
@@ -82,6 +110,7 @@
           "deviceName": "raspberry1",
           "patientID": 1,
           "ipAddress": "",
+          "macAddress": "",
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -105,6 +134,7 @@
           "deviceName": "raspberry2",
           "patientID": 2,
           "ipAddress": "",
+          "macAddress": "",
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -123,6 +153,30 @@
             }
           ],
           "lastUpdate": "2021-11-13 18:14"
+        },
+        {
+          "deviceName": "f",
+          "patientID": 8,
+          "ipAddress": "0.0.0.0",
+          "macAddress": "b8:27:eb:81:80:64",
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2022-06-28"
         }
       ]
     },
@@ -200,6 +254,7 @@
           "deviceName": "raspberry3",
           "patientID": 3,
           "ipAddress": "",
+          "macAddress": "",
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -223,6 +278,7 @@
           "deviceName": "raspberry4",
           "patientID": 4,
           "ipAddress": "",
+          "macAddress": "",
           "measureType": [
             "Temperature",
             "Battito cardiaco",

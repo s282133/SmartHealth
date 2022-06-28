@@ -5,6 +5,7 @@ import json
 import time
 import telepot
 import cherrypy
+import socket
 # from MyMQTT import *
 from time import sleep
 from collections import UserList
@@ -26,7 +27,7 @@ class Registrazione(object):
         if uri[0] == "start": 
             self.telegramID = params["chat_ID"]
             #f1 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\doctors.html')   
-            filename = sys.path[0] + '\\PageHTML\\doctors.html'
+            filename = 'PageHTML\\doctors.html'
             f1 = open(filename)
             fileContent = f1.read()      
             f1.close()
@@ -34,9 +35,20 @@ class Registrazione(object):
 
         # apertura pagina html per registrazione paziente
         if uri[0] == "registrazione_paziente": 
+
+            # macaddress
+            try:
+                r = requests.get("http://192.168.1.254:8080/macaddress", verify=False, timeout=5)
+                self.macaddress = r.text
+            except requests.exceptions.RequestException as e:  # This is the correct syntax
+                #raise SystemExit(e)
+                self.macaddress = "b8:27:eb:81:80:64"
+                #print(requests.status_codes)
+                #return "Collegare il raspberry"
+
             self.doctortelegramID = params["chat_ID"]
             #f2 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\patients.html')   
-            filename = sys.path[0] + '\\PageHTML\\patients.html'
+            filename = 'PageHTML\\patients.html'
             f2 = open(filename)
             fileContent = f2.read()      
             f2.close()
@@ -45,7 +57,7 @@ class Registrazione(object):
         # apertura tabella con dati iniziali
         if uri[0] == "tabella": 
 
-            filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\catalog.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
             # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
@@ -83,7 +95,7 @@ class Registrazione(object):
             }
 
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
-            self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
+            self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
 
             # inserisco ID del dottore
             self.LastDoctorID = self.dictionary["LastDoctorID"]
@@ -96,16 +108,47 @@ class Registrazione(object):
 
             # salvo il catalogo aggiornato
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
-            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+            with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
 
 
+        #Chiamata post fatta dal raspberry per ottenere il suo macaddresse il suo ipaddress
+        if uri[0] == "ipaddress": 
+
+            body = cherrypy.request.body.read() 
+            self.raspberry = json.loads(body)
+
+            # raspberry = {
+            #     "ipaddress": "",
+            #     "macaddress": ""
+            # }
+
+            #catalog_fn = 'CatalogueAndSettings\\catalog.json'
+            catalog_fn = 'CatalogueAndSettings\\catalog.json'
+            self.catalog = json.load(open(catalog_fn))
+            self.doctorlist = self.catalog["doctorList"]
+            
+            macaddress = self.raspberry["macaddress"]
+            ipaddress  = self.raspberry["ipaddress"]
+
+            bool_modificato=False
+            for doctorObject in self.doctorlist:
+                devicesList = doctorObject["devicesList"]
+                for deviceObject in devicesList:
+                    macAddress = deviceObject["macAddress"] 
+                    if  macaddress == macAddress:
+                        deviceObject["ipAddress"] = ipaddress
+                        bool_modificato=True
+
+            if bool_modificato:
+                with open('CatalogueAndSettings\\catalog.json', "w") as f:
+                    json.dump(self.dictionary, f, indent=2)
+
+            return "ok"
+
+        #Chiamata post per registrare il paziente
         if uri[0] == "patients": 
-
-            # macaddress
-            macaddress = requests.get("http://192.168.1.254:8080/macaddress")
-
 
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
@@ -119,15 +162,18 @@ class Registrazione(object):
                 "Field 4":"pressure_low",            
                 "Field 5":"peso" 
                 }   
-            r=requests.post("https://api.thingspeak.com/channels.json",channel)
+            # r=requests.post("https://api.thingspeak.com/channels.json",channel)
             
-            print(f"Questo è il channel: {r.json()}")
-            self.dicty=r.json()
-            self.api_key_w=self.dicty["api_keys"][0]
-            self.api_keys_write=self.api_key_w["api_key"]
-            self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
-            chennel_id=self.dicty["id"]
-            
+            # print(f"Questo è il channel: {r.json()}")
+            # self.dicty=r.json()
+            # self.api_key_w=self.dicty["api_keys"][0]
+            # self.api_keys_write=self.api_key_w["api_key"]
+            # self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
+            # chennel_id=self.dicty["id"]
+            chennel_id="123"
+            self.api_keys_write="abc"
+            self.api_keys_read="def"
+
             patient = {
                 "patientID": 0,
                 "patientName": self.record["patientName"],
@@ -158,7 +204,7 @@ class Registrazione(object):
                 }    
 
             #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
-            self.dictionary = json.load(open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json'))
+            self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
 
             self.LastPatientID = self.dictionary["LastPatientID"]
             patient["patientID"] = self.LastPatientID + 1
@@ -173,6 +219,7 @@ class Registrazione(object):
                 "deviceName": self.record["deviceName"],
                 "patientID": patient["patientID"],
                 "ipAddress": "0.0.0.0",
+                "macAddress": self.macaddress,
                 "measureType": [
                     "Temperature",
                     "Battito cardiaco",
@@ -196,7 +243,7 @@ class Registrazione(object):
             self.dictionary['doctorList'][doctor_number]['devicesList'].append(device)
 
             #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
-            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+            with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
@@ -229,6 +276,11 @@ class EchoBot():
 
 if __name__=="__main__":
 
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ipaddress = s.getsockname()[0]
+    s.close() 
+
     # Server per la registrazione
     cherrypy.tree.mount(Registrazione(),'/')
     conf={
@@ -237,6 +289,7 @@ if __name__=="__main__":
             'tool.session.on':True
         }
     }
+    cherrypy.server.socket_host = ipaddress
     cherrypy.tree.mount(Registrazione(),'/',conf)
     cherrypy.config.update(conf)
     cherrypy.engine.start() 
@@ -251,7 +304,7 @@ if __name__=="__main__":
     # conf = json.load(open(new_path,'settings.json'))
     # end comment
 
-    conf_file = sys.path[0] + '\\CatalogueAndSettings\\settings.json' #non ci andrebbe settingDoctorTelegram?
+    conf_file = 'CatalogueAndSettings\\settings.json' #non ci andrebbe settingDoctorTelegram?
     conf = json.load(open(conf_file))
     token = conf["telegramToken"]
     bot=EchoBot(token)

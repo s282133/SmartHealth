@@ -182,8 +182,25 @@ class rpiPub():
             time.sleep(ONE_MINUTE_IN_SEC)
 
     def getIpAddress(self, clientID):
-        ipAdress = "192.168.1.254"
-        return ipAdress
+
+        #ipAddress = "192.168.1.254"
+        
+        catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+        self.catalog = json.load(open(catalog_fn))
+        self.doctorlist = self.catalog["doctorList"]
+        
+        ipAddress = ""
+        for doctorObject in self.doctorlist:
+            devicesList = doctorObject["devicesList"]
+            for deviceObject in devicesList:
+                patientID = deviceObject["patientID"] 
+                if  patientID == clientID:
+                    ipAddress = deviceObject["ipAddress"]
+                    break
+            if ipAddress != "": 
+                break
+        return ipAddress  
+
 
 def getWeek(dayOne):
     currTime = time.strftime("%Y-%m-%d")
