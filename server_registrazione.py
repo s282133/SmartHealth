@@ -26,7 +26,6 @@ class Registrazione(object):
         # apertura pagina html per registrazione dottore
         if uri[0] == "start": 
             self.telegramID = params["chat_ID"]
-            #f1 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\doctors.html')   
             filename = 'PageHTML\\doctors.html'
             f1 = open(filename)
             fileContent = f1.read()      
@@ -47,7 +46,6 @@ class Registrazione(object):
                 #return "Collegare il raspberry"
 
             self.doctortelegramID = params["chat_ID"]
-            #f2 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\PageHTML\\patients.html')   
             filename = 'PageHTML\\patients.html'
             f2 = open(filename)
             fileContent = f2.read()      
@@ -60,8 +58,6 @@ class Registrazione(object):
             filename = 'CatalogueAndSettings\\catalog.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
-            # f4 = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
-            # self.catalog = json.load(f4)
             self.lista = self.catalog["doctorList"]
             doctor_number = 0
             for doctorObject in self.lista:
@@ -107,7 +103,6 @@ class Registrazione(object):
             # PROBLEMA (02-06-2022) : se parto dal catalog.json vuoto, non riesco a salvare il dottore
 
             # salvo il catalogo aggiornato
-            #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f: 
             with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
@@ -119,12 +114,6 @@ class Registrazione(object):
             body = cherrypy.request.body.read() 
             self.raspberry = json.loads(body)
 
-            # raspberry = {
-            #     "ipaddress": "",
-            #     "macaddress": ""
-            # }
-
-            #catalog_fn = 'CatalogueAndSettings\\catalog.json'
             catalog_fn = 'CatalogueAndSettings\\catalog.json'
             self.catalog = json.load(open(catalog_fn))
             self.doctorlist = self.catalog["doctorList"]
@@ -144,8 +133,8 @@ class Registrazione(object):
             if bool_modificato:
                 with open('CatalogueAndSettings\\catalog.json', "w") as f:
                     json.dump(self.dictionary, f, indent=2)
-
             return "ok"
+
 
         #Chiamata post per registrare il paziente
         if uri[0] == "patients": 
@@ -304,7 +293,8 @@ if __name__=="__main__":
     # conf = json.load(open(new_path,'settings.json'))
     # end comment
 
-    conf_file = 'CatalogueAndSettings\\settings.json' #non ci andrebbe settingDoctorTelegram?
+    #conf_file = 'CatalogueAndSettings\\settings.json' #non ci andrebbe settingDoctorTelegram?
+    conf_file = 'CatalogueAndSettings\\catalog.json' 
     conf = json.load(open(conf_file))
     token = conf["telegramToken"]
     bot=EchoBot(token)

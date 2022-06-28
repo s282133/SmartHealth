@@ -7,7 +7,7 @@
     "IPadress": "test.mosquitto.org",
     "port": 1883
   },
-  "LastPatientID": 8,
+  "LastPatientID": 9,
   "LastDoctorID": 2,
   "doctorList": [
     {
@@ -103,6 +103,34 @@
               ]
             }
           }
+        },
+        {
+          "patientID": 9,
+          "patientName": "Paola",
+          "patientSurname": "Rossi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": -1,
+            "mesureType": [
+              "Heart Rate",
+              "Pressure",
+              "Temperature",
+              "Glycemia"
+            ],
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
         }
       ],
       "devicesList": [
@@ -157,6 +185,30 @@
         {
           "deviceName": "f",
           "patientID": 8,
+          "ipAddress": "0.0.0.0",
+          "macAddress": "b8:27:eb:81:80:64",
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2022-06-28"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 9,
           "ipAddress": "0.0.0.0",
           "macAddress": "b8:27:eb:81:80:64",
           "measureType": [
