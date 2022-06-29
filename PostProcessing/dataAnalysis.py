@@ -94,6 +94,9 @@ class dataAnalysisClass():
             elif (self.measureType == "glycemia"):
                 print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
                 self.manageGlycemia(week)
+            elif (self.measureType == "temperature"):
+                print(f"DataAnalysisBlock received TEMPERATURE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+                self.manageTemperature(week)
             else:
                 print("Measure type not recognized")
 
@@ -164,6 +167,11 @@ class dataAnalysisClass():
                         mybot_dr.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
                         print("Doctor not found for this patient")
+
+    def manageTemperature(self, week):
+        print("Temperature managed")
+
+
 
     def findDoctor(self, patientID):
         telegramID = 0

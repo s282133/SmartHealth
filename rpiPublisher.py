@@ -31,8 +31,8 @@ POLLING_PERIOD_TEMPERATURE = 2      # chiedo una misurazione ogni 5 minuti
 
 ONE_MINUTE_IN_SEC = 0              # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
-SEC_WAIT_NO_MONITORING = 12
-SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3;
+SEC_WAIT_NO_MONITORING = 1
+SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3
 
 class rpiPub():
 
@@ -54,8 +54,8 @@ class rpiPub():
         self.subTopic = f"{mqttTopic}/{self.clientID}/monitoring"    
         self.client.mySubscribe(self.subTopic)
 
-        self.TopicTemperature = f"{mqttTopic}/+/temperature"    
-        self.client.mySubscribe(self.TopicTemperature)
+        self.TopicTempRaspberry = f"{mqttTopic}/+/temp_raspberry"    
+        self.client.mySubscribe(self.TopicTempRaspberry)
 
     def stop (self):
         self.client.stop()
@@ -66,15 +66,21 @@ class rpiPub():
 
     def notify(self, topic, message):
         msg = json.loads(message)
-        print(f"{self.clientID} received {msg} from topic: {topic}")
-        if topic != f"P4IoT/SmartHealth/{self.clientID}/monitoring":           
-            pass
-        else:
+        subtopic = topic.split("/")[3]
+        if subtopic == "monitoring":           
+            print(f"{self.clientID} received {msg} from topic: {topic}")
             status = msg["status"]
             if status == "ON":
                     self.monitoring = True
             elif status=="OFF":
                     self.monitoring = False
+        elif subtopic == "temp_raspberry":      
+            newMeasureTempRaspberry = msg["e"][0]["v"]
+            print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
+            self.publishTemperature(newMeasureTempRaspberry)
+        else: 
+            pass
+
         
 
     ##### SENSORS FUNCTIONS #####
@@ -135,28 +141,25 @@ class rpiPub():
 
     def publishTemperature(self, measureTemp):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
-        self.myPublish(f"{mqttTopic}/{self.clientID}/temperature", messagePR)
+        messageTE = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
+        self.myPublish(f"{mqttTopic}/{self.clientID}/temperature", messageTE)
         print(f"{self.clientID} published {measureTemp} with topic: {mqttTopic}/{self.clientID}/temperature")
 
 
     def routineFunction(self):
         if(self.monitoring == False):
             print("Monitoraggio OFF")
+            time.sleep(SEC_WAIT_NO_MONITORING)
             if self.counter % POLLING_PERIOD_HR == 0:
-                time.sleep(SEC_WAIT_NO_MONITORING)
                 newMeasureHR = int(self.getHRmeasure(self.counter))
                 self.publishHR(newMeasureHR)
             if self.counter % POLLING_PERIOD_PRESSURE == 0:
-                time.sleep(SEC_WAIT_NO_MONITORING)
                 newMeasurePressureDict = self.getPressuremeasure(self.counter)
                 self.publishPressure(newMeasurePressureDict)
             if self.counter % POLLING_PERIOD_GLYCEMIA == 0:
-                time.sleep(SEC_WAIT_NO_MONITORING)
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
-            if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
-                time.sleep(SEC_WAIT_NO_MONITORING)
+            #if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
                 #newMeasureTemperature = int(self.getTemperature())
                 #self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
@@ -233,42 +236,46 @@ if __name__ == "__main__":
     conf=json.load(open(conf_fn))
     mqttTopic = conf["mqttTopic"]
 
+    cicli=0
     # aggiungere un while
     while True:
+        #cambiare in 600
+        if cicli % 200 == 0:
 
-        filename = 'CatalogueAndSettings\\catalog.json'
-        f = open(filename)
-        catalog = json.load(f)
+            filename = 'CatalogueAndSettings\\catalog.json'
+            f = open(filename)
+            catalog = json.load(f)
 
-        doctorList = catalog["doctorList"]
-        if len(doctorList) > 0:
+            doctorList = catalog["doctorList"]
+            if len(doctorList) > 0:
 
-            for doctorObject in doctorList:
-                patientList = doctorObject["patientList"]
-                if len(patientList) > 0:
+                for doctorObject in doctorList:
+                    patientList = doctorObject["patientList"]
+                    if len(patientList) > 0:
 
-                    for userObject in patientList:
-                        connectedDevice = userObject["connectedDevice"]
+                        for userObject in patientList:
+                            connectedDevice = userObject["connectedDevice"]
 
-                        if connectedDevice["onlineSince"] == -1:
-                            connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
-                            #f.close
+                            if connectedDevice["onlineSince"] == -1:
+                                
+                                connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
+                                with open('CatalogueAndSettings\\catalog.json', "w") as f:
+                                    json.dump(catalog, f, indent=2)
+                                patientID = userObject["patientID"]
 
-                            with open('CatalogueAndSettings\\catalog.json', "w") as f:
-                                json.dump(catalog, f, indent=2)
+                                thread = Thread(target=rpiPub, args=(str(patientID),))
+                                thread.start()
+                                print(f"{patientID} is online")
 
-                            patientID = userObject["patientID"] 
-                            thread = Thread(target=rpiPub, args=(str(patientID),))
-                            thread.start()
-                            print(f"{patientID} is online")
+                            # remove entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
+                            dayOne = userObject["personalData"]["pregnancyDayOne"] 
+                            week = getWeek(dayOne)
+                            print(f'Patient {userObject["patientID"]} is in week {week}')
+                            if int(week) >= 36:
+                                patientList.remove(userObject)
+                                with open('CatalogueAndSettings\\catalog.json', "w") as f:
+                                    json.dump(catalog, f, indent=2)
+        cicli+=1
+        time.sleep(0.1)
 
-                        # remove entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
-                        dayOne = userObject["personalData"]["pregnancyDayOne"] 
-                        week = getWeek(dayOne)
-                        print(f'Patient {userObject["patientID"]} is in week {week}')
-                        if int(week) >= 36:
-                            patientList.remove(userObject)
-                            with open('CatalogueAndSettings\\catalog.json', "w") as f:
-                                json.dump(catalog, f, indent=2)
-
-        time.sleep(60)
+        #time.sleep(60)
