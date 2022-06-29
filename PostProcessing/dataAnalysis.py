@@ -40,7 +40,6 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        #if topic != f"P4IoT/SmartHealth/+/peso" and topic != f"P4IoT/SmartHealth/+/monitoring" :
         subtopic = topic.split("/")[3]
         print(f"subtopic: {subtopic}")
         if subtopic != "peso" and subtopic != "monitoring":
@@ -98,9 +97,8 @@ class dataAnalysisClass():
             else:
                 print("Measure type not recognized")
 
-        elif topic==f"P4IoT/SmartHealth/+/peso":
+        elif topic==f"{mqttTopic}/+/peso":
             print(f"sono finito qui {topic}")
-    # Funzioni di varifica del superamento della soglia e invio di un messaggio automatico a telegram 
 
     def manageHeartRate(self, week):
         thresholdsHR = self.thresholdsFile["heartrate"]
@@ -118,7 +116,7 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = self.findDoctor(self.clientID)
                     if self.telegramID > 0:
-                        mybot.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
+                        mybot_dr.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                     else:
                         print("Doctor not found for this patient")
 
@@ -143,7 +141,7 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = self.findDoctor(self.clientID)
                     if self.telegramID > 0:
-                        mybot.send_alert(self.telegramID,messaggio, "pression on", "pression off")
+                        mybot_dr.send_alert(self.telegramID,messaggio, "pression on", "pression off")
                     else:
                         print("Doctor not found for this patient")
 
@@ -163,7 +161,7 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = self.findDoctor(self.clientID)
                     if self.telegramID > 0:
-                        mybot.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
+                        mybot_dr.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
                         print("Doctor not found for this patient")
 
@@ -246,7 +244,7 @@ class SwitchBot:
         self.patientID = mes.split(" ")[2]
         print(self.patientID)
         
-        top = f"P4IoT/SmartHealth/{self.patientID}/monitoring"   #da generalizzare
+        top = f"{mqttTopic}/{self.patientID}/monitoring"   
         message =  {"status": monitoring}
         MQTTpubsub.myPublish(top, message)
         print(f"{message}")
@@ -297,7 +295,7 @@ class SwitchBot:
                     print("Paziente non trovato")
                     exit
                 
-                topic=f"P4IoT/SmartHealth/{self.patientID}/peso" 
+                topic=f"{mqttTopic}/{self.patientID}/peso" 
                 peso =  {"status": message}
                 MQTTpubsub.myPublish(topic, peso)
                 print("published")
@@ -341,23 +339,21 @@ class SwitchBot:
 
 if __name__ == "__main__":
     
-    # Broker e porta
-    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+    # Settings
+    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
     conf=json.load(open(conf_fn))
-    info = conf["broker"]
-    broker = info["IPadress"]
-    port = info["port"]
-    #topic = conf["mqttTopic"]
+    brokerIpAddress = conf["brokerIpAddress"]
+    brokerPort = conf["brokerPort"]
+    mqttTopic = conf["mqttTopic"]
+    baseTopic = conf["baseTopic"]
 
-    # SwitchBot per connettersi al Bot telegram del dottore
-    token = conf["telegramToken"]
-    mybot=SwitchBot(token,broker,port,"IoT_project")
+    # SwitchBot per connettersi al Bot telegram del dottore e del paziente
+    doctortelegramToken = conf["doctortelegramToken"]
+    mybot_dr=SwitchBot(doctortelegramToken,brokerIpAddress,brokerPort,baseTopic)
+    patientTelegramToken = conf["patientTelegramToken"]
+    mybot_pz=SwitchBot(patientTelegramToken,brokerIpAddress,brokerPort,baseTopic)
 
-    # SwitchBot per connettersi al Bot telegram del paziente
-    token_pz = conf["patientTelegramToken"]
-    mybot_pz=SwitchBot(token_pz,broker,port,"IoT_project")
-
-    MQTTpubsub = dataAnalysisClass("rpiSub", "P4IoT/SmartHealth/#", broker, port)
+    MQTTpubsub = dataAnalysisClass("rpiSub", mqttTopic + "/#", brokerIpAddress, brokerPort)
     MQTTpubsub.start()    
 
     while True:

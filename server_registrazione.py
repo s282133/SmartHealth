@@ -285,19 +285,10 @@ if __name__=="__main__":
     cherrypy.engine.block() 
 
     # Telegram per inviare le pagine html per la registrazione
-    #conf = json.load(open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\settings.json"))
-    
-    # anto commented here
-    # cur_path = os.path.dirname(__file__)
-    # new_path = os.path.relpath('..\\CatalogueAndSettings\\settings.json', cur_path)
-    # conf = json.load(open(new_path,'settings.json'))
-    # end comment
-
-    #conf_file = 'CatalogueAndSettings\\settings.json' #non ci andrebbe settingDoctorTelegram?
-    conf_file = 'CatalogueAndSettings\\catalog.json' 
+    conf_file = 'CatalogueAndSettings\\settings.json' 
     conf = json.load(open(conf_file))
-    token = conf["telegramToken"]
-    bot=EchoBot(token)
+    doctortelegramToken = conf["doctortelegramToken"]
+    bot=EchoBot(doctortelegramToken)
     print("Bot started ...")
     while True:
         time.sleep(3)

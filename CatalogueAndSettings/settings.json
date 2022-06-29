@@ -1,5 +1,8 @@
 {
-    "broker": "test.mosquitto.org",
-    "port": 1883,
-    "baseTopic": "IoT_project"
+    "brokerIpAddress": "test.mosquitto.org",
+    "brokerPort": 1883,
+    "baseTopic": "IoT_project",
+    "mqttTopic": "P4IoT/SmartHealth",
+    "doctortelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
+    "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U"
 }

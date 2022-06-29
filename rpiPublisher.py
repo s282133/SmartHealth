@@ -13,12 +13,10 @@ from threading import Thread
 from datetime import datetime
 import sys
 
-from heartrateSensor import heartrateSensorClass
-from pressureSensor import pressureSensorClass
-from glycemiaSensor import glycemiaSensorClass
-from temperatureSensor import temperatureSensorClass
-
-
+from DeviceConnectorAndSensors.heartrateSensor import heartrateSensorClass
+from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
+from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
+from DeviceConnectorAndSensors.temperatureSensor import temperatureSensorClass
 
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
@@ -53,8 +51,11 @@ class rpiPub():
 
     def start (self):
         self.client.start()
-        self.subTopic = f"P4IoT/SmartHealth/{self.client}/monitoring"      #da generalizzare
+        self.subTopic = f"{mqttTopic}/{self.clientID}/monitoring"    
         self.client.mySubscribe(self.subTopic)
+
+        self.TopicTemperature = f"{mqttTopic}/+/temperature"    
+        self.client.mySubscribe(self.TopicTemperature)
 
     def stop (self):
         self.client.stop()
@@ -66,7 +67,7 @@ class rpiPub():
     def notify(self, topic, message):
         msg = json.loads(message)
         print(f"{self.clientID} received {msg} from topic: {topic}")
-        if topic != f"P4IoT/SmartHealth/{self.client}/monitoring":           #da generalizzare
+        if topic != f"P4IoT/SmartHealth/{self.clientID}/monitoring":           
             pass
         else:
             status = msg["status"]
@@ -92,10 +93,10 @@ class rpiPub():
 
     def publishHR(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        topicHR = f"P4IoT/SmartHealth/{self.clientID}/heartrate"
+        topicHR = f"{mqttTopic}/{self.clientID}/heartrate"
         messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicHR, messageHR)
-        print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/heartrate")
+        print(f"{self.clientID} published {measure} with topic: {mqttTopic}/{self.clientID}/heartrate")
 
     # PRESSURE
 
@@ -109,8 +110,8 @@ class rpiPub():
         pressureLow = measureDict["pressureLow"]
         # TODO : mettere 2 "e", una per min e una per max
         messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
-        self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/pressure", messagePR)
-        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: P4IoT/SmartHealth/{self.clientID}/pressure")
+        self.myPublish(f"{mqttTopic}/{self.clientID}/pressure", messagePR)
+        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {mqttTopic}/{self.clientID}/pressure")
 
     # GLYCEMIA
 
@@ -121,8 +122,8 @@ class rpiPub():
     def publishGlycemia(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
-        self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/glycemia", messageGL)
-        print(f"{self.clientID} published {measure} with topic: P4IoT/SmartHealth/{self.clientID}/glycemia")
+        self.myPublish(f"{mqttTopic}/{self.clientID}/glycemia", messageGL)
+        print(f"{self.clientID} published {measure} with topic: {mqttTopic}/{self.clientID}/glycemia")
 
 
     # TEMPERATURE
@@ -135,8 +136,8 @@ class rpiPub():
     def publishTemperature(self, measureTemp):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
-        self.myPublish(f"P4IoT/SmartHealth/{self.clientID}/temperature", messagePR)
-        print(f"{self.clientID} published {measureTemp} with topic: P4IoT/SmartHealth/{self.clientID}/temperature")
+        self.myPublish(f"{mqttTopic}/{self.clientID}/temperature", messagePR)
+        print(f"{self.clientID} published {measureTemp} with topic: {mqttTopic}/{self.clientID}/temperature")
 
 
     def routineFunction(self):
@@ -156,8 +157,8 @@ class rpiPub():
                 self.publishGlycemia(newMeasureGlycemia)
             if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
                 time.sleep(SEC_WAIT_NO_MONITORING)
-                newMeasureTemperature = int(self.getTemperature())
-                self.publishTemperature(newMeasureTemperature)
+                #newMeasureTemperature = int(self.getTemperature())
+                #self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
         else:
@@ -176,8 +177,8 @@ class rpiPub():
                 self.publishGlycemia(newMeasureGlycemia)
             if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
                 time.sleep(SEC_WAIT_MONITORING)
-                newMeasureTemperature = int(self.getTemperature())
-                self.publishTemperature(newMeasureTemperature)
+                #newMeasureTemperature = int(self.getTemperature())
+                #self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
 
@@ -185,7 +186,7 @@ class rpiPub():
 
         #ipAddress = "192.168.1.254"
         
-        catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+        catalog_fn = 'CatalogueAndSettings\\catalog.json'
         self.catalog = json.load(open(catalog_fn))
         self.doctorlist = self.catalog["doctorList"]
         
@@ -227,12 +228,15 @@ def getWeek(dayOne):
 
 if __name__ == "__main__":
 
-#aggiungere un while
+    # Settings
+    conf_fn = 'CatalogueAndSettings\\settings.json'
+    conf=json.load(open(conf_fn))
+    mqttTopic = conf["mqttTopic"]
 
-    #f = open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json')   
+    # aggiungere un while
     while True:
 
-        filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+        filename = 'CatalogueAndSettings\\catalog.json'
         f = open(filename)
         catalog = json.load(f)
 
@@ -250,15 +254,12 @@ if __name__ == "__main__":
                             connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
                             #f.close
 
-                            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                            with open('CatalogueAndSettings\\catalog.json', "w") as f:
                                 json.dump(catalog, f, indent=2)
 
                             patientID = userObject["patientID"] 
                             thread = Thread(target=rpiPub, args=(str(patientID),))
                             thread.start()
-                            #self.rpiPub = rpiPub()
-                            
-
                             print(f"{patientID} is online")
 
                         # remove entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
@@ -267,7 +268,7 @@ if __name__ == "__main__":
                         print(f'Patient {userObject["patientID"]} is in week {week}')
                         if int(week) >= 36:
                             patientList.remove(userObject)
-                            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+                            with open('CatalogueAndSettings\\catalog.json', "w") as f:
                                 json.dump(catalog, f, indent=2)
 
         time.sleep(60)
