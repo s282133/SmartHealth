@@ -35,16 +35,6 @@ class Registrazione(object):
         # apertura pagina html per registrazione paziente
         if uri[0] == "registrazione_paziente": 
 
-            # macaddress
-            try:
-                r = requests.get("http://192.168.1.254:8080/macaddress", verify=False, timeout=5)
-                self.macaddress = r.text
-            except requests.exceptions.RequestException as e:  # This is the correct syntax
-                #raise SystemExit(e)
-                self.macaddress = "b8:27:eb:81:80:64"
-                #print(requests.status_codes)
-                #return "Collegare il raspberry"
-
             self.doctortelegramID = params["chat_ID"]
             filename = 'PageHTML\\patients.html'
             f2 = open(filename)
@@ -90,7 +80,6 @@ class Registrazione(object):
                 "devicesList":[]
             }
 
-            #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
 
             # inserisco ID del dottore
@@ -106,34 +95,6 @@ class Registrazione(object):
             with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
-
-
-        #Chiamata post fatta dal raspberry per ottenere il suo macaddresse il suo ipaddress
-        if uri[0] == "ipaddress": 
-
-            body = cherrypy.request.body.read() 
-            self.raspberry = json.loads(body)
-
-            catalog_fn = 'CatalogueAndSettings\\catalog.json'
-            self.catalog = json.load(open(catalog_fn))
-            self.doctorlist = self.catalog["doctorList"]
-            
-            macaddress = self.raspberry["macaddress"]
-            ipaddress  = self.raspberry["ipaddress"]
-
-            bool_modificato=False
-            for doctorObject in self.doctorlist:
-                devicesList = doctorObject["devicesList"]
-                for deviceObject in devicesList:
-                    macAddress = deviceObject["macAddress"] 
-                    if  macaddress == macAddress:
-                        deviceObject["ipAddress"] = ipaddress
-                        bool_modificato=True
-
-            if bool_modificato:
-                with open('CatalogueAndSettings\\catalog.json', "w") as f:
-                    json.dump(self.dictionary, f, indent=2)
-            return "ok"
 
 
         #Chiamata post per registrare il paziente
@@ -158,8 +119,8 @@ class Registrazione(object):
             # self.api_key_w=self.dicty["api_keys"][0]
             # self.api_keys_write=self.api_key_w["api_key"]
             # self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
-            # chennel_id=self.dicty["id"]
-            chennel_id="123"
+            # channel_id=self.dicty["id"]
+            channel_id="123"
             self.api_keys_write="abc"
             self.api_keys_read="def"
 
@@ -175,15 +136,9 @@ class Registrazione(object):
                 "connectedDevice": {
                     "deviceName": self.record["deviceName"],
                     "onlineSince": -1,
-                    "mesureType": [
-                    "Heart Rate",
-                    "Pressure",
-                    "Temperature",
-                    "Glycemia"
-                    ],
                     "telegramID": 0,        
                     "thingspeakInfo": {
-                    "channel": chennel_id,
+                    "channel": channel_id,
                     "apikeys": [
                           self.api_keys_write,
                           self.api_keys_read
@@ -192,12 +147,14 @@ class Registrazione(object):
                 }
                 }    
 
-            #self.dictionary = json.load(open('C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json'))
             self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
 
             self.LastPatientID = self.dictionary["LastPatientID"]
-            patient["patientID"] = self.LastPatientID + 1
-            self.dictionary["LastPatientID"] = self.LastPatientID + 1
+            self.NewPatientID = self.LastPatientID + 1
+            patient["patientID"] = self.NewPatientID
+            self.dictionary["LastPatientID"] = self.NewPatientID
+
+            self.RegistraPatientIdSuRaspberry( self.NewPatientID )
 
             # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
             doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
@@ -207,8 +164,6 @@ class Registrazione(object):
             device = {
                 "deviceName": self.record["deviceName"],
                 "patientID": patient["patientID"],
-                "ipAddress": "0.0.0.0",
-                "macAddress": self.macaddress,
                 "measureType": [
                     "Temperature",
                     "Battito cardiaco",
@@ -230,12 +185,20 @@ class Registrazione(object):
             }
 
             self.dictionary['doctorList'][doctor_number]['devicesList'].append(device)
-
-            #with open("C:\\Users\\Giulia\\Desktop\\Progetto IoT condiviso\\CatalogueAndSettings\\catalog.json", "w") as f:
             with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             self.lista = self.dictionary["doctorList"][doctor_number]  
             return json.dumps(self.lista) 
+
+
+    def RegistraPatientIdSuRaspberry( self, NewPatientID ):
+        patient = { "ClientID": NewPatientID }   
+        try:
+            #r = requests.post(f'http://{ipAddressRaspberry}:8080/updatepatientid', json.dumps(patient), timeout=10) 
+            r = requests.post(f'http://192.168.1.253:8080/updatepatientid', json.dumps(patient), timeout=10) 
+        except:
+            print("Attenzione: registrare l'ID del paziente su Raspberry")
+        return
 
 
     def findDoctorwithtelegramID(self, doctortelegramID):
@@ -265,10 +228,11 @@ class EchoBot():
 
 if __name__=="__main__":
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ipaddress = s.getsockname()[0]
-    s.close() 
+    conf_file = 'CatalogueAndSettings\\settings.json' 
+    conf = json.load(open(conf_file))
+    ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
+    ipAddressRaspberry = conf["ipAddressRaspberry"]
+    doctortelegramToken = conf["doctortelegramToken"]
 
     # Server per la registrazione
     cherrypy.tree.mount(Registrazione(),'/')
@@ -278,16 +242,13 @@ if __name__=="__main__":
             'tool.session.on':True
         }
     }
-    cherrypy.server.socket_host = ipaddress
+    cherrypy.server.socket_host = ipAddressServerRegistrazione
     cherrypy.tree.mount(Registrazione(),'/',conf)
     cherrypy.config.update(conf)
     cherrypy.engine.start() 
     cherrypy.engine.block() 
 
     # Telegram per inviare le pagine html per la registrazione
-    conf_file = 'CatalogueAndSettings\\settings.json' 
-    conf = json.load(open(conf_file))
-    doctortelegramToken = conf["doctortelegramToken"]
     bot=EchoBot(doctortelegramToken)
     print("Bot started ...")
     while True:

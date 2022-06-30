@@ -16,7 +16,6 @@ import sys
 from DeviceConnectorAndSensors.heartrateSensor import heartrateSensorClass
 from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
 from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
-from DeviceConnectorAndSensors.temperatureSensor import temperatureSensorClass
 
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
@@ -27,7 +26,6 @@ from commons.MyMQTT import *
 POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 3         # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 4         # chiedo una misurazione ogni 20 minuti
-POLLING_PERIOD_TEMPERATURE = 2      # chiedo una misurazione ogni 5 minuti
 
 ONE_MINUTE_IN_SEC = 0              # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
@@ -38,9 +36,10 @@ class rpiPub():
 
     # MQTT FUNCTIONS
     def __init__(self, clientID):
-        self.client = MyMQTT(clientID, "test.mosquitto.org", 1883, self)
+        self.client = MyMQTT(clientID, brokerIpAddress, brokerPort, self)
         self.clientID = clientID
-        self.messageBroker = "test.mosquitto.org"
+        #sembra non utilizzato
+        #self.messageBroker = brokerIpAddress 
         self.monitoring = False
         self.counter = 0
         print(f"{self.clientID} created")
@@ -82,14 +81,12 @@ class rpiPub():
             pass
 
         
-
     ##### SENSORS FUNCTIONS #####
 
     def initSensors(self):
         self.heartrateSensor = heartrateSensorClass()
         self.pressureSensor = pressureSensorClass()
         self.glycemiaSensor = glycemiaSensorClass()
-        self.temperatureSensor = temperatureSensorClass()
  
     # HEARTRATE
 
@@ -133,11 +130,6 @@ class rpiPub():
 
 
     # TEMPERATURE
-    
-    def getTemperature(self):
-        self.ipAddress = self.getIpAddress(self.clientID)
-        newMeasureTemperature = self.temperatureSensor.getTemperature(self.ipAddress)
-        return newMeasureTemperature
 
     def publishTemperature(self, measureTemp):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -145,6 +137,8 @@ class rpiPub():
         self.myPublish(f"{mqttTopic}/{self.clientID}/temperature", messageTE)
         print(f"{self.clientID} published {measureTemp} with topic: {mqttTopic}/{self.clientID}/temperature")
 
+
+    # Lettura e pubblicazione dati 
 
     def routineFunction(self):
         if(self.monitoring == False):
@@ -159,51 +153,22 @@ class rpiPub():
             if self.counter % POLLING_PERIOD_GLYCEMIA == 0:
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
-            #if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
-                #newMeasureTemperature = int(self.getTemperature())
-                #self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
         else:
             print("Monitoraggio ON")
+            time.sleep(SEC_WAIT_MONITORING)
             if self.counter % POLLING_PERIOD_HR == 0:
-                time.sleep(SEC_WAIT_MONITORING)
                 newMeasureHR = int(self.getHRmeasure(self.counter))
                 self.publishHR(newMeasureHR)
             if self.counter % POLLING_PERIOD_PRESSURE == 0:
-                time.sleep(SEC_WAIT_MONITORING)
                 newMeasurePressureDict = self.getPressuremeasure(self.counter)
                 self.publishPressure(newMeasurePressureDict)
             if self.counter % POLLING_PERIOD_GLYCEMIA == 0:
-                time.sleep(SEC_WAIT_MONITORING)
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
-            if self.counter % POLLING_PERIOD_TEMPERATURE == 0:
-                time.sleep(SEC_WAIT_MONITORING)
-                #newMeasureTemperature = int(self.getTemperature())
-                #self.publishTemperature(newMeasureTemperature)
             self.counter = self.counter + 1
             time.sleep(ONE_MINUTE_IN_SEC)
-
-    def getIpAddress(self, clientID):
-
-        #ipAddress = "192.168.1.254"
-        
-        catalog_fn = 'CatalogueAndSettings\\catalog.json'
-        self.catalog = json.load(open(catalog_fn))
-        self.doctorlist = self.catalog["doctorList"]
-        
-        ipAddress = ""
-        for doctorObject in self.doctorlist:
-            devicesList = doctorObject["devicesList"]
-            for deviceObject in devicesList:
-                patientID = deviceObject["patientID"] 
-                if  patientID == clientID:
-                    ipAddress = deviceObject["ipAddress"]
-                    break
-            if ipAddress != "": 
-                break
-        return ipAddress  
 
 
 def getWeek(dayOne):
@@ -234,7 +199,10 @@ if __name__ == "__main__":
     # Settings
     conf_fn = 'CatalogueAndSettings\\settings.json'
     conf=json.load(open(conf_fn))
+    brokerIpAddress = conf["brokerIpAddress"]
+    brokerPort = conf["brokerPort"]
     mqttTopic = conf["mqttTopic"]
+    baseTopic = conf["baseTopic"]
 
     cicli=0
     # aggiungere un while
