@@ -243,6 +243,7 @@ if __name__=="__main__":
         s.close()  
 
 
+
     # Server per la registrazione
     cherrypy.tree.mount(Registrazione(),'/')
     conf={

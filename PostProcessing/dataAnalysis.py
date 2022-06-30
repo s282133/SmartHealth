@@ -47,7 +47,7 @@ class dataAnalysisClass():
             print(f"sono finito qui {topic}")
             d = json.loads(msg)
             self.bn = d["bn"]
-            self.clientID = self.bn.split("/")[3]  #splittare stringhe dei topic -> "bn": "http://example.org/sensor1/"  -> "sensor1"
+            self.clientID = self.bn.split("/")[3]  
             self.e = d["e"]
             self.measureType = self.e[0]["n"]
             self.unit = self.e[0]["u"]

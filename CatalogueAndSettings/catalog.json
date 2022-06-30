@@ -25,7 +25,7 @@
           "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry1",
-            "onlineSince": "2022-06-29",
+            "onlineSince": "2022-06-30",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": "123",
@@ -71,7 +71,7 @@
           "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": -1,
+            "onlineSince": "2022-06-30",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": "123",
@@ -94,7 +94,7 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": -1,
+            "onlineSince": "2022-06-30",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": "123",
