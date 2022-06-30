@@ -1,6 +1,6 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
-  "LastPatientID": 11,
+  "LastPatientID": 12,
   "LastDoctorID": 2,
   "doctorList": [
     {
@@ -22,6 +22,7 @@
             "userEmail": "laura.cubeddu@gmail.com",
             "pregnancyDayOne": "2022-02-03"
           },
+          "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry1",
             "onlineSince": "2022-06-29",
@@ -44,6 +45,7 @@
             "userEmail": "giulia.codagnone@gmail.com",
             "pregnancyDayOne": "2022-01-02"
           },
+          "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry2",
             "onlineSince": "2022-06-29",
@@ -66,6 +68,7 @@
             "userEmail": "mario.rossi@gmail.com",
             "pregnancyDayOne": "2022-99-03"
           },
+          "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry22",
             "onlineSince": -1,
@@ -80,14 +83,15 @@
           }
         },
         {
-          "patientID": 11,
-          "patientName": "Mario",
-          "patientSurname": "Rossi",
+          "patientID": 12,
+          "patientName": "Paola",
+          "patientSurname": "Brondi",
           "personalData": {
             "taxIDcode": "ABCDEFGH",
             "userEmail": "mario.rossi@gmail.com",
             "pregnancyDayOne": "2022-99-03"
           },
+          "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "raspberry22",
             "onlineSince": -1,
@@ -190,6 +194,28 @@
             }
           ],
           "lastUpdate": "2022-06-30"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 12,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2022-06-30"
         }
       ]
     },
@@ -213,6 +239,7 @@
             "userEmail": "laura.cubeddu@gmail.com",
             "pregnancyDayOne": "2022-02-17"
           },
+          "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry1",
             "onlineSince": "2022-03-31",
@@ -236,6 +263,7 @@
             "userEmail": "alessandra.rizza@gmail.com",
             "pregnancyDayOne": "2022-03-01"
           },
+          "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry2",
             "onlineSince": "2022-03-31",

@@ -64,12 +64,14 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th scope="col">Patient ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Surname</th>
                             <th scope="col">Tax ID code</th>
                             <th scope="col">Patient Mail</th>
 							<th scope="col">First Pregnancy Day</th>
-							<th scope="col">Device Name</th>							
+							<th scope="col">Device Name</th>
+							<th scope="col">Rasp. Config.</th>														
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -139,6 +141,9 @@
                 patient = data.patientList[i];
                 updatedTableBody +=
                     "<td>" +
+                    patient.patientID +
+                    "</td>" +
+                    "<td>" +
                     patient.patientName +
                     "</td>" +
                     "<td>" +
@@ -155,7 +160,10 @@
 					"</td>" +
 					"<td>" +
 					patient.connectedDevice.deviceName +
-					"</td>";
+					"</td>"+
+                    "<td>" +
+                    patient.idRegistratoSuRaspberry +
+                    "</td>";
                 updatedTableBody += "</tr>";
             }
 

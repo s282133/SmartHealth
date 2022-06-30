@@ -8,6 +8,6 @@
     "doctortelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
     "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
 
-    "ipAddressServerRegistrazione": "127.0.0.1",
+    "ipAddressServerRegistrazione": "",
     "ipAddressRaspberry": "192.168.1.254"
 }

@@ -8,19 +8,17 @@ from ipaddress import ip_address
 import time
 import json
 import paho.mqtt.client as PahoMQTT
-import time
 from threading import Thread
 from datetime import datetime
 import sys
-
-from DeviceConnectorAndSensors.heartrateSensor import heartrateSensorClass
-from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
-from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
-
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 from CatalogueAndSettings import *
 from commons.MyMQTT import *
+
+from DeviceConnectorAndSensors.heartrateSensor import heartrateSensorClass
+from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
+from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
 
 # periodo di polling in minuti
 POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
@@ -205,9 +203,8 @@ if __name__ == "__main__":
     baseTopic = conf["baseTopic"]
 
     cicli=0
-    # aggiungere un while
     while True:
-        #cambiare in 600
+        # cambiare in 600 se vuoi ogni 60 secondi
         if cicli % 200 == 0:
 
             filename = 'CatalogueAndSettings\\catalog.json'

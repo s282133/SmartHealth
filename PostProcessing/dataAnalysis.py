@@ -5,6 +5,7 @@
 from gettext import Catalog
 # from MyMQTT import *
 import time
+import socket
 import json
 import telepot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
@@ -172,7 +173,6 @@ class dataAnalysisClass():
         print("Temperature managed")
 
 
-
     def findDoctor(self, patientID):
         telegramID = 0
         for doctorObject in self.lista:
@@ -227,11 +227,10 @@ class SwitchBot:
         message = msg['text']
 
         if message == "/start": 
-            #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
-            self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: http://127.0.0.1:8080/start?chat_ID={chat_ID}")
+            self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: http://{ipAddressServerRegistrazione}:8080/start?chat_ID={chat_ID}")
 
         if message == "/registrazione_paziente": 
-            self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: http://127.0.0.1:8080/registrazione_paziente?chat_ID={chat_ID}")
+            self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: http://{ipAddressServerRegistrazione}:8080/registrazione_paziente?chat_ID={chat_ID}")
 
         if message == "/accesso_dati": 
             self.bot.sendMessage(chat_ID, text='Access to data at this link: ')
@@ -354,6 +353,14 @@ if __name__ == "__main__":
     brokerPort = conf["brokerPort"]
     mqttTopic = conf["mqttTopic"]
     baseTopic = conf["baseTopic"]
+    ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
+
+    if ipAddressServerRegistrazione == "":
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ipAddressServerRegistrazione = s.getsockname()[0]
+        s.close()  
+
 
     # SwitchBot per connettersi al Bot telegram del dottore e del paziente
     doctortelegramToken = conf["doctortelegramToken"]

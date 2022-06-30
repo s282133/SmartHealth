@@ -6,7 +6,6 @@ import time
 import telepot
 import cherrypy
 import socket
-# from MyMQTT import *
 from time import sleep
 from collections import UserList
 from telepot.loop import MessageLoop
@@ -124,8 +123,18 @@ class Registrazione(object):
             self.api_keys_write="abc"
             self.api_keys_read="def"
 
+            self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
+            self.LastPatientID = self.dictionary["LastPatientID"]
+            self.NewPatientID = self.LastPatientID + 1
+            self.dictionary["LastPatientID"] = self.NewPatientID
+
+            if self.RegistraPatientIdSuRaspberry( self.NewPatientID ):
+                registratoSuRaspberry = "yes"
+            else:
+                registratoSuRaspberry = "no"
+        
             patient = {
-                "patientID": 0,
+                "patientID": self.NewPatientID,
                 "patientName": self.record["patientName"],
                 "patientSurname": self.record["patientSurname"],
                 "personalData": {
@@ -133,6 +142,7 @@ class Registrazione(object):
                     "userEmail": self.record["userEmail"],
                     "pregnancyDayOne": self.record["pregnancyDayOne"]
                 },
+                "idRegistratoSuRaspberry": registratoSuRaspberry,
                 "connectedDevice": {
                     "deviceName": self.record["deviceName"],
                     "onlineSince": -1,
@@ -146,15 +156,6 @@ class Registrazione(object):
                     }
                 }
                 }    
-
-            self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
-
-            self.LastPatientID = self.dictionary["LastPatientID"]
-            self.NewPatientID = self.LastPatientID + 1
-            patient["patientID"] = self.NewPatientID
-            self.dictionary["LastPatientID"] = self.NewPatientID
-
-            self.RegistraPatientIdSuRaspberry( self.NewPatientID )
 
             # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
             doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
@@ -194,11 +195,11 @@ class Registrazione(object):
     def RegistraPatientIdSuRaspberry( self, NewPatientID ):
         patient = { "ClientID": NewPatientID }   
         try:
-            #r = requests.post(f'http://{ipAddressRaspberry}:8080/updatepatientid', json.dumps(patient), timeout=10) 
-            r = requests.post(f'http://192.168.1.253:8080/updatepatientid', json.dumps(patient), timeout=10) 
+            r = requests.post(f'http://{ipAddressRaspberry}:8080/updatepatientid', json.dumps(patient), timeout=5) 
+            #r = requests.post(f'http://192.168.1.253:8080/updatepatientid', json.dumps(patient), timeout=5) 
+            return True
         except:
-            print("Attenzione: registrare l'ID del paziente su Raspberry")
-        return
+            return False
 
 
     def findDoctorwithtelegramID(self, doctortelegramID):
@@ -228,11 +229,19 @@ class EchoBot():
 
 if __name__=="__main__":
 
+
     conf_file = 'CatalogueAndSettings\\settings.json' 
     conf = json.load(open(conf_file))
     ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
     ipAddressRaspberry = conf["ipAddressRaspberry"]
     doctortelegramToken = conf["doctortelegramToken"]
+
+    if ipAddressServerRegistrazione == "":
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ipAddressServerRegistrazione = s.getsockname()[0]
+        s.close()  
+
 
     # Server per la registrazione
     cherrypy.tree.mount(Registrazione(),'/')
