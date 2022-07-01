@@ -25,7 +25,7 @@
           "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry1",
-            "onlineSince": "2022-06-30",
+            "onlineSince": "2022-07-01",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": "123",
@@ -48,7 +48,7 @@
           "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "raspberry2",
-            "onlineSince": "2022-06-29",
+            "onlineSince": "2022-07-01",
             "telegramID": 491287865,
             "thingspeakInfo": {
               "channel": "123",

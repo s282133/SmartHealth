@@ -21,20 +21,20 @@ from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
 from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR = 2               # chiedo una misurazione ogni 5 minuti
-POLLING_PERIOD_PRESSURE = 3         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 4         # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_HR = 10               # chiedo una misurazione ogni 5 minuti
+POLLING_PERIOD_PRESSURE = 12         # chiedo una misurazione ogni 10 minuti
+POLLING_PERIOD_GLYCEMIA = 14         # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 0              # per motivi di debug a volte lo metto ad 1 ma deve essere 60
+ONE_MINUTE_IN_SEC = 0               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
-SEC_WAIT_NO_MONITORING = 12
+SEC_WAIT_NO_MONITORING = 1
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3
 
 class rpiPub():
 
     # MQTT FUNCTIONS
     def __init__(self, clientID):
-        self.client = MyMQTT(clientID, brokerIpAddress, brokerPort, self)
+        self.client_MQTT = MyMQTT(clientID, brokerIpAddress, brokerPort, self)
         self.clientID = clientID
         #sembra non utilizzato
         #self.messageBroker = brokerIpAddress 
@@ -47,19 +47,20 @@ class rpiPub():
             self.routineFunction() 
 
     def start (self):
-        self.client.start()
+        self.client_MQTT.start()
         self.subTopic = f"{mqttTopic}/{self.clientID}/monitoring"    
-        self.client.mySubscribe(self.subTopic)
+        self.client_MQTT.mySubscribe(self.subTopic)
 
-        self.TopicTempRaspberry = f"{mqttTopic}/+/temp_raspberry"    
-        self.client.mySubscribe(self.TopicTempRaspberry)
+        #self.TopicTempRaspberry = f"{mqttTopic}/+/temp_raspberry"    
+        self.TopicTempRaspberry = f"{mqttTopic}/{self.clientID}/temp_raspberry"    
+        self.client_MQTT.mySubscribe(self.TopicTempRaspberry)
 
     def stop (self):
-        self.client.stop()
+        self.client_MQTT.stop()
 
     def myPublish(self, topic, message):
-        print(f"{self.clientID} publishing {message} to topic: {topic}")
-        self.client.myPublish(topic, message)
+        #print(f"{self.clientID} publishing {message} to topic: {topic}")
+        self.client_MQTT.myPublish(topic, message)
 
     def notify(self, topic, message):
         msg = json.loads(message)
@@ -140,7 +141,7 @@ class rpiPub():
 
     def routineFunction(self):
         if(self.monitoring == False):
-            print("Monitoraggio OFF")
+            #print("Monitoraggio OFF")
             time.sleep(SEC_WAIT_NO_MONITORING)
             if self.counter % POLLING_PERIOD_HR == 0:
                 newMeasureHR = int(self.getHRmeasure(self.counter))
