@@ -3,6 +3,7 @@ import sys, os
 import json
 sys.path.insert(0, os.path.abspath('..'))
 import time
+import string
 
 filename = 'CatalogueAndSettings\\catalog.json'
 
@@ -28,6 +29,7 @@ def retrieveOnlineSince(patient_ID):
                 return device["onlineSince"]
 
 def getWeek(dayOne):
+    print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
     currY = currTime.split("-")[0]
     currM = currTime.split("-")[1]
@@ -38,9 +40,9 @@ def getWeek(dayOne):
 
     #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
     #print(f"DataAnalysisBlock: dayOne : {dayOne}")
-    dayoneY = dayOne.split("-")[0]
-    dayoneM = dayOne.split("-")[1]
-    dayoneD = dayOne.split("-")[2]
+    dayoneY = str(dayOne).split("-")[0]
+    dayoneM = str(dayOne).split("-")[1]
+    dayoneD = str(dayOne).split("-")[2]
     #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
     #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
