@@ -13,8 +13,11 @@ from datetime import datetime
 import sys
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
+
 from CatalogueAndSettings import *
+
 from commons.MyMQTT import *
+from commons.functionsOnCatalogue import *
 
 from DeviceConnectorAndSensors.heartrateSensor import heartrateSensorClass
 from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
@@ -171,27 +174,27 @@ class rpiPub():
             time.sleep(ONE_MINUTE_IN_SEC)
 
 
-def getWeek(dayOne):
-    currTime = time.strftime("%Y-%m-%d")
-    currY = currTime.split("-")[0]
-    currM = currTime.split("-")[1]
-    currD = currTime.split("-")[2]
-    #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
-    currDays = int(currY)*365 + int(currM)*30 + int(currD)
-    #print(f"DataAnalysisBlock: current day is {currDays}")
+# def getWeek(dayOne):
+#     currTime = time.strftime("%Y-%m-%d")
+#     currY = currTime.split("-")[0]
+#     currM = currTime.split("-")[1]
+#     currD = currTime.split("-")[2]
+#     #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
+#     currDays = int(currY)*365 + int(currM)*30 + int(currD)
+#     #print(f"DataAnalysisBlock: current day is {currDays}")
 
-    #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
-    #print(f"DataAnalysisBlock: dayOne : {dayOne}")
-    dayoneY = dayOne.split("-")[0]
-    dayoneM = dayOne.split("-")[1]
-    dayoneD = dayOne.split("-")[2]
-    #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
-    dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
+#     #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
+#     #print(f"DataAnalysisBlock: dayOne : {dayOne}")
+#     dayoneY = dayOne.split("-")[0]
+#     dayoneM = dayOne.split("-")[1]
+#     dayoneD = dayOne.split("-")[2]
+#     #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
+#     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
+#     #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
 
-    elapsedDays = currDays - dayoneDays
-    week = int(elapsedDays / 7)
-    return week
+#     elapsedDays = currDays - dayoneDays
+#     week = int(elapsedDays / 7)
+#     return week
 
 
 if __name__ == "__main__":
