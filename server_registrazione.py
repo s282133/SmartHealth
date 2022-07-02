@@ -241,8 +241,6 @@ if __name__=="__main__":
         ipAddressServerRegistrazione = s.getsockname()[0]
         s.close()  
 
-
-
     # Server per la registrazione
     cherrypy.tree.mount(Registrazione(),'/')
     conf={
