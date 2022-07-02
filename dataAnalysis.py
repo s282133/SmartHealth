@@ -23,15 +23,17 @@ class dataAnalysisClass():
 
     # MQTT FUNCTIONS
 
-    def __init__(self, clientID, topic, broker, port):
+    def __init__(self, clientID, broker, port):
         self.client = MyMQTT(clientID, broker, port, self)
-        self.topic = topic
-        timeshift_fn = sys.path[0] + '\\PostProcessing\\timeshift.json'
+        timeshift_fn = 'PostProcessing\\timeshift.json'
         self.thresholdsFile = json.load(open(timeshift_fn,'r'))
 
     def start(self):
         self.client.start()
-        self.client.mySubscribe(self.topic)
+        self.client.mySubscribe("P4IoT/SmartHealth/+/heartrate")
+        self.client.mySubscribe("P4IoT/SmartHealth/+/pressure")
+        self.client.mySubscribe("P4IoT/SmartHealth/+/glycemia")
+        self.client.mySubscribe("P4IoT/SmartHealth/+/temperature")
     
     def stop(self):
         self.client.stop()
@@ -41,68 +43,63 @@ class dataAnalysisClass():
         print(f"Published on {topic}")
     
     def notify(self, topic, msg):
-        subtopic = topic.split("/")[3]
-        print(f"subtopic: {subtopic}")
-        if subtopic != "peso" and subtopic != "monitoring":
-            print(f"sono finito qui {topic}")
-            d = json.loads(msg)
-            self.bn = d["bn"]
-            self.clientID = self.bn.split("/")[3]  
-            self.e = d["e"]
-            self.measureType = self.e[0]["n"]
-            self.unit = self.e[0]["u"]
-            self.timestamp = self.e[0]["t"]
-            self.value = self.e[0]["v"]
 
-            currY = self.timestamp.split("-")[0]
-            currM = self.timestamp.split("-")[1]
-            currD_hms = self.timestamp.split("-")[2]
-            currD = currD_hms.split(" ")[0]
-            #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
-            currDays = int(currY)*365 + int(currM)*30 + int(currD)
-            #print(f"DataAnalysisBlock: current day is {currDays}")
+        print(f"Il topic è: {topic}")
+        d = json.loads(msg)
+        self.bn = d["bn"]
+        self.clientID = self.bn.split("/")[3]  
+        self.e = d["e"]
+        self.measureType = self.e[0]["n"]
+        self.unit = self.e[0]["u"]
+        self.timestamp = self.e[0]["t"]
+        self.value = self.e[0]["v"]
 
-            #print(f"DataAnalysisBlock: clientID : {self.clientID}")
-            dayOne = retrievePregnancyDayOne(int(self.clientID))            
-            #print(f"DataAnalysisBlock: dayOne : {dayOne}")
-            dayoneY = dayOne.split("-")[0]
-            dayoneM = dayOne.split("-")[1]
-            dayoneD = dayOne.split("-")[2]
-            #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
-            dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-            #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
+        currY = self.timestamp.split("-")[0]
+        currM = self.timestamp.split("-")[1]
+        currD_hms = self.timestamp.split("-")[2]
+        currD = currD_hms.split(" ")[0]
+        #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
+        currDays = int(currY)*365 + int(currM)*30 + int(currD)
+        #print(f"DataAnalysisBlock: current day is {currDays}")
 
-            elapsedDays = currDays - dayoneDays
-            week = int(elapsedDays / 7)
-            if(week == 0): 
-                week = 1
+        #print(f"DataAnalysisBlock: clientID : {self.clientID}")
+        dayOne = retrievePregnancyDayOne(int(self.clientID))            
+        #print(f"DataAnalysisBlock: dayOne : {dayOne}")
+        dayoneY = dayOne.split("-")[0]
+        dayoneM = dayOne.split("-")[1]
+        dayoneD = dayOne.split("-")[2]
+        #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
+        dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
+        #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
 
-            print(f"TEST: week of pregnancy of patient {self.clientID} is {week}, from {dayOne} to {currY}-{currM}-{currD}, {elapsedDays} elapsed days")
+        elapsedDays = currDays - dayoneDays
+        week = int(elapsedDays / 7)
+        if(week == 0): 
+            week = 1
 
-            #print(f"DataAnalysisBlock: patient dayOne is {dayOne}")
-            #print(f"DataAnalysisBlock: timestamp is {self.timestamp}")
-            #print(f"week of pregnancy of patient {self.clientID} is {week}")
+        print(f"TEST: week of pregnancy of patient {self.clientID} is {week}, from {dayOne} to {currY}-{currM}-{currD}, {elapsedDays} elapsed days")
 
-        
-            if (self.measureType == "heartrate"):
-                print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-                self.manageHeartRate(week)
-            elif (self.measureType == "pressureHigh"):
-                self.sensed_pressureHigh=self.e[0]["v"]
-                self.sensed_pressureLow=self.e[1]["v"]
-                print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-                self.managePressure(week)            
-            elif (self.measureType == "glycemia"):
-                print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-                self.manageGlycemia(week)
-            elif (self.measureType == "temperature"):
-                print(f"DataAnalysisBlock received TEMPERATURE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
-                self.manageTemperature(week)
-            else:
-                print("Measure type not recognized")
+        #print(f"DataAnalysisBlock: patient dayOne is {dayOne}")
+        #print(f"DataAnalysisBlock: timestamp is {self.timestamp}")
+        #print(f"week of pregnancy of patient {self.clientID} is {week}")
+    
 
-        elif topic==f"{mqttTopic}/+/peso":
-            print(f"sono finito qui {topic}")
+        if (self.measureType == "heartrate"):
+            print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+            self.manageHeartRate(week)
+        elif (self.measureType == "pressureHigh"):
+            self.sensed_pressureHigh=self.e[0]["v"]
+            self.sensed_pressureLow=self.e[1]["v"]
+            print(f"DataAnalysisBlock received PRESSURE measure of: {self.sensed_pressureHigh}, {self.sensed_pressureLow} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+            self.managePressure(week)            
+        elif (self.measureType == "glycemia"):
+            print(f"DataAnalysisBlock received GLYCEMIA measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+            self.manageGlycemia(week)
+        elif (self.measureType == "temperature"):
+            print(f"DataAnalysisBlock received TEMPERATURE measure of: {self.value} at time {self.timestamp}, by {self.clientID}, week of pregnancy {week}")
+            self.manageTemperature(week)
+        else:
+            print("Measure type not recognized")
 
     def manageHeartRate(self, week):
         thresholdsHR = self.thresholdsFile["heartrate"]
@@ -114,7 +111,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: heart rate is in range")
                 else:
                     print(f"DataAnalysisBlock: heart rate is NOT in range") 
-                    catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
@@ -139,7 +136,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
-                    catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
@@ -159,7 +156,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: glycemia is in range")
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
-                    catalog_fn = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
@@ -197,7 +194,7 @@ class SwitchBot:
         self.client = MyMQTT("telegramBot", broker, port, None)
         self.client.start()
         self.topic = topic
-        self.previous_message="qualcosa"
+        self.previous_message="previous_message"
         self.__message = {'bn': "telegramBot",
                           'e':
                           [
@@ -214,6 +211,7 @@ class SwitchBot:
             MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
                     'callback_query': self.on_callback_query}).run_as_thread()
             print(f"token else is {self.tokenBot}")
+
 
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
@@ -263,7 +261,6 @@ class SwitchBot:
         message = msg['text']
 
         if message == "/start": 
-            #self.bot.sendMessage(chat_ID, text="http://192.168.1.125:8080/registrazione") #funziona per il cellulare
             self.bot.sendMessage(chat_ID, text="Bot successfully started, send your patientID given you by doctor")
             self.previous_message="/start"
         
@@ -279,7 +276,6 @@ class SwitchBot:
         elif message == "/help":
             self.bot.sendMessage(chat_ID, text="You can send /start to log in\n You can send /peso toregister your weight\n You can send /survey to complete a survey") 
             self.previous_message="/help"
-
 
         elif message == "/survey":
             self.bot.sendMessage(chat_ID, text="You can complete the survey at this link: ")
@@ -309,7 +305,7 @@ class SwitchBot:
                 self.previous_message=""
 
     def Update_PatientTelegramID (self,chat_ID, message):
-            filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\catalog.json'
             f = open(filename)
             self.catalog = json.load(f)
             self.lista = self.catalog["doctorList"]
@@ -321,11 +317,11 @@ class SwitchBot:
                         connectedDevice = patientObject["connectedDevice"]
                         connectedDevice["telegramID"]=chat_ID
                         print(f"{chat_ID}")
-            with open(sys.path[0] + '\\CatalogueAndSettings\\catalog.json', "w") as f:
+            with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
              
     def findPatient(self, chat_ID):
-        filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+        filename = 'CatalogueAndSettings\\catalog.json'
         f = open(filename)
         self.catalog = json.load(f)
 
@@ -347,7 +343,7 @@ class SwitchBot:
 if __name__ == "__main__":
     
     # Settings
-    conf_fn = sys.path[0] + '\\CatalogueAndSettings\\settings.json'
+    conf_fn = 'CatalogueAndSettings\\settings.json'
     conf=json.load(open(conf_fn))
     brokerIpAddress = conf["brokerIpAddress"]
     brokerPort = conf["brokerPort"]
@@ -361,14 +357,13 @@ if __name__ == "__main__":
         ipAddressServerRegistrazione = s.getsockname()[0]
         s.close()  
 
-
     # SwitchBot per connettersi al Bot telegram del dottore e del paziente
     doctortelegramToken = conf["doctortelegramToken"]
     mybot_dr=SwitchBot(doctortelegramToken,brokerIpAddress,brokerPort,baseTopic)
     patientTelegramToken = conf["patientTelegramToken"]
     mybot_pz=SwitchBot(patientTelegramToken,brokerIpAddress,brokerPort,baseTopic)
 
-    MQTTpubsub = dataAnalysisClass("rpiSub", mqttTopic + "/#", brokerIpAddress, brokerPort)
+    MQTTpubsub = dataAnalysisClass("rpiSub", brokerIpAddress, brokerPort)
     MQTTpubsub.start()    
 
     while True:

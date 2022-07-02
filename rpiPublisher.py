@@ -74,7 +74,8 @@ class rpiPub():
                     self.monitoring = False
         elif subtopic == "temp_raspberry":      
             newMeasureTempRaspberry = msg["e"][0]["v"]
-            print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
+            #Riattivare se necessario
+            #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
             self.publishTemperature(newMeasureTempRaspberry)
         else: 
             pass

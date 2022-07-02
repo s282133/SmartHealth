@@ -3,7 +3,7 @@ import sys, os
 import json
 sys.path.insert(0, os.path.abspath('..'))
 
-filename = sys.path[0] + '\\CatalogueAndSettings\\catalog.json'
+filename = 'CatalogueAndSettings\\catalog.json'
 
 dictionaryCatalog=json.load(open(filename,'r'))
 

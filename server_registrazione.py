@@ -215,20 +215,19 @@ class Registrazione(object):
         return doctor_number
 
 
-# Inviare pagine html per la registrazione al messaggio inviato da un dottore
-class EchoBot():
-    exposed=True
-    def __init__(self, token):
-        self.tokenBot = token
-        self.bot = telepot.Bot(self.tokenBot)
-        MessageLoop(self.bot, {'chat': self.on_chat_message}).run_as_thread()
-    def on_chat_message(self, msg):
-        content_type, chat_type, chat_ID = telepot.glance(msg)
-        self.bot.sendMessage(chat_ID, str(chat_ID))
+# # Inviare pagine html per la registrazione al messaggio inviato da un dottore
+# class EchoBot():
+#     exposed=True
+#     def __init__(self, token):
+#         self.tokenBot = token
+#         self.bot = telepot.Bot(self.tokenBot)
+#         MessageLoop(self.bot, {'chat': self.on_chat_message}).run_as_thread()
+#     def on_chat_message(self, msg):
+#         content_type, chat_type, chat_ID = telepot.glance(msg)
+#         self.bot.sendMessage(chat_ID, str(chat_ID))
    
 
 if __name__=="__main__":
-
 
     conf_file = 'CatalogueAndSettings\\settings.json' 
     conf = json.load(open(conf_file))
@@ -258,10 +257,10 @@ if __name__=="__main__":
     cherrypy.engine.start() 
     cherrypy.engine.block() 
 
-    # Telegram per inviare le pagine html per la registrazione
-    bot=EchoBot(doctortelegramToken)
-    print("Bot started ...")
-    while True:
-        time.sleep(3)
+    # # Telegram per inviare le pagine html per la registrazione
+    # bot=EchoBot(doctortelegramToken)
+    # print("Bot started ...")
+    # while True:
+    #     time.sleep(3)
 
 
