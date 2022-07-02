@@ -264,14 +264,13 @@ class SwitchBot:
             self.bot.sendMessage(chat_ID, text="Bot successfully started, send your patientID given you by doctor")
             self.previous_message="/start"
         
-        elif  self.previous_message == "/start":
-            if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(chat_ID, text=f"Your patientID is not possible") 
-                self.previous_message="" 
-            else:
-                self.bot.sendMessage(chat_ID, text=f"Your patientID is: {message}")                 
-                self.Update_PatientTelegramID(chat_ID,message)
-                self.previous_message=""
+        elif  self.previous_message == "/start" and int(message) < 0:
+            self.bot.sendMessage(chat_ID, text=f"Your patientID is not possible") 
+            self.previous_message="" 
+        elif self.previous_message == "/start" and int(message) > 0:
+            self.bot.sendMessage(chat_ID, text=f"Your patientID is: {message}")                 
+            self.Update_PatientTelegramID(chat_ID,message)
+            self.previous_message=""
 
         elif message == "/help":
             self.bot.sendMessage(chat_ID, text="You can send /start to log in\n You can send /peso toregister your weight\n You can send /survey to complete a survey") 
@@ -285,7 +284,7 @@ class SwitchBot:
             self.bot.sendMessage(chat_ID, text="Please send your weight in kg")
             self.previous_message="/peso"
         
-        elif  self.previous_message == "/peso":
+        elif self.previous_message == "/peso":
             
             if(int(message) < 0 or (int(message) > 100)):
                 self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
