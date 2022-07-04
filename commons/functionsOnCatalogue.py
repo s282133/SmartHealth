@@ -5,12 +5,10 @@ sys.path.insert(0, os.path.abspath('..'))
 import time
 import string
 
-filename = 'CatalogueAndSettings\\catalog.json'
-
-dictionaryCatalog=json.load(open(filename,'r'))
-
 
 def retrievePregnancyDayOne(patient_ID):
+    filename = 'CatalogueAndSettings\\catalog.json'
+    dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
@@ -20,6 +18,8 @@ def retrievePregnancyDayOne(patient_ID):
                 return data["pregnancyDayOne"]
 
 def retrieveOnlineSince(patient_ID):
+    filename = 'CatalogueAndSettings\\catalog.json'
+    dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
@@ -27,6 +27,30 @@ def retrieveOnlineSince(patient_ID):
             if patient_ID == _patients["patientID"]:
                 device=_patients["connectedDevice"]
                 return device["onlineSince"]
+
+def retrieveTSReadAPIfromClientID(patient_ID):
+    filename = 'CatalogueAndSettings\\catalog.json'
+    dictionaryCatalog=json.load(open(filename,'r'))
+    docList=dictionaryCatalog["doctorList"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                data= _patients["connectedDevice"]["apikeys"][0]
+                print(f"{patient_ID} has READ API KEY {data}")
+                return data
+
+def retrieveTSWriteAPIfromClientID(patient_ID):
+    filename = 'CatalogueAndSettings\\catalog.json'
+    dictionaryCatalog=json.load(open(filename,'r'))
+    docList=dictionaryCatalog["doctorList"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                data= _patients["connectedDevice"]["apikeys"][1]
+                print(f"{patient_ID} has WRITE API KEY {data}")
+                return data
 
 def getWeek(dayOne):
     print(f"dayone = {dayOne}")
