@@ -21,7 +21,7 @@ class Thingspeak():
         message = json.loads(payload) #trasformiamo in json
         self.bn=message['bn']
         self.clientID = self.bn.split("/")[3] 
-        api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
+        api_key = retrieveTSWriteAPIfromClientID(int(self.clientID)) 
         print(f"{api_key}, {self.clientID}")
         if topic=="P4IoT/SmartHealth/+/peso":
             peso=message["status"]
