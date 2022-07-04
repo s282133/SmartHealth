@@ -3,7 +3,7 @@ import json
 import time
 import requests
 # import sys
-
+import re
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
@@ -15,17 +15,19 @@ class Thingspeak():
     def __init__(self,broker,port):
         self.mqttClient=MyMQTT("thingspeak",broker,port,self) 
         self.cont=0
+        self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
+        self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
         
 
     def notify(self,topic,payload): 
         message = json.loads(payload) #trasformiamo in json
-        if topic=="P4IoT/SmartHealth/+/peso":
+        if bool(self.patternWeight.match(str(topic))):
             self.clientID = topic("/")[2]
             api_key = retrieveTSWriteAPIfromClientID(int(self.clientID))   
             peso=message["status"]
             print(f"topic del peso: {topic}")
             r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}')    
-        elif topic!="P4IoT/SmartHealth/+/monitoring": #da cambiare
+        elif bool(self.patternMonitoring.match(str(topic))): #da cambiare
             print(f"topic non del peso: {topic}")
             self.bn=message['bn'] 
             self.clientID = self.bn.split("/")[3]
