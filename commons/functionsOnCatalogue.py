@@ -8,29 +8,35 @@ import string
 
 def retrievePregnancyDayOne(patient_ID):
     filename = '..\\CatalogueAndSettings\\catalog.json'
-    dictionaryCatalog=json.load(open(filename,'r'))
+    filepointer = open(filename, 'r')
+    dictionaryCatalog = json.load(filepointer)
+    # dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
             if patient_ID == _patients["patientID"]:
-                data= _patients["personalData"]
+                data= _patients["personalData"] 
+                filepointer.close()    
                 return data["pregnancyDayOne"]
 
 def retrieveOnlineSince(patient_ID):
     filename = '..\\CatalogueAndSettings\\catalog.json'
-    dictionaryCatalog=json.load(open(filename,'r'))
+    filepointer = open(filename, 'r')
+    dictionaryCatalog = json.load(filepointer)
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
             if patient_ID == _patients["patientID"]:
                 device=_patients["connectedDevice"]
+                filepointer.close()
                 return device["onlineSince"]
 
 def retrieveTSReadAPIfromClientID(patient_ID):
     filename = '..\\CatalogueAndSettings\\catalog.json'
-    dictionaryCatalog=json.load(open(filename,'r'))
+    filepointer = open(filename, 'r')
+    dictionaryCatalog = json.load(filepointer)
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
@@ -42,11 +48,13 @@ def retrieveTSReadAPIfromClientID(patient_ID):
                 #print(f"thingspeakInfo: {thingspeakInfo}")                
                 api_keys = list(thingspeakInfo["apikeys"])
                 #print(f"api_keys: {api_keys}")  
+                filepointer.close()                 
                 return api_keys[1]
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
     filename = '..\\CatalogueAndSettings\\catalog.json'
-    dictionaryCatalog=json.load(open(filename,'r'))
+    filepointer = open(filename, 'r')
+    dictionaryCatalog = json.load(filepointer)
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
@@ -58,7 +66,8 @@ def retrieveTSWriteAPIfromClientID(patient_ID):
                 thingspeakInfo = connectedDevice["thingspeakInfo"]
                 #print(f"thingspeakInfo: {thingspeakInfo}")                
                 api_keys = list(thingspeakInfo["apikeys"])
-                #print(f"api_keys: {api_keys}")                  
+                #print(f"api_keys: {api_keys}")        
+                filepointer.close()          
                 return api_keys[0]
 
 
