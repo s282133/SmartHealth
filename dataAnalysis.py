@@ -115,7 +115,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: heart rate is in range")
                 else:
                     print(f"DataAnalysisBlock: heart rate is NOT in range") 
-                    catalog_fn = '.\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
@@ -140,7 +140,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
-                    catalog_fn = '.\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
@@ -160,7 +160,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: glycemia is in range")
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
-                    catalog_fn = '.\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
@@ -180,7 +180,7 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: temperature is in range")
                 else:
                     print(f"DataAnalysisBlock: temperature is NOT in range") 
-                    catalog_fn = '.\\CatalogueAndSettings\\catalog.json'
+                    catalog_fn = 'CatalogueAndSettings\\catalog.json'
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
@@ -327,7 +327,7 @@ class SwitchBot:
                 self.previous_message=""
 
     def Update_PatientTelegramID (self,chat_ID, message):
-            filename = '.\\CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\catalog.json'
             f = open(filename)
             self.catalog = json.load(f)
             self.lista = self.catalog["doctorList"]
@@ -339,11 +339,11 @@ class SwitchBot:
                         connectedDevice = patientObject["connectedDevice"]
                         connectedDevice["telegramID"]=chat_ID
                         print(f"{chat_ID}")
-            with open('.\\CatalogueAndSettings\\catalog.json', "w") as f:
+            with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
              
     def findPatient(self, chat_ID):
-        filename = '.\\CatalogueAndSettings\\catalog.json'
+        filename = 'CatalogueAndSettings\\catalog.json'
         f = open(filename)
         self.catalog = json.load(f)
 
@@ -365,7 +365,7 @@ class SwitchBot:
 if __name__ == "__main__":
     
     # Settings
-    conf_fn = '.\\CatalogueAndSettings\\settings.json'
+    conf_fn = 'CatalogueAndSettings\\settings.json'
     conf=json.load(open(conf_fn))
     brokerIpAddress = conf["brokerIpAddress"]
     brokerPort = conf["brokerPort"]
