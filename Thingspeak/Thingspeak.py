@@ -22,6 +22,7 @@ class Thingspeak():
         self.bn=message['bn']
         self.clientID = self.bn.split("/")[3] 
         api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
+        print(f"{api_key}, {self.clientID}")
         if topic=="P4IoT/SmartHealth/+/peso":
             peso=message["status"]
             r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}')    
