@@ -22,12 +22,12 @@ class Thingspeak():
     def notify(self,topic,payload): 
         message = json.loads(payload) #trasformiamo in json
         if bool(self.patternWeight.match(str(topic))):
-            self.clientID = topic("/")[2]
+            self.clientID = str(topic).split("/")[2]
             api_key = retrieveTSWriteAPIfromClientID(int(self.clientID))   
             peso=message["status"]
             print(f"topic del peso: {topic}")
             r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}')    
-        elif bool(self.patternMonitoring.match(str(topic))): #da cambiare
+        elif not bool(self.patternMonitoring.match(str(topic))): #da cambiare
             print(f"topic non del peso: {topic}")
             self.bn=message['bn'] 
             self.clientID = self.bn.split("/")[3]
