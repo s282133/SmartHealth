@@ -36,9 +36,10 @@ def retrieveTSReadAPIfromClientID(patient_ID):
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
             if patient_ID == _patients["patientID"]:
-                data= list(_patients["connectedDevice"]["thingspeakInfo"]["apikeys"])[1]
-                print(f"{patient_ID} has READ API KEY {data}")
-                return data
+                connectedDevice = _patients["connectedDevice"]
+                thingspeakInfo = connectedDevice["thingspeakInfo"]
+                api_keys = list(thingspeakInfo["apikeys"])
+                return api_keys[1]
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
     filename = '..\\CatalogueAndSettings\\catalog.json'
@@ -48,9 +49,12 @@ def retrieveTSWriteAPIfromClientID(patient_ID):
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
             if patient_ID == _patients["patientID"]:
-                data= _patients["connectedDevice"]["thingspeakInfo"]["apikeys"][0]
-                print(f"{patient_ID} has WRITE API KEY {data}")
-                return data
+                #data= _patients["connectedDevice"]["thingspeakInfo"]["apikeys"][0]
+                connectedDevice = _patients["connectedDevice"]
+                thingspeakInfo = connectedDevice["thingspeakInfo"]
+                api_keys = list(thingspeakInfo["apikeys"])
+                return api_keys[0]
+
 
 def getWeek(dayOne):
     print(f"dayone = {dayOne}")
