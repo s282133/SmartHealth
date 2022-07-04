@@ -8,6 +8,8 @@ import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
 
+from commons.functionsOnCatalogue import *
+
 
 class Thingspeak():
     def __init__(self,broker,port):
@@ -29,7 +31,7 @@ class Thingspeak():
             self.clientID = self.bn.split("/")[3] 
             self.measureType = message['e'][0]['n']
             #ricerca in base al self.clientID per conoscere l'apikey
-            api_key="FRN2A7XGJHIUSN24"   
+            api_key= retrieveTSWriteAPIfromClientID(self.clientID) 
             if self.measureType=="heartrate":
                 heart_rate=int(message['e'][0]['v'])
                 r1 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field1={heart_rate}')
