@@ -40,8 +40,8 @@ class Thingspeak():
             elif message['e'][0]['n']=="pressureHigh":
                 self.sensed_pressureHigh=message['e'][0]['v']
                 self.sensed_pressureLow=message['e'][1]['v']
-                r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}')
-                r3 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field4={self.sensed_pressureLow}')     
+                r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}&field4={self.sensed_pressureLow}')
+                #r3 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}')     
                 print(f"Field2: {self.sensed_pressureHigh}")
                 print(f"Field4: {self.sensed_pressureLow}")
                 
