@@ -1,6 +1,66 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
-  "LastPatientID": 12,
-  "LastDoctorID": 2,
-  "doctorList": []
+  "LastPatientID": 13,
+  "LastDoctorID": 3,
+  "doctorList": [
+    {
+      "doctorID": 3,
+      "doctorName": "Perry",
+      "doctorSurname": "Cox",
+      "doctorMail": "perrycox@scrubs.com",
+      "lastUpdate": "2022-07-04",
+      "connectedDevice": {
+        "telegramID": "298694124"
+      },
+      "patientList": [
+        {
+          "patientID": 13,
+          "patientName": "Robin",
+          "patientSurname": "Scherbatsky",
+          "personalData": {
+            "taxIDcode": "RBNSCH",
+            "userEmail": "robin@himym.com",
+            "pregnancyDayOne": "2022-05-29"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "rpi98",
+            "onlineSince": "2022-07-04",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1788970,
+              "apikeys": [
+                "FRN2A7XGJHIUSN24",
+                "ZDNDUY17T8SJSXRM"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "rpi98",
+          "patientID": 13,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2022-07-04"
+        }
+      ]
+    }
+  ]
 }

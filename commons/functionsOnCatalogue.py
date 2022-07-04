@@ -36,7 +36,7 @@ def retrieveTSReadAPIfromClientID(patient_ID):
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
             if patient_ID == _patients["patientID"]:
-                data= _patients["connectedDevice"]["apikeys"][0]
+                data= list(_patients["connectedDevice"]["thingspeakInfo"]["apikeys"])[1]
                 print(f"{patient_ID} has READ API KEY {data}")
                 return data
 
@@ -48,7 +48,7 @@ def retrieveTSWriteAPIfromClientID(patient_ID):
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
             if patient_ID == _patients["patientID"]:
-                data= _patients["connectedDevice"]["apikeys"][1]
+                data= _patients["connectedDevice"]["thingspeakInfo"]["apikeys"][0]
                 print(f"{patient_ID} has WRITE API KEY {data}")
                 return data
 

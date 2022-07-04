@@ -111,17 +111,17 @@ class Registrazione(object):
                 "Field 4":"pressure_low",            
                 "Field 5":"peso" 
                 }   
-            # r=requests.post("https://api.thingspeak.com/channels.json",channel)
+            r=requests.post("https://api.thingspeak.com/channels.json",channel)
             
-            # print(f"Questo è il channel: {r.json()}")
-            # self.dicty=r.json()
-            # self.api_key_w=self.dicty["api_keys"][0]
-            # self.api_keys_write=self.api_key_w["api_key"]
-            # self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
-            # channel_id=self.dicty["id"]
-            channel_id="123"
-            self.api_keys_write="abc"
-            self.api_keys_read="def"
+            print(f"Questo è il channel: {r.json()}")
+            self.dicty=r.json()
+            self.api_key_w=self.dicty["api_keys"][0]
+            self.api_keys_write=self.api_key_w["api_key"]
+            self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
+            channel_id=self.dicty["id"]
+            # channel_id="123"
+            # self.api_keys_write="abc"
+            # self.api_keys_read="def"
 
             self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
             self.LastPatientID = self.dictionary["LastPatientID"]
