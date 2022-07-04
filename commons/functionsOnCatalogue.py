@@ -7,7 +7,7 @@ import string
 
 
 def retrievePregnancyDayOne(patient_ID):
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\catalog.json'
     dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
@@ -18,7 +18,7 @@ def retrievePregnancyDayOne(patient_ID):
                 return data["pregnancyDayOne"]
 
 def retrieveOnlineSince(patient_ID):
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\catalog.json'
     dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
@@ -29,7 +29,7 @@ def retrieveOnlineSince(patient_ID):
                 return device["onlineSince"]
 
 def retrieveTSReadAPIfromClientID(patient_ID):
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\catalog.json'
     dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
@@ -41,7 +41,7 @@ def retrieveTSReadAPIfromClientID(patient_ID):
                 return data
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\catalog.json'
     dictionaryCatalog=json.load(open(filename,'r'))
     docList=dictionaryCatalog["doctorList"]
     for _doctors in docList:
