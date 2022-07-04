@@ -19,19 +19,15 @@ class Thingspeak():
 
     def notify(self,topic,payload): 
         message = json.loads(payload) #trasformiamo in json
+        self.bn=message['bn']
+        self.clientID = self.bn.split("/")[3] 
+        api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
         if topic=="P4IoT/SmartHealth/+/peso":
             peso=message["status"]
-            self.clientID = topic.split("/")[3] 
-            #ricerca in base al self.clientID per conoscere l'apikey a partire da self.patientID
-            api_key="FRN2A7XGJHIUSN24"
             r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}')    
         elif topic!="P4IoT/SmartHealth/clientID/monitoring": #da cambiare    
             print(f"Topic is (else){topic}")
-            self.bn=message['bn']
-            self.clientID = self.bn.split("/")[3] 
             self.measureType = message['e'][0]['n']
-            #ricerca in base al self.clientID per conoscere l'apikey
-            api_key= retrieveTSWriteAPIfromClientID(self.clientID) 
             if self.measureType=="heartrate":
                 heart_rate=int(message['e'][0]['v'])
                 r1 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field1={heart_rate}')
