@@ -93,3 +93,56 @@ def getWeek(dayOne):
     elapsedDays = currDays - dayoneDays
     week = int(elapsedDays / 7)
     return week
+
+
+def findDoctorIDwithtelegramID(doctortelegramID):
+    doctorID = -1
+    dictionary = json.load(open('..\\CatalogueAndSettings\\catalog.json','r'))
+    lista = dictionary["doctorList"]
+    for doctorObject in lista:
+        connectedDevice = doctorObject["connectedDevice"]
+        telegramID = connectedDevice["telegramID"] 
+        if doctortelegramID == telegramID: 
+            doctorID = doctorObject["doctorID"] 
+            break
+    return doctorID
+
+
+def findPatient(chat_ID):
+    filename = '..\\CatalogueAndSettings\\catalog.json'
+    f = open(filename)
+    catalog = json.load(f)
+
+    patientID=-1
+    lista = catalog["doctorList"]
+    for doctorObject in lista:
+        patientList = doctorObject["patientList"]
+        for userObject in patientList:
+            connectedDevice = userObject["connectedDevice"] 
+            telegramID = connectedDevice["telegramID"]
+            if  chat_ID == telegramID:
+                patientID = userObject["patientID"] 
+                break
+        if patientID >= 0: 
+            break
+    return patientID   
+
+
+def findDoctorTelegramIdFromPatientId(patientID):
+    filename = '..\\CatalogueAndSettings\\catalog.json'
+    f = open(filename)
+    catalog = json.load(f)
+
+    telegramID = -1
+    lista = catalog["doctorList"]
+    for doctorObject in lista:
+        patientList = doctorObject["patientList"]
+        for userObject in patientList:
+            patientID = userObject["patientID"] 
+            if  patientID == patientID:
+                connectedDevice = userObject["connectedDevice"]
+                telegramID = connectedDevice["telegramID"]
+                break
+        if telegramID >= 0: 
+            break
+    return telegramID    

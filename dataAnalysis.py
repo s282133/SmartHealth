@@ -119,7 +119,7 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = self.findDoctor(self.clientID)
+                    self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
                     if self.telegramID > 0:
                         mybot_dr.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                     else:
@@ -144,7 +144,7 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = self.findDoctor(self.clientID)
+                    self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
                     if self.telegramID > 0:
                         mybot_dr.send_alert(self.telegramID,messaggio, "pression on", "pression off")
                     else:
@@ -164,7 +164,7 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = self.findDoctor(self.clientID)
+                    self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
                     if self.telegramID > 0:
                         mybot_dr.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
@@ -184,28 +184,11 @@ class dataAnalysisClass():
                     self.catalog = json.load(open(catalog_fn))
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = self.findDoctor(self.clientID)
+                    self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
                     if self.telegramID > 0:
                         mybot_dr.send_alert(self.telegramID,messaggio, "temperature on", "temperature off")
                     else:
                         print("Doctor not found for this patient")
-
-        #print("Temperature managed")
-
-
-    def findDoctor(self, patientID):
-        telegramID = 0
-        for doctorObject in self.lista:
-            patientList = doctorObject["patientList"]
-            for userObject in patientList:
-                patientID = userObject["patientID"] 
-                if  patientID == patientID:
-                    connectedDevice = userObject["connectedDevice"]
-                    telegramID = connectedDevice["telegramID"]
-                    break
-            if telegramID > 0: 
-                break
-        return telegramID    
 
 
 
@@ -279,7 +262,6 @@ class SwitchBot:
         self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
  
     def on_chat_patient_message(self, msg):
-        #capire come gestire il previous message
         content_type, chat_type, chat_ID = telepot.glance(msg)
         message = msg['text']
 
@@ -314,7 +296,7 @@ class SwitchBot:
             else:
                 self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
                 print (f"Chat ID: {chat_ID}")
-                self.patientID = self.findPatient(chat_ID)
+                self.patientID = findPatient(chat_ID)
                 
                 if self.patientID == 0:
                     print("Paziente non trovato")
@@ -341,25 +323,7 @@ class SwitchBot:
                         print(f"{chat_ID}")
             with open('CatalogueAndSettings\\catalog.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
-             
-    def findPatient(self, chat_ID):
-        filename = 'CatalogueAndSettings\\catalog.json'
-        f = open(filename)
-        self.catalog = json.load(f)
-
-        patientID=0
-        self.lista = self.catalog["doctorList"]
-        for doctorObject in self.lista:
-            patientList = doctorObject["patientList"]
-            for userObject in patientList:
-                connectedDevice = userObject["connectedDevice"] 
-                telegramID = connectedDevice["telegramID"]
-                if  chat_ID == telegramID:
-                    patientID = userObject["patientID"] 
-                    break
-            if patientID > 0: 
-                break
-        return patientID   
+    
                               
 
 if __name__ == "__main__":

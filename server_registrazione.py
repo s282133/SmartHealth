@@ -114,14 +114,14 @@ class Registrazione(object):
             r=requests.post("https://api.thingspeak.com/channels.json",channel)
             
             print(f"Questo è il channel: {r.json()}")
-            self.dicty=r.json()
-            self.api_key_w=self.dicty["api_keys"][0]
-            self.api_keys_write=self.api_key_w["api_key"]
-            self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
-            channel_id=self.dicty["id"]
-            # channel_id="123"
-            # self.api_keys_write="abc"
-            # self.api_keys_read="def"
+            # self.dicty=r.json()
+            # self.api_key_w=self.dicty["api_keys"][0]
+            # self.api_keys_write=self.api_key_w["api_key"]
+            # self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
+            # channel_id=self.dicty["id"]
+            channel_id="123"
+            self.api_keys_write="abc"
+            self.api_keys_read="def"
 
             self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
             self.LastPatientID = self.dictionary["LastPatientID"]
@@ -158,7 +158,23 @@ class Registrazione(object):
                 }    
 
             # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
-            doctor_number = self.findDoctorwithtelegramID(self.doctortelegramID)
+            trovatoDottore = False
+            doctor_number = 0
+            dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
+            lista = dictionary["doctorList"]
+            for doctorObject in lista:
+                connectedDevice = doctorObject["connectedDevice"]
+                telegramID = connectedDevice["telegramID"] 
+                if self.doctortelegramID == telegramID: 
+                    trovatoDottore = True
+                    break
+                doctor_number += 1
+
+            if not trovatoDottore:
+                messaggio = f"Dottore non trovato con il telegram ID {self.doctortelegramID}"
+                print(messaggio)
+                return messaggio
+            
             self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
 
             # aggiunta del device contemporaneamente al paziente
@@ -202,31 +218,6 @@ class Registrazione(object):
             return False
 
 
-    def findDoctorwithtelegramID(self, doctortelegramID):
-        doctor_number = 0
-        self.lista = self.dictionary["doctorList"]
-        for doctorObject in self.lista:
-            connectedDevice = doctorObject["connectedDevice"]
-            telegramID = connectedDevice["telegramID"] 
-            if doctortelegramID == telegramID: 
-                break
-            doctor_number += 1
-            print(f"{doctor_number} belongs to {telegramID}")
-        return doctor_number
-
-
-# # Inviare pagine html per la registrazione al messaggio inviato da un dottore
-# class EchoBot():
-#     exposed=True
-#     def __init__(self, token):
-#         self.tokenBot = token
-#         self.bot = telepot.Bot(self.tokenBot)
-#         MessageLoop(self.bot, {'chat': self.on_chat_message}).run_as_thread()
-#     def on_chat_message(self, msg):
-#         content_type, chat_type, chat_ID = telepot.glance(msg)
-#         self.bot.sendMessage(chat_ID, str(chat_ID))
-   
-
 if __name__=="__main__":
 
     conf_file = 'CatalogueAndSettings\\settings.json' 
@@ -254,11 +245,4 @@ if __name__=="__main__":
     cherrypy.config.update(conf)
     cherrypy.engine.start() 
     cherrypy.engine.block() 
-
-    # # Telegram per inviare le pagine html per la registrazione
-    # bot=EchoBot(doctortelegramToken)
-    # print("Bot started ...")
-    # while True:
-    #     time.sleep(3)
-
 
