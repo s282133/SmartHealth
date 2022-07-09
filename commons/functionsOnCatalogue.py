@@ -134,7 +134,7 @@ def findDoctorTelegramIdFromPatientId(parPatientID):
     filepointer = open(filename, 'r')
     catalog = json.load(filepointer)
 
-    telegramID = ""
+    telegramID = -1
     lista = catalog["doctorList"]
     for doctorObject in lista:
         patientList = doctorObject["patientList"]
@@ -144,6 +144,6 @@ def findDoctorTelegramIdFromPatientId(parPatientID):
                 connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"]
                 break
-        if telegramID != "": 
+        if telegramID >= 0: 
             break
     return telegramID    
