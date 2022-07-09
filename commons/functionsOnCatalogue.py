@@ -128,21 +128,22 @@ def findPatient(chat_ID):
     return patientID   
 
 
-def findDoctorTelegramIdFromPatientId(patientID):
-    filename = '..\\CatalogueAndSettings\\catalog.json'
-    f = open(filename)
-    catalog = json.load(f)
+def findDoctorTelegramIdFromPatientId(parPatientID):
 
-    telegramID = -1
+    filename = 'CatalogueAndSettings\\catalog.json'
+    filepointer = open(filename, 'r')
+    catalog = json.load(filepointer)
+
+    telegramID = ""
     lista = catalog["doctorList"]
     for doctorObject in lista:
         patientList = doctorObject["patientList"]
         for userObject in patientList:
             patientID = userObject["patientID"] 
-            if  patientID == patientID:
-                connectedDevice = userObject["connectedDevice"]
+            if  patientID == parPatientID:
+                connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"]
                 break
-        if telegramID >= 0: 
+        if telegramID != "": 
             break
     return telegramID    

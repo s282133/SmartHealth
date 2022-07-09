@@ -38,7 +38,7 @@ class rpiPub():
     # MQTT FUNCTIONS
     def __init__(self, clientID):
         self.client_MQTT = MyMQTT(clientID, brokerIpAddress, brokerPort, self)
-        self.clientID = clientID
+        self.clientID = int(clientID)
         #sembra non utilizzato
         #self.messageBroker = brokerIpAddress 
         self.monitoring = False

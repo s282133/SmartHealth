@@ -1,7 +1,7 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
-  "LastPatientID": 15,
-  "LastDoctorID": 3,
+  "LastPatientID": 18,
+  "LastDoctorID": 5,
   "doctorList": [
     {
       "doctorID": 3,
@@ -26,7 +26,7 @@
           "connectedDevice": {
             "deviceName": "rpi98",
             "onlineSince": "2022-07-04",
-            "telegramID": 298694124,
+            "telegramID": "298694124",
             "thingspeakInfo": {
               "channel": 1788970,
               "apikeys": [
@@ -84,8 +84,8 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-04",
-            "telegramID": 786029508,
+            "onlineSince": "2022-07-09",
+            "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,
               "apikeys": [
@@ -107,8 +107,31 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": -1,
-            "telegramID": 0,
+            "onlineSince": "2022-07-09",
+            "telegramID": "",
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 16,
+          "patientName": "Paola",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-07-09",
+            "telegramID": "",
             "thingspeakInfo": {
               "channel": "123",
               "apikeys": [
@@ -163,6 +186,28 @@
             }
           ],
           "lastUpdate": "2022-07-05"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 16,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "MQTT"
+          ],
+          "servicesDetails": [
+            {
+              "serviceType": "MQTT",
+              "topic": [
+                "/MySmartHealth/1/sensors/body"
+              ]
+            }
+          ],
+          "lastUpdate": "2022-07-09"
         }
       ]
     }

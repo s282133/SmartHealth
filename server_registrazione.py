@@ -24,7 +24,7 @@ class Registrazione(object):
         
         # apertura pagina html per registrazione dottore
         if uri[0] == "start": 
-            self.telegramID = params["chat_ID"]
+            self.telegramID = str(params["chat_ID"])
             filename = 'PageHTML\\doctors.html'
             f1 = open(filename)
             fileContent = f1.read()      
@@ -146,7 +146,7 @@ class Registrazione(object):
                 "connectedDevice": {
                     "deviceName": self.record["deviceName"],
                     "onlineSince": -1,
-                    "telegramID": 0,        
+                    "telegramID": "",        
                     "thingspeakInfo": {
                     "channel": channel_id,
                     "apikeys": [

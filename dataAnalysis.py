@@ -47,7 +47,7 @@ class dataAnalysisClass():
         print(f"Il topic è: {topic}")
         d = json.loads(msg)
         self.bn = d["bn"]
-        self.clientID = self.bn.split("/")[3]  
+        self.clientID = int(self.bn.split("/")[3])  
         self.e = d["e"]
         self.measureType = self.e[0]["n"]
         self.unit = self.e[0]["u"]
@@ -77,7 +77,7 @@ class dataAnalysisClass():
         # if(week == 0): 
         #     week = 1
 
-        dayOne = retrievePregnancyDayOne(int(self.clientID))
+        dayOne = retrievePregnancyDayOne(self.clientID)
 
         week = getWeek(dayOne)
 
@@ -120,7 +120,7 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
-                    if self.telegramID > 0:
+                    if self.telegramID != "":
                         mybot_dr.send_alert(self.telegramID, messaggio, "heartrate on", "heartrate off")
                     else:
                         print("Doctor not found for this patient")
@@ -145,7 +145,7 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
-                    if self.telegramID > 0:
+                    if self.telegramID != "":
                         mybot_dr.send_alert(self.telegramID,messaggio, "pression on", "pression off")
                     else:
                         print("Doctor not found for this patient")
@@ -165,7 +165,7 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
-                    if self.telegramID > 0:
+                    if self.telegramID != "":
                         mybot_dr.send_alert(self.telegramID,messaggio, "glycemia on", "glycemia off")
                     else:
                         print("Doctor not found for this patient")
@@ -185,7 +185,7 @@ class dataAnalysisClass():
                     self.lista = self.catalog["doctorList"]
                     messaggio = f"Attention, patient {self.clientID} {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = findDoctorTelegramIdFromPatientId(self.clientID)
-                    if self.telegramID > 0:
+                    if self.telegramID != "":
                         mybot_dr.send_alert(self.telegramID,messaggio, "temperature on", "temperature off")
                     else:
                         print("Doctor not found for this patient")
@@ -252,7 +252,7 @@ class SwitchBot:
 
         mes=messaggio["message"]["text"]
         print(mes)
-        self.patientID = mes.split(" ")[2]
+        self.patientID = int(mes.split(" ")[2])
         print(self.patientID)
         
         top = f"{mqttTopic}/{self.patientID}/monitoring"   

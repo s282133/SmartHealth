@@ -5,7 +5,7 @@ class MyMQTT:
         self.broker = broker
         self.port = port
         self.notifier = notifier
-        self.clientID = clientID
+        # self.clientID = clientID - Non la usiamo mai
         self._topic = ""
         self._isSubscriber = False
         # create an instance of paho.mqtt.client
