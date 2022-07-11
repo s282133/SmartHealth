@@ -4,14 +4,10 @@
 import json                     
 import time
 import cherrypy
-from time import sleep
-# from collections import UserList
-# from telepot.loop import MessageLoop
 import requests
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-# import sys, os
-# sys.path.insert(0, os.path.abspath('..'))
+from time import sleep
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 from PageHTML import *
 from commons.MyMQTT import *

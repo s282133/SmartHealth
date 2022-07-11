@@ -1,12 +1,11 @@
 # Il pubblicatore di temperature pubblica sul topic /temp_raspberry 
 # delle temperature casuali fornite da un generatore 
 
-from commons.MyMQTT import *
 import json
 import time
-import socket
-import struct
 import requests
+
+from commons.MyMQTT import *
 from DeviceConnectorAndSensors.temperatureSensor import temperatureSensorClass
 
 class sensor_publisher:
@@ -21,7 +20,6 @@ class sensor_publisher:
 
     def publish(self,topic,message):
         self.clientMQTT.myPublish(topic,message)
-	
 
 if __name__ == "__main__":
   
@@ -43,7 +41,6 @@ if __name__ == "__main__":
     tempSensor = []
     for patient in lista_pazienti:
         tempSensor.append( temperatureSensorClass() )
-
 
     N=0
     Ciclo=0

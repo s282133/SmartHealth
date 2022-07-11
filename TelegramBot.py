@@ -3,15 +3,14 @@
 
 from gettext import Catalog
 import time
-import socket
 import json
 import telepot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from unicodedata import name
 from telepot.loop import MessageLoop
-import sys, os
-from pprint import pprint
-sys.path.insert(0, os.path.abspath('..'))
+# import sys, os
+# from pprint import pprint
+# sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
@@ -61,9 +60,7 @@ class SwitchBot:
             conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
             conf = json.load(open(conf_file))
             services = conf["services"]
-            
             registration_service = getServiceByName(services,"Registration")
-            
             if registration_service == None:
                 print("Servizio registrazione non trovato")
 
@@ -72,17 +69,33 @@ class SwitchBot:
             api_start = getApiByName(registration_service["APIs"],"start") 
             registration_uri = api_start["uri"]
 
-            #da cambiare on jinja
+            #da cambiare con jinja
             registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
 
             uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
-
-            #self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: http://{self.ipAddressServerRegistrazione}:8080/start?chat_ID={chat_ID}")
             self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
 
 
         if message == "/registrazione_paziente": 
-            self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: http://{self.ipAddressServerRegistrazione}:8080/registrazione_paziente?chat_ID={chat_ID}")
+
+            # Gestione Servizi
+            conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
+            conf = json.load(open(conf_file))
+            services = conf["services"]
+            registration_service = getServiceByName(services,"Registration")
+            if registration_service == None:
+                print("Servizio registrazione non trovato")
+
+            patient_registration_ipAddress = registration_service["host"]
+            patient_registration_port = registration_service["port"]
+            api_start = getApiByName(registration_service["APIs"],"registrazione_paziente") 
+            patient_registration_uri = api_start["uri"]
+
+            #da cambiare con jinja
+            patient_registration_uri = patient_registration_uri.replace("{{chat_ID}}", str(chat_ID))
+
+            uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
+            self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
         if message == "/accesso_dati": 
             self.bot.sendMessage(chat_ID, text='Access to data at this link: ')

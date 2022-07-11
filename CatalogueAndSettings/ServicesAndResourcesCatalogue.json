@@ -149,7 +149,7 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 3,
+    "LastPatientID": 4,
     "LastDoctorID": 2
   },
   "resources": [
@@ -229,7 +229,7 @@
           "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-10",
+            "onlineSince": "2022-07-12",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -252,7 +252,30 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-09",
+            "onlineSince": "2022-07-12",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 4,
+          "patientName": "Paola",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-07-12",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": "123",
@@ -298,6 +321,23 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-07-05"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 4,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-11"
         }
       ]
     }

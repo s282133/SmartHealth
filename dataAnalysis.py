@@ -1,22 +1,16 @@
 ### Description: MQTT subscriber that processes data from the MQTT broker, evaluating if it is according to thresholds
 # telegramID Laura = 491287865
 
-from gettext import Catalog
 import time
 import socket
 import json
-import telepot
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-from unicodedata import name
-from telepot.loop import MessageLoop
-import sys, os
-from pprint import pprint
-from TelegramBot import SwitchBot
-
-sys.path.insert(0, os.path.abspath('..'))
 
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
+
+from gettext import Catalog
+from TelegramBot import SwitchBot
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class dataAnalysisClass():
 
@@ -175,7 +169,7 @@ class dataAnalysisClass():
             weekmin = rangeTE["weekrange"].split("-")[0]
             weekmax = rangeTE["weekrange"].split("-")[1]
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
-                if (int(self.value) >= int(rangeTE["min"]) and int(self.value) <= int(rangeTE["max"])):
+                if (float(self.value) >= float(rangeTE["min"]) and float(self.value) <= float(rangeTE["max"])):
                     print(f"DataAnalysisBlock: temperature is in range")
                 else:
                     print(f"DataAnalysisBlock: temperature is NOT in range") 
