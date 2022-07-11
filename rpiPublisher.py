@@ -3,16 +3,15 @@
 ###              You can add more sensors easily, check the code below
 ###              It's also a subscriber cause recives data from "monitoring" command       
 
-# from MyMQTT import *
 from ipaddress import ip_address
 import time
 import json
 import paho.mqtt.client as PahoMQTT
 from threading import Thread
 from datetime import datetime
-import sys
-import sys, os
-sys.path.insert(0, os.path.abspath('..'))
+# import sys
+# import sys, os
+# sys.path.insert(0, os.path.abspath('..'))
 
 from CatalogueAndSettings import *
 
@@ -28,8 +27,8 @@ POLLING_PERIOD_HR = 10               # chiedo una misurazione ogni 5 minuti
 POLLING_PERIOD_PRESSURE = 12         # chiedo una misurazione ogni 10 minuti
 POLLING_PERIOD_GLYCEMIA = 14         # chiedo una misurazione ogni 20 minuti
 
-ONE_MINUTE_IN_SEC = 0               # per motivi di debug a volte lo metto ad 1 ma deve essere 60
-                                    # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
+ONE_MINUTE_IN_SEC = 0                # per motivi di debug a volte lo metto ad 1 ma deve essere 60
+                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
 SEC_WAIT_NO_MONITORING = 1
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3
 
@@ -39,8 +38,6 @@ class rpiPub():
     def __init__(self, clientID):
         self.client_MQTT = MyMQTT(clientID, brokerIpAddress, brokerPort, self)
         self.clientID = int(clientID)
-        #sembra non utilizzato
-        #self.messageBroker = brokerIpAddress 
         self.monitoring = False
         self.counter = 0
         print(f"{self.clientID} created")

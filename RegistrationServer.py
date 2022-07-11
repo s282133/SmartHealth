@@ -1,19 +1,17 @@
-# SERVER PER LA REGISTRAZIONE DEL PAZIENTE E DEL DOTTORE 
-# Il server permette al medico di registrarsi per la prima volta o di inserire un paziente nella sua lista  iscrivendolo
+# Il server per la registrazione permette al medico di registrarsi per la prima volta o 
+# di inserire un paziente nella sua lista iscrivendolo e associandogli un raspberry
 
 import json                     
 import time
-import telepot
 import cherrypy
-import socket
 from time import sleep
-from collections import UserList
-from telepot.loop import MessageLoop
+# from collections import UserList
+# from telepot.loop import MessageLoop
 import requests
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
-import sys, os
-sys.path.insert(0, os.path.abspath('..'))
+# import sys, os
+# sys.path.insert(0, os.path.abspath('..'))
 
 from PageHTML import *
 from commons.MyMQTT import *
@@ -60,6 +58,7 @@ class Registrazione(object):
             self.lista = self.catalog["resources"][doctor_number] 
             return json.dumps(self.lista) 
 
+        # restituzione di una lista con tutti i pazienti del catalogo
         if uri[0] == "lista_pazienti":
 
             filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
@@ -99,22 +98,18 @@ class Registrazione(object):
 
             self.dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
 
-            # inserisco ID del dottore
             self.LastDoctorID = self.dictionary["resourceState"]["LastDoctorID"]
             doctor["doctorID"] = self.LastDoctorID + 1
             self.dictionary["resourceState"]["LastDoctorID"] = self.LastDoctorID + 1
 
-            # inserisco il dottore nella lista
             self.dictionary["resources"].append(doctor) 
             # PROBLEMA (02-06-2022) : se parto dal catalog.json vuoto, non riesco a salvare il dottore
 
-            # salvo il catalogo aggiornato
             with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
 
-
-        #Chiamata post per registrare il paziente
+        # aggiungere un paziente alla lista dei pazienti al SUBMIT
         if uri[0] == "patients": 
 
             body = cherrypy.request.body.read() 
@@ -175,7 +170,7 @@ class Registrazione(object):
                 }
                 }    
 
-            # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
+            # ricerca del giusto dottore tramite telegram ID  
             trovatoDottore = False
             doctor_number = 0
             dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
@@ -230,45 +225,25 @@ class Registrazione(object):
             return False
 
 
-def TestRegistraPatientIdSuRaspberry( NewPatientID ):
-    json_post = rasp_json.replace("{{NewPatientID}}",str(NewPatientID),1)
-    jd = json.loads(json_post)
-    jd2 = json.dumps(jd)
-    print(jd2)
-    r = f'http://{rasp_ipAddress}:{rasp_port}/{rasp_uri}'
-    print(r)
-    return True
 
+# def getServiceByName(parServices,parName):
+#     first_or_default = next((x for x in parServices if x["service_name"]==parName), None)
+#     return first_or_default 
 
-def getServiceByName(parServices,parName):
-    first_or_default = next((x for x in parServices if x["service_name"]==parName), None)
-    return first_or_default 
-
-def getApiByName(parAPIs,parName):
-    first_or_default = next((x for x in parAPIs if x["functionality_name"]==parName), None)
-    return first_or_default 
+# def getApiByName(parAPIs,parName):
+#     first_or_default = next((x for x in parAPIs if x["functionality_name"]==parName), None)
+#     return first_or_default 
 
 
 
 if __name__=="__main__":
 
-    # conf_file = 'CatalogueAndSettings\\settings.json' 
-    # conf = json.load(open(conf_file))
-    # ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
-    # ipAddressRaspberry = conf["ipAddressRaspberry"]
-    # doctortelegramToken = conf["doctortelegramToken"]
-
-    # if ipAddressServerRegistrazione == "":
-    #     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    #     s.connect(("8.8.8.8", 80))
-    #     ipAddressServerRegistrazione = s.getsockname()[0]
-    #     s.close()  
-
-
     conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
     conf = json.load(open(conf_file))
-    services = conf["services"]
 
+
+    # parametri per la registrazione su raspberry
+    services = conf["services"]
     PatientRegistrationOnRaspberry = getServiceByName(services,"PatientRegistrationOnRaspberry")
 
     if PatientRegistrationOnRaspberry == None:
@@ -280,16 +255,14 @@ if __name__=="__main__":
     rasp_uri = api_updatepatient["uri"]
     rasp_json = api_updatepatient["json_post"]
 
-    #TestRegistraPatientIdSuRaspberry( 10 )
 
-
-    # Server per la registrazione
-
+    # host per il server registrazione
     registration_service = getServiceByName(services,"Registration")
     if registration_service == None:
         print("Servizio registrazione non trovato")
     registration_ipAddress = registration_service["host"]
 
+    # server registrazione
     cherrypy.tree.mount(Registrazione(),'/')
     conf={
         '/':{

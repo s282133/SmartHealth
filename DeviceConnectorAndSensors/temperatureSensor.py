@@ -9,7 +9,6 @@ class temperatureSensorClass():
 
         self.temperature = self.temperature + random.randint(-1, 1)/10
 
-
         if self.temperature < 36:
             self.temperature = 36
 

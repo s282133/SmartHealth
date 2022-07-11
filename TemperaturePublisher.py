@@ -1,3 +1,6 @@
+# Il pubblicatore di temperature pubblica sul topic /temp_raspberry 
+# delle temperature casuali fornite da un generatore 
+
 from commons.MyMQTT import *
 import json
 import time
@@ -51,7 +54,7 @@ if __name__ == "__main__":
             Ciclo+=1
 
         time.sleep(3)
-        time_stamp = str(time.ctime(time.time())) #fornisce orario e data con il giusto formato       
+        time_stamp = str(time.ctime(time.time()))        
 
         # deve venire fuori da un generatore di temperature
         temperature = tempSensor[k].getTemperature(Ciclo)

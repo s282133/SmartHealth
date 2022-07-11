@@ -149,12 +149,12 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 20,
-    "LastDoctorID": 6
+    "LastPatientID": 3,
+    "LastDoctorID": 2
   },
   "resources": [
     {
-      "doctorID": 3,
+      "doctorID": 1,
       "doctorName": "Perry",
       "doctorSurname": "Cox",
       "doctorMail": "perrycox@scrubs.com",
@@ -164,7 +164,7 @@
       },
       "patientList": [
         {
-          "patientID": 13,
+          "patientID": 1,
           "patientName": "Robin",
           "patientSurname": "Scherbatsky",
           "personalData": {
@@ -190,7 +190,7 @@
       "devicesList": [
         {
           "deviceName": "rpi98",
-          "patientID": 13,
+          "patientID": 1,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -208,7 +208,7 @@
       ]
     },
     {
-      "doctorID": 4,
+      "doctorID": 2,
       "doctorName": "Giulia",
       "doctorSurname": "Codagnone",
       "doctorMail": "perrycox@scrubs.com",
@@ -241,7 +241,7 @@
           }
         },
         {
-          "patientID": 15,
+          "patientID": 3,
           "patientName": "Maria",
           "patientSurname": "Rossi",
           "personalData": {
@@ -262,81 +262,12 @@
               ]
             }
           }
-        },
-        {
-          "patientID": 16,
-          "patientName": "Paola",
-          "patientSurname": "Codagnone",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "2022-99-03"
-          },
-          "idRegistratoSuRaspberry": "no",
-          "connectedDevice": {
-            "deviceName": "raspberry22",
-            "onlineSince": "2022-07-09",
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "123",
-              "apikeys": [
-                "abc",
-                "def"
-              ]
-            }
-          }
-        },
-        {
-          "patientID": 19,
-          "patientName": "Giulia",
-          "patientSurname": "Rossi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "2022-99-03"
-          },
-          "idRegistratoSuRaspberry": "no",
-          "connectedDevice": {
-            "deviceName": "raspberry22",
-            "onlineSince": "2022-07-09",
-            "telegramID": 786029508,
-            "thingspeakInfo": {
-              "channel": "123",
-              "apikeys": [
-                "abc",
-                "def"
-              ]
-            }
-          }
-        },
-        {
-          "patientID": 20,
-          "patientName": "Elisa",
-          "patientSurname": "Brondi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "2022-99-03"
-          },
-          "idRegistratoSuRaspberry": "yes",
-          "connectedDevice": {
-            "deviceName": "raspberry22",
-            "onlineSince": -1,
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": "123",
-              "apikeys": [
-                "abc",
-                "def"
-              ]
-            }
-          }
         }
       ],
       "devicesList": [
         {
           "deviceName": "rpi98",
-          "patientID": 14,
+          "patientID": 2,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -353,7 +284,7 @@
         },
         {
           "deviceName": "raspberry22",
-          "patientID": 14,
+          "patientID": 3,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -367,71 +298,8 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-07-05"
-        },
-        {
-          "deviceName": "raspberry22",
-          "patientID": 16,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "application_to_raspberry",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-09"
-        },
-        {
-          "deviceName": "raspberry22",
-          "patientID": 19,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "raspberry_mqtt",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-09"
-        },
-        {
-          "deviceName": "raspberry22",
-          "patientID": 20,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "application_to_raspberry",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-11"
         }
       ]
-    },
-    {
-      "doctorID": 6,
-      "doctorName": "Mario",
-      "doctorSurname": "Rossi",
-      "doctorMail": "mario.rossi@gmail.com",
-      "lastUpdate": "2022-07-11",
-      "connectedDevice": {
-        "telegramID": 786029508
-      },
-      "patientList": [],
-      "devicesList": []
     }
   ]
 }

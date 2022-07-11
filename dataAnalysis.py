@@ -1,9 +1,7 @@
 ### Description: MQTT subscriber that processes data from the MQTT broker, evaluating if it is according to thresholds
-#se dovesse servire: self.telegramID=491287865 #telegramID Laura
+# telegramID Laura = 491287865
 
-#ulteriore commento
 from gettext import Catalog
-# from MyMQTT import *
 import time
 import socket
 import json

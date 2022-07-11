@@ -1,3 +1,6 @@
+# TelegramBot gestisce sia il bot del paziente che quello del dottore
+# abilitando i comandi disponibili e mandando messaggi di allerta
+
 from gettext import Catalog
 import time
 import socket
