@@ -25,7 +25,7 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-04",
+            "onlineSince": "2022-07-10",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -73,7 +73,7 @@
       },
       "patientList": [
         {
-          "patientID": 14,
+          "patientID": 2,
           "patientName": "Laura",
           "patientSurname": "Cubeddu",
           "personalData": {
@@ -81,10 +81,10 @@
             "userEmail": "robin@himym.com",
             "pregnancyDayOne": "2022-05-29"
           },
-          "idRegistratoSuRaspberry": "no",
+          "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-09",
+            "onlineSince": "2022-07-10",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1788970,

@@ -58,6 +58,22 @@ class Registrazione(object):
             self.lista = self.catalog["doctorList"][doctor_number] 
             return json.dumps(self.lista) 
 
+        if uri[0] == "lista_pazienti":
+
+            filename = 'CatalogueAndSettings\\catalog.json'
+            f4 = open(filename)
+            self.catalog = json.load(f4)
+            self.lista_pazienti = []
+            self.lista = self.catalog["doctorList"]
+            for doctorObject in self.lista:
+                self.patientList = doctorObject["patientList"]
+                for patientObject in self.patientList:
+                    self.patientID = patientObject["patientID"]
+                    idRegistratoSuRaspberry = patientObject["idRegistratoSuRaspberry"]
+                    if idRegistratoSuRaspberry == "no":
+                        self.lista_pazienti.append(self.patientID)
+            return json.dumps(self.lista_pazienti)
+
     # aggiungere un dottore alla lista di dottori al SUBMIT
     def POST(self,*uri,**params):
 
@@ -209,7 +225,7 @@ class Registrazione(object):
 
 
     def RegistraPatientIdSuRaspberry( self, NewPatientID ):
-        patient = { "ClientID": NewPatientID }   
+        patient = { "ClientID": NewPatientID}   
         try:
             r = requests.post(f'http://{ipAddressRaspberry}:8080/updatepatientid', json.dumps(patient), timeout=5) 
             #r = requests.post(f'http://192.168.1.253:8080/updatepatientid', json.dumps(patient), timeout=5) 
