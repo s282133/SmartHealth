@@ -6,12 +6,12 @@ import time
 import cherrypy
 import requests
 
-from time import sleep
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-
 from PageHTML import *
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
+
+from time import sleep
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class Registrazione(object):
     exposed=True
@@ -219,17 +219,6 @@ class Registrazione(object):
             return True
         except:
             return False
-
-
-
-# def getServiceByName(parServices,parName):
-#     first_or_default = next((x for x in parServices if x["service_name"]==parName), None)
-#     return first_or_default 
-
-# def getApiByName(parAPIs,parName):
-#     first_or_default = next((x for x in parAPIs if x["functionality_name"]==parName), None)
-#     return first_or_default 
-
 
 
 if __name__=="__main__":
