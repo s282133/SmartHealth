@@ -212,11 +212,11 @@ if __name__ == "__main__":
         # cambiare in 600 se vuoi ogni 60 secondi
         if cicli % 200 == 0:
 
-            filename = 'CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f = open(filename)
             catalog = json.load(f)
 
-            doctorList = catalog["doctorList"]
+            doctorList = catalog["resources"]
             if len(doctorList) > 0:
 
                 for doctorObject in doctorList:
@@ -229,7 +229,7 @@ if __name__ == "__main__":
                             if connectedDevice["onlineSince"] == -1:
                                 
                                 connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
-                                with open('CatalogueAndSettings\\catalog.json', "w") as f:
+                                with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                                     json.dump(catalog, f, indent=2)
                                 patientID = userObject["patientID"]
 
@@ -243,7 +243,7 @@ if __name__ == "__main__":
                             print(f'Patient {userObject["patientID"]} is in week {week}')
                             if int(week) >= 36:
                                 patientList.remove(userObject)
-                                with open('CatalogueAndSettings\\catalog.json', "w") as f:
+                                with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                                     json.dump(catalog, f, indent=2)
         cicli+=1
         time.sleep(0.1)

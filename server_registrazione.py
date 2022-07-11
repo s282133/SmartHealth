@@ -44,10 +44,10 @@ class Registrazione(object):
         # apertura tabella con dati iniziali
         if uri[0] == "tabella": 
 
-            filename = 'CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
-            self.lista = self.catalog["doctorList"]
+            self.lista = self.catalog["resources"]
             doctor_number = 0
             for doctorObject in self.lista:
                 connectedDevice = doctorObject["connectedDevice"]
@@ -55,16 +55,16 @@ class Registrazione(object):
                 if self.doctortelegramID == telegramID: 
                     break
                 doctor_number += 1
-            self.lista = self.catalog["doctorList"][doctor_number] 
+            self.lista = self.catalog["resources"][doctor_number] 
             return json.dumps(self.lista) 
 
         if uri[0] == "lista_pazienti":
 
-            filename = 'CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
             self.lista_pazienti = []
-            self.lista = self.catalog["doctorList"]
+            self.lista = self.catalog["resources"]
             for doctorObject in self.lista:
                 self.patientList = doctorObject["patientList"]
                 for patientObject in self.patientList:
@@ -95,19 +95,19 @@ class Registrazione(object):
                 "devicesList":[]
             }
 
-            self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
+            self.dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
 
             # inserisco ID del dottore
-            self.LastDoctorID = self.dictionary["LastDoctorID"]
+            self.LastDoctorID = self.dictionary["resourceState"]["LastDoctorID"]
             doctor["doctorID"] = self.LastDoctorID + 1
-            self.dictionary["LastDoctorID"] = self.LastDoctorID + 1
+            self.dictionary["resourceState"]["LastDoctorID"] = self.LastDoctorID + 1
 
             # inserisco il dottore nella lista
-            self.dictionary['doctorList'].append(doctor) 
+            self.dictionary["resources"].append(doctor) 
             # PROBLEMA (02-06-2022) : se parto dal catalog.json vuoto, non riesco a salvare il dottore
 
             # salvo il catalogo aggiornato
-            with open('CatalogueAndSettings\\catalog.json', "w") as f:
+            with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
 
@@ -139,10 +139,10 @@ class Registrazione(object):
             self.api_keys_write="abc"
             self.api_keys_read="def"
 
-            self.dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
-            self.LastPatientID = self.dictionary["LastPatientID"]
+            self.dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
+            self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]
             self.NewPatientID = self.LastPatientID + 1
-            self.dictionary["LastPatientID"] = self.NewPatientID
+            self.dictionary["resourceState"]["LastPatientID"] = self.NewPatientID
 
             if self.RegistraPatientIdSuRaspberry( self.NewPatientID ):
                 registratoSuRaspberry = "yes"
@@ -176,8 +176,8 @@ class Registrazione(object):
             # ricerca del giusto dottore tramite telegram ID già presente nel catalogo e quello da cui si è ricevuto il messaggio per la registrazione 
             trovatoDottore = False
             doctor_number = 0
-            dictionary = json.load(open('CatalogueAndSettings\\catalog.json'))
-            lista = dictionary["doctorList"]
+            dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
+            lista = dictionary["resources"]
             for doctorObject in lista:
                 connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"] 
@@ -191,7 +191,7 @@ class Registrazione(object):
                 print(messaggio)
                 return messaggio
             
-            self.dictionary['doctorList'][doctor_number]['patientList'].append(patient)
+            self.dictionary["resources"][doctor_number]['patientList'].append(patient)
 
             # aggiunta del device contemporaneamente al paziente
             device = {
@@ -212,10 +212,10 @@ class Registrazione(object):
                 "lastUpdate": time.strftime("%Y-%m-%d")
             }
 
-            self.dictionary['doctorList'][doctor_number]['devicesList'].append(device)
-            with open('CatalogueAndSettings\\catalog.json', "w") as f:
+            self.dictionary["resources"][doctor_number]['devicesList'].append(device)
+            with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                 json.dump(self.dictionary, f, indent=2)
-            self.lista = self.dictionary["doctorList"][doctor_number]  
+            self.lista = self.dictionary["resources"][doctor_number]  
             return json.dumps(self.lista) 
 
 

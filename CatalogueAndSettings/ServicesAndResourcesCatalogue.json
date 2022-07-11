@@ -1,0 +1,366 @@
+{
+  "Catalog_url": "http://127.0.0.1:8080",
+  "localization": "192.168.0.1",
+  "mqtt_broker_info": {
+    "mqtt_broker": "test.mosquitto.org",
+    "mqtt_broker_port": 1883,
+    "base_topic": "IoT_Project"
+  },
+  "services": [
+    {
+      "name": "TelegramClient",
+      "APIs": {
+        "http": [
+          {
+            "name_functionality": "get_patientID",
+            "localization": "192.168.0.2",
+            "access_mode": "GET",
+            "full_uri": "/TelegramClient/get_clientID?par1={{patient_name}}"
+          },
+          {
+            "name_functionality": "get_patientName",
+            "localization": "192.168.0.2",
+            "access_mode": "GET",
+            "full_uri": "/TelegramClient/get_patientName?par1={{patientID}}"
+          }
+        ],
+        "mqtt": [
+          {
+            "name_functionality": "publish_message",
+            "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
+            "sub_topic": ""
+          },
+          {
+            "name_functionality": "receive_message",
+            "pub_topic": "",
+            "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NodeRed",
+      "APIs": {
+        "http": [
+          {
+            "name_functionality": "post_temperature_data",
+            "localization": "192.168.0.3",
+            "access_mode": "POST",
+            "full_uri": "/post_temperature/{{patientID}}"
+          }
+        ],
+        "mqtt": []
+      }
+    },
+    {
+      "name": "application_to_raspberry",
+      "APIs": {
+        "http": [],
+        "mqtt": [
+          {
+            "name_functionality": "publish_message",
+            "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
+            "sub_topic": ""
+          },
+          {
+            "name_functionality": "receive_message",
+            "pub_topic": "",
+            "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "raspberry_to_application",
+      "APIs": {
+        "http": [],
+        "mqtt": [
+          {
+            "name_functionality": "publish_message",
+            "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
+            "sub_topic": ""
+          },
+          {
+            "name_functionality": "receive_message",
+            "pub_topic": "",
+            "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
+          }
+        ]
+      }
+    }
+  ],
+  "resourceState": {
+    "LastPatientID": 20,
+    "LastDoctorID": 5
+  },
+  "resources": [
+    {
+      "doctorID": 3,
+      "doctorName": "Perry",
+      "doctorSurname": "Cox",
+      "doctorMail": "perrycox@scrubs.com",
+      "lastUpdate": "2022-07-04",
+      "connectedDevice": {
+        "telegramID": 298694124
+      },
+      "patientList": [
+        {
+          "patientID": 13,
+          "patientName": "Robin",
+          "patientSurname": "Scherbatsky",
+          "personalData": {
+            "taxIDcode": "RBNSCH",
+            "userEmail": "robin@himym.com",
+            "pregnancyDayOne": "2022-05-29"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "rpi98",
+            "onlineSince": "2022-07-10",
+            "telegramID": 298694124,
+            "thingspeakInfo": {
+              "channel": 1788970,
+              "apikeys": [
+                "FRN2A7XGJHIUSN24",
+                "ZDNDUY17T8SJSXRM"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "rpi98",
+          "patientID": 13,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-04"
+        }
+      ]
+    },
+    {
+      "doctorID": 4,
+      "doctorName": "Giulia",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "perrycox@scrubs.com",
+      "lastUpdate": "2022-07-04",
+      "connectedDevice": {
+        "telegramID": 786029508
+      },
+      "patientList": [
+        {
+          "patientID": 2,
+          "patientName": "Laura",
+          "patientSurname": "Cubeddu",
+          "personalData": {
+            "taxIDcode": "RBNSCH",
+            "userEmail": "robin@himym.com",
+            "pregnancyDayOne": "2022-05-29"
+          },
+          "idRegistratoSuRaspberry": "yes",
+          "connectedDevice": {
+            "deviceName": "rpi98",
+            "onlineSince": "2022-07-10",
+            "telegramID": 786029508,
+            "thingspeakInfo": {
+              "channel": 1788970,
+              "apikeys": [
+                "FRN2A7XGJHIUSN24",
+                "ZDNDUY17T8SJSXRM"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 15,
+          "patientName": "Maria",
+          "patientSurname": "Rossi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "maria.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-07-09",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 16,
+          "patientName": "Paola",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-07-09",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 19,
+          "patientName": "Giulia",
+          "patientSurname": "Rossi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-07-09",
+            "telegramID": 786029508,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 20,
+          "patientName": "Elisa",
+          "patientSurname": "Brondi",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-99-03"
+          },
+          "idRegistratoSuRaspberry": "yes",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": -1,
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": "123",
+              "apikeys": [
+                "abc",
+                "def"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "rpi98",
+          "patientID": 14,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-04"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 14,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-05"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 16,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-09"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 19,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "raspberry_mqtt",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-09"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 20,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-11"
+        }
+      ]
+    }
+  ]
+}

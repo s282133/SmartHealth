@@ -7,11 +7,11 @@ import string
 
 
 def retrievePregnancyDayOne(patient_ID):
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     dictionaryCatalog = json.load(filepointer)
     # dictionaryCatalog=json.load(open(filename,'r'))
-    docList=dictionaryCatalog["doctorList"]
+    docList=dictionaryCatalog["resources"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
@@ -21,10 +21,10 @@ def retrievePregnancyDayOne(patient_ID):
                 return data["pregnancyDayOne"]
 
 def retrieveOnlineSince(patient_ID):
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     dictionaryCatalog = json.load(filepointer)
-    docList=dictionaryCatalog["doctorList"]
+    docList=dictionaryCatalog["resources"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
@@ -34,10 +34,10 @@ def retrieveOnlineSince(patient_ID):
                 return device["onlineSince"]
 
 def retrieveTSReadAPIfromClientID(patient_ID):
-    filename = '..\\CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     dictionaryCatalog = json.load(filepointer)
-    docList=dictionaryCatalog["doctorList"]
+    docList=dictionaryCatalog["resources"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
@@ -52,10 +52,10 @@ def retrieveTSReadAPIfromClientID(patient_ID):
                 return api_keys[1]
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
-    filename = '..\\CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     dictionaryCatalog = json.load(filepointer)
-    docList=dictionaryCatalog["doctorList"]
+    docList=dictionaryCatalog["resources"]
     for _doctors in docList:
         patientList=_doctors["patientList"] 
         for _patients in patientList: 
@@ -97,8 +97,8 @@ def getWeek(dayOne):
 
 def findDoctorIDwithtelegramID(doctortelegramID):
     doctorID = -1
-    dictionary = json.load(open('..\\CatalogueAndSettings\\catalog.json','r'))
-    lista = dictionary["doctorList"]
+    dictionary = json.load(open('..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json','r'))
+    lista = dictionary["resources"]
     for doctorObject in lista:
         connectedDevice = doctorObject["connectedDevice"]
         telegramID = connectedDevice["telegramID"] 
@@ -109,12 +109,12 @@ def findDoctorIDwithtelegramID(doctortelegramID):
 
 
 def findPatient(chat_ID):
-    filename = '..\\CatalogueAndSettings\\catalog.json'
+    filename = '..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     f = open(filename)
     catalog = json.load(f)
 
     patientID=-1
-    lista = catalog["doctorList"]
+    lista = catalog["resources"]
     for doctorObject in lista:
         patientList = doctorObject["patientList"]
         for userObject in patientList:
@@ -130,12 +130,12 @@ def findPatient(chat_ID):
 
 def findDoctorTelegramIdFromPatientId(parPatientID):
 
-    filename = 'CatalogueAndSettings\\catalog.json'
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     catalog = json.load(filepointer)
 
     telegramID = -1
-    lista = catalog["doctorList"]
+    lista = catalog["resources"]
     for doctorObject in lista:
         patientList = doctorObject["patientList"]
         for userObject in patientList:

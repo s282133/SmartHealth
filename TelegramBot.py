@@ -131,10 +131,10 @@ class SwitchBot:
                 self.previous_message=""
 
     def Update_PatientTelegramID (self,chat_ID, message):
-            filename = 'CatalogueAndSettings\\catalog.json'
+            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f = open(filename)
             self.catalog = json.load(f)
-            self.lista = self.catalog["doctorList"]
+            self.lista = self.catalog["resources"]
             for doctorObject in self.lista:
                 patientList = doctorObject["patientList"]
                 for patientObject in patientList:
@@ -143,7 +143,7 @@ class SwitchBot:
                         connectedDevice = patientObject["connectedDevice"]
                         connectedDevice["telegramID"]=chat_ID
                         print(f"{chat_ID}")
-            with open('CatalogueAndSettings\\catalog.json', "w") as f:
+            with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
     
                               
