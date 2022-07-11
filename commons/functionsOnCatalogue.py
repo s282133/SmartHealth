@@ -147,3 +147,13 @@ def findDoctorTelegramIdFromPatientId(parPatientID):
         if telegramID >= 0: 
             break
     return telegramID    
+
+
+def getServiceByName(parServices,parName):
+    first_or_default = next((x for x in parServices if x["service_name"]==parName), None)
+    return first_or_default 
+
+
+def getApiByName(parAPIs,parName):
+    first_or_default = next((x for x in parAPIs if x["functionality_name"]==parName), None)
+    return first_or_default 

@@ -1,6 +1,5 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
-  "localization": "192.168.0.1",
   "mqtt_broker_info": {
     "mqtt_broker": "test.mosquitto.org",
     "mqtt_broker_port": 1883,
@@ -8,30 +7,88 @@
   },
   "services": [
     {
-      "name": "TelegramClient",
+      "service_name": "Registration",
+      "description": "Servizio per la registrazione di dottori e pazienti",
+      "host": "192.168.1.125",
+      "port": 8080,
+      "APIs": [
+        {
+          "functionality_name": "start",
+          "description": "Form per la registrazione del dottore",
+          "access_mode": "GET",
+          "uri": "start?chat_ID={{chat_ID}}"
+        },
+        {
+          "functionality_name": "registrazione_paziente",
+          "description": "Form per la registrazione del paziente",
+          "access_mode": "GET",
+          "uri": "registrazione_paziente?chat_ID={{chat_ID}}"
+        },
+        {
+          "functionality_name": "tabella",
+          "description": "Form per visualizzare i pazienti del dottore in tabella",
+          "access_mode": "GET",
+          "uri": "tabella"
+        },
+        {
+          "functionality_name": "lista_pazienti",
+          "description": "Fornisce la lista json degli ID di tutti i pazienti nel catalogo",
+          "access_mode": "GET",
+          "uri": "lista_pazienti"
+        },
+        {
+          "functionality_name": "doctors",
+          "description": "Registrazione nel catalogo del dottore",
+          "access_mode": "POST",
+          "uri": "doctors"
+        },
+        {
+          "functionality_name": "patients",
+          "description": "Registrazione nel catalogo del paziente",
+          "access_mode": "POST",
+          "uri": "patients"
+        }
+      ]
+    },
+    {
+      "service_name": "PatientRegistrationOnRaspberry",
+      "description": "Associa il raspberry al paziente appena registrato",
+      "host": "192.168.1.254",
+      "port": 8080,
+      "APIs": [
+        {
+          "functionality_name": "updatepatient",
+          "description": "Registrazione in un file json sul raspberry l'ID del paziente",
+          "access_mode": "POST",
+          "json_post": "{ \"ClientID\": {{NewPatientID}} }",
+          "uri": "updatepatient"
+        }
+      ]
+    },
+    {
+      "service_name": "TelegramClient",
+      "host": "192.168.0.3",
       "APIs": {
         "http": [
           {
-            "name_functionality": "get_patientID",
-            "localization": "192.168.0.2",
+            "functionality_name": "get_patientID",
             "access_mode": "GET",
             "full_uri": "/TelegramClient/get_clientID?par1={{patient_name}}"
           },
           {
-            "name_functionality": "get_patientName",
-            "localization": "192.168.0.2",
+            "functionality_name": "get_patientName",
             "access_mode": "GET",
             "full_uri": "/TelegramClient/get_patientName?par1={{patientID}}"
           }
         ],
         "mqtt": [
           {
-            "name_functionality": "publish_message",
+            "functionality_name": "publish_message",
             "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
             "sub_topic": ""
           },
           {
-            "name_functionality": "receive_message",
+            "functionality_name": "receive_message",
             "pub_topic": "",
             "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
           }
@@ -39,12 +96,12 @@
       }
     },
     {
-      "name": "NodeRed",
+      "service_name": "NodeRed",
+      "host": "192.168.0.3",
       "APIs": {
         "http": [
           {
-            "name_functionality": "post_temperature_data",
-            "localization": "192.168.0.3",
+            "functionality_name": "post_temperature_data",
             "access_mode": "POST",
             "full_uri": "/post_temperature/{{patientID}}"
           }
@@ -53,17 +110,18 @@
       }
     },
     {
-      "name": "application_to_raspberry",
+      "service_name": "application_to_raspberry",
+      "host": "192.168.0.3",
       "APIs": {
         "http": [],
         "mqtt": [
           {
-            "name_functionality": "publish_message",
+            "functionality_name": "publish_message",
             "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
             "sub_topic": ""
           },
           {
-            "name_functionality": "receive_message",
+            "functionality_name": "receive_message",
             "pub_topic": "",
             "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
           }
@@ -71,17 +129,18 @@
       }
     },
     {
-      "name": "raspberry_to_application",
+      "naservice_nameme": "raspberry_to_application",
+      "host": "192.168.0.3",
       "APIs": {
         "http": [],
         "mqtt": [
           {
-            "name_functionality": "publish_message",
+            "functionality_name": "publish_message",
             "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
             "sub_topic": ""
           },
           {
-            "name_functionality": "receive_message",
+            "functionality_name": "receive_message",
             "pub_topic": "",
             "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
           }
@@ -91,7 +150,7 @@
   ],
   "resourceState": {
     "LastPatientID": 20,
-    "LastDoctorID": 5
+    "LastDoctorID": 6
   },
   "resources": [
     {
@@ -361,6 +420,18 @@
           "lastUpdate": "2022-07-11"
         }
       ]
+    },
+    {
+      "doctorID": 6,
+      "doctorName": "Mario",
+      "doctorSurname": "Rossi",
+      "doctorMail": "mario.rossi@gmail.com",
+      "lastUpdate": "2022-07-11",
+      "connectedDevice": {
+        "telegramID": 786029508
+      },
+      "patientList": [],
+      "devicesList": []
     }
   ]
 }

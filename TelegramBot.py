@@ -53,7 +53,30 @@ class SwitchBot:
         message = msg['text']
 
         if message == "/start": 
-            self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: http://{self.ipAddressServerRegistrazione}:8080/start?chat_ID={chat_ID}")
+            
+            # Gestione Servizi
+            conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
+            conf = json.load(open(conf_file))
+            services = conf["services"]
+            
+            registration_service = getServiceByName(services,"Registration")
+            
+            if registration_service == None:
+                print("Servizio registrazione non trovato")
+
+            registration_ipAddress = registration_service["host"]
+            registration_port = registration_service["port"]
+            api_start = getApiByName(registration_service["APIs"],"start") 
+            registration_uri = api_start["uri"]
+
+            #da cambiare on jinja
+            registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
+
+            uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
+
+            #self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: http://{self.ipAddressServerRegistrazione}:8080/start?chat_ID={chat_ID}")
+            self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
+
 
         if message == "/registrazione_paziente": 
             self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: http://{self.ipAddressServerRegistrazione}:8080/registrazione_paziente?chat_ID={chat_ID}")

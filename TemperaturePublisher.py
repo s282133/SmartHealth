@@ -24,7 +24,6 @@ if __name__ == "__main__":
   
     r = requests.get(f'http://192.168.1.125:8080/lista_pazienti')    
     lista_pazienti = r.json()
-    
 
     conf_fn = 'CatalogueAndSettings\\settings.json'
     conf=json.load(open(conf_fn))
