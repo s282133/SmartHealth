@@ -3,10 +3,8 @@
 ###              You can add more sensors easily, check the code below
 ###              It's also a subscriber cause recives data from "monitoring" command       
 
-# from ipaddress import ip_address
 import time
 import json
-# import paho.mqtt.client as PahoMQTT
 from threading import Thread
 from datetime import datetime
 

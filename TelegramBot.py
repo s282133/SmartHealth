@@ -1,18 +1,17 @@
 # TelegramBot gestisce sia il bot del paziente che quello del dottore
 # abilitando i comandi disponibili e mandando messaggi di allerta
 
-from gettext import Catalog
 import time
 import json
 import telepot
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-from unicodedata import name
-from telepot.loop import MessageLoop
-# import sys, os
-# from pprint import pprint
-# sys.path.insert(0, os.path.abspath('..'))
+from gettext import Catalog
+
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
+
+from unicodedata import name
+from telepot.loop import MessageLoop
+from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class SwitchBot:
     def __init__(self, token, broker, port, mqttTopic, topic, ipAddressServerRegistrazione, data_analisys_obj):
