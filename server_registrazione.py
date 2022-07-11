@@ -204,16 +204,11 @@ class Registrazione(object):
                     "Glicemia"
                 ],
                 "availableServices": [
-                    "MQTT"
+                    "raspberry_mqtt",
+                    "raspberry_rest"
                 ],
-                "servicesDetails": [
-                    {
-                    "serviceType": "MQTT",
-                    "topic": [
-                        "/MySmartHealth/1/sensors/body"
-                    ]
-                    }
-                ],
+                "activeService": "application_to_raspberry",
+                "activeProtocol": "mqtt",
                 "lastUpdate": time.strftime("%Y-%m-%d")
             }
 

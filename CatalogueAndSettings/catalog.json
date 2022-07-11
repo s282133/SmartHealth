@@ -48,16 +48,10 @@
             "Glicemia"
           ],
           "availableServices": [
-            "MQTT"
+            "raspberry_mqtt",
+            "raspberry_rest"
           ],
-          "servicesDetails": [
-            {
-              "serviceType": "MQTT",
-              "topic": [
-                "/MySmartHealth/1/sensors/body"
-              ]
-            }
-          ],
+          "activeService": "raspberry_mqtt",
           "lastUpdate": "2022-07-04"
         }
       ]
@@ -176,16 +170,10 @@
             "Glicemia"
           ],
           "availableServices": [
-            "MQTT"
+            "raspberry_mqtt",
+            "raspberry_rest"
           ],
-          "servicesDetails": [
-            {
-              "serviceType": "MQTT",
-              "topic": [
-                "/MySmartHealth/1/sensors/body"
-              ]
-            }
-          ],
+          "activeService": "raspberry_mqtt",
           "lastUpdate": "2022-07-04"
         },
         {
@@ -198,16 +186,10 @@
             "Glicemia"
           ],
           "availableServices": [
-            "MQTT"
+            "raspberry_mqtt",
+            "raspberry_rest"
           ],
-          "servicesDetails": [
-            {
-              "serviceType": "MQTT",
-              "topic": [
-                "/MySmartHealth/1/sensors/body"
-              ]
-            }
-          ],
+          "activeService": "raspberry_mqtt",
           "lastUpdate": "2022-07-05"
         },
         {
@@ -220,16 +202,10 @@
             "Glicemia"
           ],
           "availableServices": [
-            "MQTT"
+            "raspberry_mqtt",
+            "raspberry_rest"
           ],
-          "servicesDetails": [
-            {
-              "serviceType": "MQTT",
-              "topic": [
-                "/MySmartHealth/1/sensors/body"
-              ]
-            }
-          ],
+          "activeService": "raspberry_mqtt",
           "lastUpdate": "2022-07-09"
         },
         {
@@ -242,16 +218,10 @@
             "Glicemia"
           ],
           "availableServices": [
-            "MQTT"
+            "raspberry_mqtt",
+            "raspberry_rest"
           ],
-          "servicesDetails": [
-            {
-              "serviceType": "MQTT",
-              "topic": [
-                "/MySmartHealth/1/sensors/body"
-              ]
-            }
-          ],
+          "activeService": "raspberry_mqtt",
           "lastUpdate": "2022-07-09"
         }
       ]
