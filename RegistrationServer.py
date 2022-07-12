@@ -54,23 +54,6 @@ class Registrazione(object):
             self.lista = self.catalog["resources"][doctor_number] 
             return json.dumps(self.lista) 
 
-        # restituzione di una lista con tutti i pazienti del catalogo
-        if uri[0] == "lista_pazienti":
-
-            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-            f4 = open(filename)
-            self.catalog = json.load(f4)
-            self.lista_pazienti = []
-            self.lista = self.catalog["resources"]
-            for doctorObject in self.lista:
-                self.patientList = doctorObject["patientList"]
-                for patientObject in self.patientList:
-                    self.patientID = patientObject["patientID"]
-                    idRegistratoSuRaspberry = patientObject["idRegistratoSuRaspberry"]
-                    if idRegistratoSuRaspberry == "no":
-                        self.lista_pazienti.append(self.patientID)
-            return json.dumps(self.lista_pazienti)
-
     # aggiungere un dottore alla lista di dottori al SUBMIT
     def POST(self,*uri,**params):
 

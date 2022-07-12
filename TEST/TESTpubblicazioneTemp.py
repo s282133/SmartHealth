@@ -56,8 +56,8 @@ if __name__ == "__main__":
                         ]
                 }
         
-        topic = f"{mqttTopic}/{ClientID}/temp_raspberry"
-        topic = f"{mqttTopic}/2/temp_raspberry"
+        topic = f"{mqtt_base_topic}/{ClientID}/temp_raspberry"
+        topic = f"{mqtt_base_topic}/2/temp_raspberry"
         myPublisher.publish(topic,message)
         
         print(N)

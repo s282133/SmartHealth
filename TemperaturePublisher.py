@@ -6,6 +6,8 @@ import time
 import requests
 
 from commons.MyMQTT import *
+from commons.functionsOnCatalogue import *
+
 from DeviceConnectorAndSensors.temperatureSensor import temperatureSensorClass
 
 class sensor_publisher:
@@ -22,31 +24,45 @@ class sensor_publisher:
         self.clientMQTT.myPublish(topic,message)
 
 if __name__ == "__main__":
-  
-    r = requests.get(f'http://192.168.1.125:8080/lista_pazienti')    
-    lista_pazienti = r.json()
 
-    conf_fn = 'CatalogueAndSettings\\settings.json'
-    conf=json.load(open(conf_fn))
-    brokerIpAdress = conf["brokerIpAddress"]
-    brokerPort = conf["brokerPort"]
-    mqttTopic = conf["mqttTopic"]
-    baseTopic = conf["baseTopic"]
+    # Lista pazienti con raspberry simulati per l'invio delle temperature
+    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    catalog = json.load(open(resouce_filename))
+    lista_pazienti_simulati = []
+    lista = catalog["resources"]
+    for doctorObject in lista:
+        patientList = doctorObject["patientList"]
+        for patientObject in patientList:
+            patientID = patientObject["patientID"]
+            idRegistratoSuRaspberry = patientObject["idRegistratoSuRaspberry"]
+            if idRegistratoSuRaspberry == "no":
+                lista_pazienti_simulati.append(patientID)
 
-    myPublisher = sensor_publisher(brokerIpAdress,brokerPort)
+    # Gestione servizi MQTT
+    services = catalog["services"]
+    mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+    if mqtt_service == None:
+        print("Servizio registrazione non trovato")
+    mqtt_broker = mqtt_service["broker"]
+    mqtt_port = mqtt_service["port"]
+    mqtt_base_topic = mqtt_service["base_topic"]
+    mqtt_api = getApiByName(mqtt_service["APIs"],"send_temperature") 
+    mqtt_topic = mqtt_api["topic"]
+
+    myPublisher = sensor_publisher(mqtt_broker,mqtt_port)
     myPublisher.start()
 
     done=False
 
     tempSensor = []
-    for patient in lista_pazienti:
+    for patient in lista_pazienti_simulati:
         tempSensor.append( temperatureSensorClass() )
 
     N=0
     Ciclo=0
     while not done:
 
-        k = N % len(lista_pazienti)
+        k = N % len(lista_pazienti_simulati)
         if k == 0:
             Ciclo+=1
 
@@ -62,11 +78,12 @@ if __name__ == "__main__":
                         ]
                 }
         
-        patientID = lista_pazienti[k]
+        patientID = lista_pazienti_simulati[k]
         
-        topic = f"{mqttTopic}/{patientID}/temp_raspberry"
-        myPublisher.publish(topic,message)
-        #print(f"{patientID} published {temperature} with topic: {mqttTopic}/{patientID}/temp_raspberry")
+        local_topic = mqtt_topic.replace("{{base_topic}}", str(mqtt_base_topic))
+        local_topic = local_topic.replace("{{patientID}}", str(patientID))
+        myPublisher.publish(local_topic,message)
+        print(f"{patientID} published {temperature} with topic: {local_topic}")
 
         N=N+1
         #print(N)

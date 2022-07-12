@@ -1,5 +1,5 @@
 {
-    "brokerIpAddress": "test.mosquitto.org",
+    "brokerIpAddress": "broker.hivemq.com",
     "brokerPort": 1883,
 
     "baseTopic": "IoT_project",

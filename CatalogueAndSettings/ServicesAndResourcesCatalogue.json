@@ -1,7 +1,7 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
   "mqtt_broker_info": {
-    "mqtt_broker": "test.mosquitto.org",
+    "mqtt_broker": "broker.hivemq.com",
     "mqtt_broker_port": 1883,
     "base_topic": "IoT_Project"
   },
@@ -31,12 +31,6 @@
           "uri": "tabella"
         },
         {
-          "functionality_name": "lista_pazienti",
-          "description": "Fornisce la lista json degli ID di tutti i pazienti nel catalogo",
-          "access_mode": "GET",
-          "uri": "lista_pazienti"
-        },
-        {
           "functionality_name": "doctors",
           "description": "Registrazione nel catalogo del dottore",
           "access_mode": "POST",
@@ -62,6 +56,25 @@
           "access_mode": "POST",
           "json_post": "{ \"ClientID\": {{NewPatientID}} }",
           "uri": "updatepatient"
+        }
+      ]
+    },
+    {
+      "service_name": "MQTT_rilevazione_valori",
+      "description": "Servizio utilizzato per l'invio dei parametri letti dai pazienti",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "send_temperature",
+          "description": "Invio delle temperature simulate e non dei pazienti",
+          "topic": "{{base_topic}}/{{patientID}}/temp_raspberry"
+        },
+        {
+          "functionality_name": "",
+          "description": "",
+          "topic": ""
         }
       ]
     },
@@ -175,7 +188,7 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-10",
+            "onlineSince": "2022-07-12",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1788970,
