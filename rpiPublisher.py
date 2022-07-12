@@ -5,7 +5,6 @@
 
 import time
 import json
-import paho.mqtt.client as PahoMQTT
 from threading import Thread
 from datetime import datetime
 
@@ -73,7 +72,6 @@ class rpiPub():
                     self.monitoring = False
         elif subtopic == TOPIC_TEMP_RASPBERRY:      
             newMeasureTempRaspberry = msg["e"][0]["v"]
-            #Riattivare se necessario
             #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
             self.publishTemperature(newMeasureTempRaspberry)
         else: 
@@ -210,7 +208,6 @@ if __name__ == "__main__":
 
     cicli=0
     while True:
-        # cambiare in 600 se vuoi ogni 60 secondi
         if cicli % 200 == 0:
 
             filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
@@ -248,5 +245,4 @@ if __name__ == "__main__":
                                     json.dump(catalog, f, indent=2)
         cicli+=1
         time.sleep(0.1)
-
         #time.sleep(60)

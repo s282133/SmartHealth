@@ -10,7 +10,6 @@ from PageHTML import *
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
-from time import sleep
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class Registrazione(object):

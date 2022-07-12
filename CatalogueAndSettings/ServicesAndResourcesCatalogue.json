@@ -70,17 +70,19 @@
           "functionality_name": "send_temperature",
           "description": "Invio delle temperature simulate e non dei pazienti",
           "topic": "{{base_topic}}/{{patientID}}/temp_raspberry"
-        },
-        {
-          "functionality_name": "",
-          "description": "",
-          "topic": ""
         }
       ]
     },
     {
+      "service_name": "TelegramDoctor",
+      "doctorTelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
+      "APIs": {
+        "http": []
+      }
+    },
+    {
       "service_name": "TelegramClient",
-      "host": "192.168.0.3",
+      "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
       "APIs": {
         "http": [
           {
@@ -188,7 +190,7 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-12",
+            "onlineSince": "2022-07-13",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -242,7 +244,7 @@
           "idRegistratoSuRaspberry": "yes",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-12",
+            "onlineSince": "2022-07-13",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -265,7 +267,7 @@
           "idRegistratoSuRaspberry": "no",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-12",
+            "onlineSince": "2022-07-13",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": "123",

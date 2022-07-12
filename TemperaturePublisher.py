@@ -3,7 +3,6 @@
 
 import json
 import time
-import requests
 
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
@@ -69,7 +68,6 @@ if __name__ == "__main__":
         time.sleep(3)
         time_stamp = str(time.ctime(time.time()))        
 
-        # deve venire fuori da un generatore di temperature
         temperature = tempSensor[k].getTemperature(Ciclo)
         
         message = { "bn": "http://example.org/sensor1/", 
@@ -86,7 +84,6 @@ if __name__ == "__main__":
         print(f"{patientID} published {temperature} with topic: {local_topic}")
 
         N=N+1
-        #print(N)
 
     myPublisher.stop()   
 

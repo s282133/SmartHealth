@@ -190,26 +190,53 @@ if __name__ == "__main__":
     # Settings
     conf_fn = 'CatalogueAndSettings\\settings.json'
     conf=json.load(open(conf_fn))
-    brokerIpAddress = conf["brokerIpAddress"]
-    brokerPort = conf["brokerPort"]
-    mqttTopic = conf["mqttTopic"]
+    # brokerIpAddress = conf["brokerIpAddress"]
+    # brokerPort = conf["brokerPort"]
+    # mqttTopic = conf["mqttTopic"]
     baseTopic = conf["baseTopic"]
-    doctortelegramToken = conf["doctortelegramToken"]
-    patientTelegramToken = conf["patientTelegramToken"]
+    # doctortelegramToken = conf["doctortelegramToken"]
+    # patientTelegramToken = conf["patientTelegramToken"]
 
-    ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
-    if ipAddressServerRegistrazione == "":
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ipAddressServerRegistrazione = s.getsockname()[0]
-        s.close()  
+    # ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
+    # if ipAddressServerRegistrazione == "":
+    #     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    #     s.connect(("8.8.8.8", 80))
+    #     ipAddressServerRegistrazione = s.getsockname()[0]
+    #     s.close()  
 
-    MQTTpubsub = dataAnalysisClass("rpiSub", brokerIpAddress, brokerPort)
+    # MQTTpubsub = dataAnalysisClass("rpiSub", brokerIpAddress, brokerPort)
+    # MQTTpubsub.start()   
+
+
+    # Gestione servizi MQTT
+    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    catalog = json.load(open(resouce_filename))
+    services = catalog["services"]
+
+    mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+    if mqtt_service == None:
+        print("Servizio registrazione non trovato")
+    mqtt_broker = mqtt_service["broker"]
+    mqtt_port = mqtt_service["port"]
+    mqtt_base_topic = mqtt_service["base_topic"]
+
+    MQTTpubsub = dataAnalysisClass("rpiSub", mqtt_broker, mqtt_port)
     MQTTpubsub.start()   
 
 
+    # Gestione servizi telegram???
+    TelegramDoctor_service = getServiceByName(services,"TelegramDoctor")
+    if TelegramDoctor_service == None:
+        print("Servizio registrazione non trovato")
+    doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
 
-    # Gestione Servizi
+    TelegramClient_service = getServiceByName(services,"TelegramClient")
+    if TelegramClient_service == None:
+        print("Servizio registrazione non trovato")
+    patientTelegramToken = TelegramClient_service["patientTelegramToken"]
+
+
+    # Gestione Servizi di registrazione
     conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
     conf = json.load(open(conf_file))
     services = conf["services"]
@@ -219,25 +246,21 @@ if __name__ == "__main__":
     registration_ipAddress = registration_service["host"]
     
 
-
-
     # SwitchBot per connettersi al Bot telegram del dottore e del paziente
-    mybot_dr=SwitchBot(doctortelegramToken,
-                       brokerIpAddress,
-                       brokerPort,
-                       mqttTopic,
+    mybot_dr=SwitchBot(doctorTelegramToken,
+                       mqtt_broker,
+                       mqtt_port,
+                       mqtt_base_topic,
                        baseTopic,
                        registration_ipAddress,
-                       #ipAddressServerRegistrazione,
                        MQTTpubsub)
 
     mybot_pz=SwitchBot(patientTelegramToken,
-                       brokerIpAddress,
-                       brokerPort,
-                       mqttTopic,
+                       mqtt_broker,
+                       mqtt_port,
+                       mqtt_base_topic,
                        baseTopic,
                        registration_ipAddress,
-                       #ipAddressServerRegistrazione,
                        MQTTpubsub)
 
 
