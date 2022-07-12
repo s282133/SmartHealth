@@ -194,34 +194,50 @@ if __name__ == "__main__":
     brokerPort = conf["brokerPort"]
     mqttTopic = conf["mqttTopic"]
     baseTopic = conf["baseTopic"]
-    ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
+    doctortelegramToken = conf["doctortelegramToken"]
+    patientTelegramToken = conf["patientTelegramToken"]
 
+    ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
     if ipAddressServerRegistrazione == "":
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ipAddressServerRegistrazione = s.getsockname()[0]
         s.close()  
 
-
     MQTTpubsub = dataAnalysisClass("rpiSub", brokerIpAddress, brokerPort)
-    MQTTpubsub.start()    
+    MQTTpubsub.start()   
+
+
+
+    # Gestione Servizi
+    conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
+    conf = json.load(open(conf_file))
+    services = conf["services"]
+    registration_service = getServiceByName(services,"Registration")
+    if registration_service == None:
+        print("Servizio registrazione non trovato")
+    registration_ipAddress = registration_service["host"]
+    
+
+
 
     # SwitchBot per connettersi al Bot telegram del dottore e del paziente
-    doctortelegramToken = conf["doctortelegramToken"]
     mybot_dr=SwitchBot(doctortelegramToken,
                        brokerIpAddress,
                        brokerPort,
                        mqttTopic,
                        baseTopic,
-                       ipAddressServerRegistrazione,
+                       registration_ipAddress,
+                       #ipAddressServerRegistrazione,
                        MQTTpubsub)
-    patientTelegramToken = conf["patientTelegramToken"]
+
     mybot_pz=SwitchBot(patientTelegramToken,
                        brokerIpAddress,
                        brokerPort,
                        mqttTopic,
                        baseTopic,
-                       ipAddressServerRegistrazione,
+                       registration_ipAddress,
+                       #ipAddressServerRegistrazione,
                        MQTTpubsub)
 
 
