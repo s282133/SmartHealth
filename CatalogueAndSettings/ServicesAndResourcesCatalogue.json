@@ -93,39 +93,12 @@
     {
       "service_name": "TelegramDoctor",
       "doctorTelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
-      "APIs": {
-        "http": []
-      }
+      "APIs": []
     },
     {
       "service_name": "TelegramClient",
       "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
-      "APIs": {
-        "http": [
-          {
-            "functionality_name": "get_patientID",
-            "access_mode": "GET",
-            "full_uri": "/TelegramClient/get_clientID?par1={{patient_name}}"
-          },
-          {
-            "functionality_name": "get_patientName",
-            "access_mode": "GET",
-            "full_uri": "/TelegramClient/get_patientName?par1={{patientID}}"
-          }
-        ],
-        "mqtt": [
-          {
-            "functionality_name": "publish_message",
-            "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
-            "sub_topic": ""
-          },
-          {
-            "functionality_name": "receive_message",
-            "pub_topic": "",
-            "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
-          }
-        ]
-      }
+      "APIs": []
     },
     {
       "service_name": "NodeRed",
@@ -181,7 +154,7 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 4,
+    "LastPatientID": 3,
     "LastDoctorID": 2
   },
   "resources": [
@@ -196,7 +169,7 @@
       },
       "patientList": [
         {
-          "patientID": 1,
+          "patientID": 3,
           "patientName": "Robin",
           "patientSurname": "Scherbatsky",
           "personalData": {
@@ -205,6 +178,7 @@
             "pregnancyDayOne": "2022-05-29"
           },
           "idRegistratoSuRaspberry": "no",
+          "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
             "onlineSince": "2022-07-13",
@@ -222,7 +196,7 @@
       "devicesList": [
         {
           "deviceName": "rpi98",
-          "patientID": 1,
+          "patientID": 3,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -250,7 +224,7 @@
       },
       "patientList": [
         {
-          "patientID": 2,
+          "patientID": 1,
           "patientName": "Laura",
           "patientSurname": "Cubeddu",
           "personalData": {
@@ -259,6 +233,7 @@
             "pregnancyDayOne": "2022-05-29"
           },
           "idRegistratoSuRaspberry": "yes",
+          "monitoring": "on",
           "connectedDevice": {
             "deviceName": "rpi98",
             "onlineSince": "2022-07-13",
@@ -273,7 +248,7 @@
           }
         },
         {
-          "patientID": 3,
+          "patientID": 2,
           "patientName": "Maria",
           "patientSurname": "Rossi",
           "personalData": {
@@ -282,6 +257,7 @@
             "pregnancyDayOne": "2022-99-03"
           },
           "idRegistratoSuRaspberry": "no",
+          "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
             "onlineSince": "2022-07-13",
@@ -299,7 +275,7 @@
       "devicesList": [
         {
           "deviceName": "rpi98",
-          "patientID": 2,
+          "patientID": 1,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -316,7 +292,7 @@
         },
         {
           "deviceName": "raspberry22",
-          "patientID": 3,
+          "patientID": 2,
           "measureType": [
             "Temperature",
             "Battito cardiaco",

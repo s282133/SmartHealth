@@ -53,6 +53,35 @@ class Registrazione(object):
             self.lista = self.catalog["resources"][doctor_number] 
             return json.dumps(self.lista) 
 
+        # mandare al raspberry il servizio da utilizzare
+        if uri[0] == "get_raspberry_parameters":
+            # Gestione servizi MQTT
+            resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+            catalog = json.load(open(resouce_filename))
+            services = catalog["services"]
+            mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+            mqtt_broker = mqtt_service["broker"]
+            mqtt_port = mqtt_service["port"]
+            mqtt_base_topic = mqtt_service["base_topic"]
+
+            if mqtt_service == None:
+                return ""
+
+            api_updatepatient = getApiByName(mqtt_service["APIs"],"send_temperature") 
+            topic = api_updatepatient["topic"]
+
+            # da cambiare con jinja
+            #"{{base_topic}}/{{patientID}}/temp_raspberry"
+            local_topic = topic.replace("{{base_topic}}", mqtt_base_topic)
+            
+            mqtt_service = {
+                "broker": mqtt_broker,
+                "port": mqtt_port,
+                "topic": local_topic
+            }
+
+            return json.dumps(mqtt_service) 
+
     # aggiungere un dottore alla lista di dottori al SUBMIT
     def POST(self,*uri,**params):
 
@@ -119,7 +148,9 @@ class Registrazione(object):
             self.NewPatientID = self.LastPatientID + 1
             self.dictionary["resourceState"]["LastPatientID"] = self.NewPatientID
 
-            if self.RegistraPatientIdSuRaspberry( self.NewPatientID ):
+            self.returnCode = 0
+            result = self.RegistraPatientIdSuRaspberry( self.NewPatientID )
+            if result == 1:
                 registratoSuRaspberry = "yes"
             else:
                 registratoSuRaspberry = "no"
@@ -197,10 +228,14 @@ class Registrazione(object):
     def RegistraPatientIdSuRaspberry( self, NewPatientID ):
         json_post = rasp_json.replace("{{NewPatientID}}",str(NewPatientID),1)
         try:
-            r = requests.post(f'http://{rasp_ipAddress}:{rasp_port}/{rasp_uri}', {json_post}, timeout=5) 
-            return True
-        except:
-            return False
+            uri = f'http://{rasp_ipAddress}:{rasp_port}/{rasp_uri}'
+            r = requests.post(uri, json_post, timeout=5) 
+            if r.text == 'OK':
+                return 1
+            else:    
+                return 0
+        except: return -1
+
 
 
 if __name__=="__main__":

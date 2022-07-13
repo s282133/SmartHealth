@@ -116,19 +116,12 @@ class DoctorBot:
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
                 
-        if query_data==f"{self.cmd_on}":
-            monitoring = "ON"      
-        else:
-            monitoring = "OFF"
-
-        mes=messaggio["message"]["text"]
-        print(mes)
-        self.patientID = int(mes.split(" ")[2])
-        print(self.patientID)
+        MonitoringID = self.cmd_on.split(" ")[2]
+        monitoring = self.cmd_on.split(" ")[1]
         
-        top = f"{self.mqttTopic}/{self.patientID}/monitoring"   
+        top = f"{self.mqttTopic}/{MonitoringID}/monitoring"   
         message =  {"status": monitoring}
         self.data_analisys_obj.myPublish(top, message)
         print(f"{message}")
-        self.bot.sendMessage(chat_ID, text=f"Monitoring {query_data}")
+        self.bot.sendMessage(chat_ID, text=f"Monitoring {monitoring}")
  

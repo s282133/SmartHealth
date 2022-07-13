@@ -164,3 +164,49 @@ def getTopicByParameters(parTopic, parBaseTopic, parPatientID):
     local_topic = parTopic.replace("{{base_topic}}", parBaseTopic)
     local_topic = local_topic.replace("{{patientID}}", parPatientID) #parPatient da passare come stringa
     return local_topic
+
+
+def getNameFromClientID(patient_ID):
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filepointer = open(filename, 'r')
+    dictionaryCatalog = json.load(filepointer)
+    docList=dictionaryCatalog["resources"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                patientName=_patients["patientName"]
+                patientSurname=_patients["patientSurname"]
+                filepointer.close()
+                return f"{patientName} {patientSurname}"
+
+
+def getMonitoringStateFromClientID(patient_ID):
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filepointer = open(filename, 'r')
+    dictionaryCatalog = json.load(filepointer)
+    docList=dictionaryCatalog["resources"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                monitoring=_patients["monitoring"]
+                filepointer.close()
+                return monitoring
+    
+
+
+def setMonitorinStatefromClientID(monitoring, patient_ID):
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filepointer = open(filename)
+    dictionaryCatalog = json.load(filepointer)
+    docList=dictionaryCatalog["resources"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                _patients["monitoring"] = monitoring
+                filepointer.close()
+                with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
+                    json.dump(dictionaryCatalog, f, indent=2)
+    

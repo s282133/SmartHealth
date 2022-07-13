@@ -19,9 +19,13 @@ from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
 TOPIC_TEMP_RASPBERRY = "temp_raspberry"
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR = 10               # chiedo una misurazione ogni 5 minuti
-POLLING_PERIOD_PRESSURE = 12         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 14         # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_HR       = 20         # chiedo una misurazione ogni 5 minuti
+POLLING_PERIOD_PRESSURE = 22         # chiedo una misurazione ogni 10 minuti
+POLLING_PERIOD_GLYCEMIA = 24         # chiedo una misurazione ogni 20 minuti
+
+POLLING_MONITORING_HR       = 10         # chiedo una misurazione ogni 5 minuti
+POLLING_MONITORING_PRESSURE = 12         # chiedo una misurazione ogni 10 minuti
+POLLING_MONITORING_GLYCEMIA = 14         # chiedo una misurazione ogni 20 minuti
 
 ONE_MINUTE_IN_SEC = 0                # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                      # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
@@ -34,7 +38,13 @@ class rpiPub():
     def __init__(self, clientID):
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = int(clientID)
-        self.monitoring = False
+
+        self.monitoring_status = getMonitoringStateFromClientID(self.clientID)
+        if self.monitoring_status == "on":
+            self.monitoring = True
+        else:
+            self.monitoring = False
+
         self.counter = 0
         print(f"{self.clientID} created")
         self.start()
@@ -64,11 +74,14 @@ class rpiPub():
         subtopic = topic.split("/")[3]
         if subtopic == "monitoring":           
             print(f"{self.clientID} received {msg} from topic: {topic}")
-            status = msg["status"]
-            if status == "ON":
-                    self.monitoring = True
-            elif status=="OFF":
-                    self.monitoring = False
+            self.monitoring_status = msg["status"]
+            if self.monitoring_status == "on":
+                self.monitoring = True
+            elif self.monitoring_status=="off":
+                self.monitoring = False
+
+            setMonitorinStatefromClientID(self.monitoring_status, self.clientID)
+
         elif subtopic == TOPIC_TEMP_RASPBERRY:      
             newMeasureTempRaspberry = msg["e"][0]["v"]
             #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
@@ -95,7 +108,7 @@ class rpiPub():
         topicHR = f"{mqtt_base_topic}/{self.clientID}/heartrate"
         messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicHR, messageHR)
-        print(f"{self.clientID} published {measure} with topic: {mqtt_base_topic}/{self.clientID}/heartrate")
+        print(f"{self.clientID} published {measure} with topic: {mqtt_base_topic}/{self.clientID}/heartrate ({self.monitoring_status})")
 
     # PRESSURE
 
@@ -110,7 +123,7 @@ class rpiPub():
         # TODO : mettere 2 "e", una per min e una per max
         messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
         self.myPublish(f"{mqtt_base_topic}/{self.clientID}/pressure", messagePR)
-        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {mqtt_base_topic}/{self.clientID}/pressure")
+        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {mqtt_base_topic}/{self.clientID}/pressure ({self.monitoring_status})")
 
     # GLYCEMIA
 
@@ -122,7 +135,7 @@ class rpiPub():
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
         self.myPublish(f"{mqtt_base_topic}/{self.clientID}/glycemia", messageGL)
-        print(f"{self.clientID} published {measure} with topic: {mqtt_base_topic}/{self.clientID}/glycemia")
+        print(f"{self.clientID} published {measure} with topic: {mqtt_base_topic}/{self.clientID}/glycemia ({self.monitoring_status})")
 
 
     # TEMPERATURE
@@ -137,9 +150,10 @@ class rpiPub():
     # Lettura e pubblicazione dati 
 
     def routineFunction(self):
+        time.sleep(1)
         if(self.monitoring == False):
             #print("Monitoraggio OFF")
-            time.sleep(SEC_WAIT_NO_MONITORING)
+            #time.sleep(SEC_WAIT_NO_MONITORING)
             if self.counter % POLLING_PERIOD_HR == 0:
                 newMeasureHR = int(self.getHRmeasure(self.counter))
                 self.publishHR(newMeasureHR)
@@ -150,21 +164,20 @@ class rpiPub():
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
             self.counter = self.counter + 1
-            time.sleep(ONE_MINUTE_IN_SEC)
+            #time.sleep(ONE_MINUTE_IN_SEC)
         else:
             print("Monitoraggio ON")
-            time.sleep(SEC_WAIT_MONITORING)
-            if self.counter % POLLING_PERIOD_HR == 0:
+            #time.sleep(SEC_WAIT_MONITORING)
+            if self.counter % POLLING_MONITORING_HR == 0:
                 newMeasureHR = int(self.getHRmeasure(self.counter))
                 self.publishHR(newMeasureHR)
-            if self.counter % POLLING_PERIOD_PRESSURE == 0:
+            if self.counter % POLLING_MONITORING_PRESSURE == 0:
                 newMeasurePressureDict = self.getPressuremeasure(self.counter)
                 self.publishPressure(newMeasurePressureDict)
-            if self.counter % POLLING_PERIOD_GLYCEMIA == 0:
+            if self.counter % POLLING_MONITORING_GLYCEMIA == 0:
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
             self.counter = self.counter + 1
-            time.sleep(ONE_MINUTE_IN_SEC)
 
 
 # def getWeek(dayOne):
