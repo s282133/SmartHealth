@@ -2,32 +2,32 @@
 # telegramID Laura = 491287865
 
 import time
-import socket
 import json
 
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
 from gettext import Catalog
-from TelegramBot import SwitchBot
+from DoctorBot import DoctorBot
+from PatientBot import PatientBot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class dataAnalysisClass():
 
     # MQTT FUNCTIONS
 
-    def __init__(self, clientID, broker, port):
-        self.client = MyMQTT(clientID, broker, port, self)
+    def __init__(self):
+        self.client = MyMQTT(None, mqtt_broker, mqtt_port, self)
         timeshift_fn = 'PostProcessing\\timeshift.json'
         self.thresholdsFile = json.load(open(timeshift_fn,'r'))
 
     def start(self):
         self.client.start()
-        self.client.mySubscribe("P4IoT/SmartHealth/+/heartrate")
-        self.client.mySubscribe("P4IoT/SmartHealth/+/pressure")
-        self.client.mySubscribe("P4IoT/SmartHealth/+/glycemia")
-        self.client.mySubscribe("P4IoT/SmartHealth/+/temperature")
-    
+        self.client.mySubscribe(local_topic_temperature)
+        self.client.mySubscribe(local_topic_heartrate)
+        self.client.mySubscribe(local_topic_pressure)
+        self.client.mySubscribe(local_topic_glycemia)
+
     def stop(self):
         self.client.stop()
         
@@ -187,82 +187,34 @@ class dataAnalysisClass():
 
 if __name__ == "__main__":
     
-    # Settings
-    conf_fn = 'CatalogueAndSettings\\settings.json'
-    conf=json.load(open(conf_fn))
-    # brokerIpAddress = conf["brokerIpAddress"]
-    # brokerPort = conf["brokerPort"]
-    # mqttTopic = conf["mqttTopic"]
-    baseTopic = conf["baseTopic"]
-    # doctortelegramToken = conf["doctortelegramToken"]
-    # patientTelegramToken = conf["patientTelegramToken"]
-
-    # ipAddressServerRegistrazione = conf["ipAddressServerRegistrazione"]
-    # if ipAddressServerRegistrazione == "":
-    #     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    #     s.connect(("8.8.8.8", 80))
-    #     ipAddressServerRegistrazione = s.getsockname()[0]
-    #     s.close()  
-
-    # MQTTpubsub = dataAnalysisClass("rpiSub", brokerIpAddress, brokerPort)
-    # MQTTpubsub.start()   
-
-
     # Gestione servizi MQTT
     resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     catalog = json.load(open(resouce_filename))
     services = catalog["services"]
 
-    mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+    mqtt_service = getServiceByName(services,"MQTT_analysis")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]
     mqtt_port = mqtt_service["port"]
     mqtt_base_topic = mqtt_service["base_topic"]
+    mqtt_api = getApiByName(mqtt_service["APIs"],"send_measure") 
 
-    MQTTpubsub = dataAnalysisClass("rpiSub", mqtt_broker, mqtt_port)
+    mqtt_topic_temperature  = mqtt_api["topic_temperature"]
+    mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
+    mqtt_topic_pressure     = mqtt_api["topic_pressure"]
+    mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+
+    local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, mqtt_base_topic, "+")
+    local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, mqtt_base_topic, "+")
+    local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, mqtt_base_topic, "+")
+    local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, mqtt_base_topic, "+")
+
+    MQTTpubsub = dataAnalysisClass()
     MQTTpubsub.start()   
 
-
-    # Gestione servizi telegram???
-    TelegramDoctor_service = getServiceByName(services,"TelegramDoctor")
-    if TelegramDoctor_service == None:
-        print("Servizio registrazione non trovato")
-    doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
-
-    TelegramClient_service = getServiceByName(services,"TelegramClient")
-    if TelegramClient_service == None:
-        print("Servizio registrazione non trovato")
-    patientTelegramToken = TelegramClient_service["patientTelegramToken"]
-
-
-    # Gestione Servizi di registrazione
-    conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
-    conf = json.load(open(conf_file))
-    services = conf["services"]
-    registration_service = getServiceByName(services,"Registration")
-    if registration_service == None:
-        print("Servizio registrazione non trovato")
-    registration_ipAddress = registration_service["host"]
-    
-
-    # SwitchBot per connettersi al Bot telegram del dottore e del paziente
-    mybot_dr=SwitchBot(doctorTelegramToken,
-                       mqtt_broker,
-                       mqtt_port,
-                       mqtt_base_topic,
-                       baseTopic,
-                       registration_ipAddress,
-                       MQTTpubsub)
-
-    mybot_pz=SwitchBot(patientTelegramToken,
-                       mqtt_broker,
-                       mqtt_port,
-                       mqtt_base_topic,
-                       baseTopic,
-                       registration_ipAddress,
-                       MQTTpubsub)
-
+    mybot_dr=DoctorBot(MQTTpubsub)
+    mybot_pz=PatientBot(MQTTpubsub)
 
     while True:
         time.sleep(10)

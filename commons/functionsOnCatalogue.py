@@ -157,3 +157,10 @@ def getServiceByName(parServices,parName):
 def getApiByName(parAPIs,parName):
     first_or_default = next((x for x in parAPIs if x["functionality_name"]==parName), None)
     return first_or_default 
+
+
+def getTopicByParameters(parTopic, parBaseTopic, parPatientID):
+    #"topic_temperature": "{{base_topic}}/{{patientID}}/temperature",
+    local_topic = parTopic.replace("{{base_topic}}", parBaseTopic)
+    local_topic = local_topic.replace("{{patientID}}", parPatientID) #parPatient da passare come stringa
+    return local_topic

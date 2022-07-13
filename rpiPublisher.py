@@ -48,9 +48,8 @@ class rpiPub():
         self.client_MQTT.mySubscribe(self.subTopic)
 
         #da sostituire con jinja
-        local_topic = mqtt_topic.replace("{{base_topic}}", str(mqtt_base_topic))
-        self.TopicTempRaspberry = local_topic.replace("{{patientID}}", str(self.clientID))    
-   
+        self.TopicTempRaspberry = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(self.clientID))
+        
         self.client_MQTT.mySubscribe(self.TopicTempRaspberry)
 
     def stop (self):

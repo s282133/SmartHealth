@@ -78,8 +78,8 @@ if __name__ == "__main__":
         
         patientID = lista_pazienti_simulati[k]
         
-        local_topic = mqtt_topic.replace("{{base_topic}}", str(mqtt_base_topic))
-        local_topic = local_topic.replace("{{patientID}}", str(patientID))
+        local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
+
         myPublisher.publish(local_topic,message)
         print(f"{patientID} published {temperature} with topic: {local_topic}")
 

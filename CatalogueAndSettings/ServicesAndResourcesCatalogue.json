@@ -74,6 +74,23 @@
       ]
     },
     {
+      "service_name": "MQTT_analysis",
+      "description": "Servizio utilizzato per l'invio dei dati in analisi",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "send_measure",
+          "description": "Invio dei dati misurati sul paziente",
+          "topic_temperature": "{{base_topic}}/{{patientID}}/temperature",
+          "topic_heartrate": "{{base_topic}}/{{patientID}}/heartrate",
+          "topic_pressure": "{{base_topic}}/{{patientID}}/pressure",
+          "topic_glycemia": "{{base_topic}}/{{patientID}}/glycemia"
+        }
+      ]
+    },
+    {
       "service_name": "TelegramDoctor",
       "doctorTelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
       "APIs": {
