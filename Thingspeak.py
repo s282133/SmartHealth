@@ -26,7 +26,8 @@ class Thingspeak():
             api_key = retrieveTSWriteAPIfromClientID(self.clientID)
             peso=message["status"]
             print(f"topic del peso: {topic}")
-            r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}')    
+            r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}') 
+
         elif not bool(self.patternMonitoring.match(str(topic))): #da cambiare
             print(f"topic non del peso: {topic}")
             self.bn=message['bn'] 
@@ -34,24 +35,27 @@ class Thingspeak():
             api_key = retrieveTSWriteAPIfromClientID(self.clientID)     
             print(f"Topic is (else){topic}")
             self.measureType = message['e'][0]['n']
+
             if self.measureType=="heartrate":
                 heart_rate=int(message['e'][0]['v'])
-                r1 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field1={heart_rate}')
+                r1 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={heart_rate}')
                 print(f"Field1: {heart_rate}")
+
             elif message['e'][0]['n']=="glycemia":
                 glycemia=int(message['e'][0]['v'])
-                r2=requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field3={glycemia}')
+                r2=requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field3={glycemia}')
                 print(f"Field3: {glycemia}")
+
             elif message['e'][0]['n']=="pressureHigh":
+            #elif message['e'][0]['n']=="pressure": #se lo facciamo usl topic
                 self.sensed_pressureHigh=message['e'][0]['v']
                 self.sensed_pressureLow=message['e'][1]['v']
-                r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}&field4={self.sensed_pressureLow}')
+                r3 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}')
+                r4 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field4={self.sensed_pressureLow}')
                 #r3 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}')     
                 print(f"Field2: {self.sensed_pressureHigh}")
                 print(f"Field4: {self.sensed_pressureLow}")
                 
- 
-            
                 
             
     def start(self): 

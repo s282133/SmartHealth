@@ -127,11 +127,11 @@ class Registrazione(object):
             channel={
                 "api_key":"OEUWTU8AH5MOIMKZ",
                 "name": nameChannel,
-                "Field 1":"heart rate",
-                "Field 2":"pressure_high",
-                "Field 3":"glycemia",    
-                "Field 4":"pressure_low",            
-                "Field 5":"peso" 
+                "field1": "heart rate",
+                "field2": "pressure_high",
+                "field3": "glycemia",    
+                "field4": "pressure_low",            
+                "field5": "peso" 
                 }   
             r=requests.post("https://api.thingspeak.com/channels.json",channel)
             

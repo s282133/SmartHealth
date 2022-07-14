@@ -210,3 +210,18 @@ def setMonitorinStatefromClientID(monitoring, patient_ID):
                 with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                     json.dump(dictionaryCatalog, f, indent=2)
     
+    
+def setOnlineSinceFromClientID(patient_ID):
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filepointer = open(filename)
+    dictionaryCatalog = json.load(filepointer)
+    docList=dictionaryCatalog["resources"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                _patients["connectedDevice"]["onlineSince"] = -1
+                filepointer.close()
+                with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
+                    json.dump(dictionaryCatalog, f, indent=2)
+        

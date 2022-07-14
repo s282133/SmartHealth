@@ -217,6 +217,11 @@ class rpiPub():
 
 if __name__ == "__main__":
 
+    #setOnlineSinceFromClientID(1)
+    #setOnlineSinceFromClientID(2)
+    #setOnlineSinceFromClientID(3)
+    setOnlineSinceFromClientID(6)
+
     # Gestione servizi MQTT
     resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     catalog = json.load(open(resouce_filename))
