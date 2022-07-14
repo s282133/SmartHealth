@@ -7,7 +7,6 @@ import re
 import sys, os
 sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
-
 from commons.functionsOnCatalogue import *
 
 
@@ -50,8 +49,8 @@ class Thingspeak():
             #elif message['e'][0]['n']=="pressure": #se lo facciamo usl topic
                 self.sensed_pressureHigh=message['e'][0]['v']
                 self.sensed_pressureLow=message['e'][1]['v']
-                r3 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}')
-                r4 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field4={self.sensed_pressureLow}')
+                r3 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}&field4={self.sensed_pressureLow}')
+                #r4 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field4={self.sensed_pressureLow}')
                 #r3 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}')     
                 print(f"Field2: {self.sensed_pressureHigh}")
                 print(f"Field4: {self.sensed_pressureLow}")
