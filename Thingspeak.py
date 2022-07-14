@@ -62,7 +62,9 @@ class Thingspeak():
 
 
 if __name__=="__main__":
-    mySubscriber=Thingspeak('test.mosquitto.org',1883) #anche questo andrebbe letto dal catalog
+    #mySubscriber=Thingspeak('test.mosquitto.org',1883) #anche questo andrebbe letto dal catalog
+    mySubscriber=Thingspeak("broker.hivemq.com",1883) #anche questo andrebbe letto dal catalog
+   
     mySubscriber.start()
     mySubscriber.subscribe()
 

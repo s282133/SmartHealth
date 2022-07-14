@@ -122,9 +122,11 @@ class Registrazione(object):
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
 
+            nameChannel = self.record["patientName"] + " " + self.record["patientSurname"]
+            
             channel={
                 "api_key":"OEUWTU8AH5MOIMKZ",
-                "name":"lillo",
+                "name": nameChannel,
                 "Field 1":"heart rate",
                 "Field 2":"pressure_high",
                 "Field 3":"glycemia",    
@@ -134,14 +136,14 @@ class Registrazione(object):
             r=requests.post("https://api.thingspeak.com/channels.json",channel)
             
             print(f"Questo è il channel: {r.json()}")
-            # self.dicty=r.json()
-            # self.api_key_w=self.dicty["api_keys"][0]
-            # self.api_keys_write=self.api_key_w["api_key"]
-            # self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
-            # channel_id=self.dicty["id"]
-            channel_id="123"
-            self.api_keys_write="abc"
-            self.api_keys_read="def"
+            self.dicty=r.json()
+            self.api_key_w=self.dicty["api_keys"][0]
+            self.api_keys_write=self.api_key_w["api_key"]
+            self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
+            channel_id=self.dicty["id"]
+            # channel_id="123"
+            # self.api_keys_write="abc"
+            # self.api_keys_read="def"
 
             self.dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
             self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]
@@ -165,6 +167,7 @@ class Registrazione(object):
                     "pregnancyDayOne": self.record["pregnancyDayOne"]
                 },
                 "idRegistratoSuRaspberry": registratoSuRaspberry,
+                "monitoring": "off",
                 "connectedDevice": {
                     "deviceName": self.record["deviceName"],
                     "onlineSince": -1,

@@ -34,7 +34,7 @@ def retrieveOnlineSince(patient_ID):
                 return device["onlineSince"]
 
 def retrieveTSReadAPIfromClientID(patient_ID):
-    filename = '..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     dictionaryCatalog = json.load(filepointer)
     docList=dictionaryCatalog["resources"]
@@ -52,7 +52,7 @@ def retrieveTSReadAPIfromClientID(patient_ID):
                 return api_keys[1]
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
-    filename = '..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename, 'r')
     dictionaryCatalog = json.load(filepointer)
     docList=dictionaryCatalog["resources"]

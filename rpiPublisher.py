@@ -27,6 +27,8 @@ POLLING_MONITORING_HR       = 10         # chiedo una misurazione ogni 5 minuti
 POLLING_MONITORING_PRESSURE = 12         # chiedo una misurazione ogni 10 minuti
 POLLING_MONITORING_GLYCEMIA = 14         # chiedo una misurazione ogni 20 minuti
 
+SECONDI_SCADENZA_MONITORING = 30       
+
 ONE_MINUTE_IN_SEC = 0                # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                      # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
 SEC_WAIT_NO_MONITORING = 1
@@ -46,6 +48,8 @@ class rpiPub():
             self.monitoring = False
 
         self.counter = 0
+        self.monitoring_counter = 0
+
         print(f"{self.clientID} created")
         self.start()
         self.initSensors()
@@ -76,6 +80,7 @@ class rpiPub():
             print(f"{self.clientID} received {msg} from topic: {topic}")
             self.monitoring_status = msg["status"]
             if self.monitoring_status == "on":
+                self.monitoring_counter = 0
                 self.monitoring = True
             elif self.monitoring_status=="off":
                 self.monitoring = False
@@ -166,7 +171,7 @@ class rpiPub():
             self.counter = self.counter + 1
             #time.sleep(ONE_MINUTE_IN_SEC)
         else:
-            print("Monitoraggio ON")
+            #print("Monitoraggio ON")
             #time.sleep(SEC_WAIT_MONITORING)
             if self.counter % POLLING_MONITORING_HR == 0:
                 newMeasureHR = int(self.getHRmeasure(self.counter))
@@ -178,6 +183,13 @@ class rpiPub():
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
             self.counter = self.counter + 1
+
+            self.monitoring_counter = self.monitoring_counter + 1
+            if self.monitoring_counter == SECONDI_SCADENZA_MONITORING:
+                self.monitoring_counter = 0
+                self.monitoring_status ="off"
+                self.monitoring = False
+                setMonitorinStatefromClientID(self.monitoring_status, self.clientID)
 
 
 # def getWeek(dayOne):

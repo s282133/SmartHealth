@@ -54,7 +54,6 @@ class DoctorBot:
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
                    InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
-        self.cmd_on=cmd_on
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
         self.bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
 
@@ -116,8 +115,8 @@ class DoctorBot:
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
                 
-        MonitoringID = self.cmd_on.split(" ")[2]
-        monitoring = self.cmd_on.split(" ")[1]
+        MonitoringID = query_data.split(" ")[2]
+        monitoring = query_data.split(" ")[1]
         
         top = f"{self.mqttTopic}/{MonitoringID}/monitoring"   
         message =  {"status": monitoring}
