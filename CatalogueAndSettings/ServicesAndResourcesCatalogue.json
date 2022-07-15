@@ -87,6 +87,26 @@
           "topic_heartrate": "{{base_topic}}/{{patientID}}/heartrate",
           "topic_pressure": "{{base_topic}}/{{patientID}}/pressure",
           "topic_glycemia": "{{base_topic}}/{{patientID}}/glycemia"
+        },
+        {
+          "functionality_name": "monitoring_on",
+          "description": "Attivazione del monitoring",
+          "topic": "{{base_topic}}/{{patientID}}/monitoring"
+        },
+        {
+          "functionality_name": "send_alert",
+          "description": "Invio di un messaggio di allerta",
+          "topic": "{{base_topic}}/{{patientID}}/send_alert"
+        },
+        {
+          "functionality_name": "receive_alert",
+          "description": "Invio di un messaggio di allerta",
+          "topic": "{{base_topic}}/+/send_alert"
+        },
+        {
+          "functionality_name": "send_peso",
+          "description": "Invio di un messaggio di allerta",
+          "topic": "{{base_topic}}/+/peso"
         }
       ]
     },
@@ -236,7 +256,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-14",
+            "onlineSince": "2022-07-15",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -284,7 +304,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-14",
+            "onlineSince": "2022-07-15",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1800231,

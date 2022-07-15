@@ -8,8 +8,6 @@ from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
 from gettext import Catalog
-from DoctorBot import DoctorBot
-from PatientBot import PatientBot
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class dataAnalysisClass():
@@ -17,23 +15,50 @@ class dataAnalysisClass():
     # MQTT FUNCTIONS
 
     def __init__(self):
-        self.client = MyMQTT(None, mqtt_broker, mqtt_port, self)
+
+        # Gestione servizi MQTT
+        resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+        catalog = json.load(open(resouce_filename))
+        services = catalog["services"]
+
+        mqtt_service = getServiceByName(services,"MQTT_analysis")
+        if mqtt_service == None:
+            print("Servizio registrazione non trovato")
+        mqtt_broker = mqtt_service["broker"]
+        mqtt_port = mqtt_service["port"]
+        self.mqtt_base_topic = mqtt_service["base_topic"]
+        mqtt_api = getApiByName(mqtt_service["APIs"],"send_measure") 
+
+        mqtt_topic_temperature  = mqtt_api["topic_temperature"]
+        mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
+        mqtt_topic_pressure     = mqtt_api["topic_pressure"]
+        mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+
+        self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
+        self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
+        self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
+        self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
+
+        mqtt_topic_send_alert = getApiByName(mqtt_service["APIs"],"send_alert") 
+        self.topic_send_alert  = mqtt_topic_send_alert["topic"]
+
+        self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
         timeshift_fn = 'PostProcessing\\timeshift.json'
         self.thresholdsFile = json.load(open(timeshift_fn,'r'))
 
     def start(self):
-        self.client.start()
-        self.client.mySubscribe(local_topic_temperature)
-        self.client.mySubscribe(local_topic_heartrate)
-        self.client.mySubscribe(local_topic_pressure)
-        self.client.mySubscribe(local_topic_glycemia)
+        self.mqtt_client.start()
+        self.mqtt_client.mySubscribe(self.local_topic_temperature)
+        self.mqtt_client.mySubscribe(self.local_topic_heartrate)
+        self.mqtt_client.mySubscribe(self.local_topic_pressure)
+        self.mqtt_client.mySubscribe(self.local_topic_glycemia)
 
     def stop(self):
-        self.client.stop()
+        self.mqtt_client.stop()
         
 
     def myPublish(self, topic, message):
-        self.client.myPublish(topic, message) 
+        self.mqtt_client.myPublish(topic, message) 
         print(f"Published on {topic}")
 
 
@@ -124,7 +149,7 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
-                        mybot_dr.send_alert(self.telegramID, messaggio, f"heartrate on {parClientID}", f"heartrate off {parClientID}")
+                        self.send_alert(parClientID, self.telegramID, messaggio, f"heartrate on {parClientID}", f"heartrate off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
 
@@ -149,7 +174,7 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
-                        mybot_dr.send_alert(self.telegramID,messaggio, f"pression on {parClientID}", f"pression off {parClientID}")
+                        self.send_alert(parClientID, self.telegramID, messaggio, f"pression on {parClientID}", f"pression off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
 
@@ -169,9 +194,10 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
-                        mybot_dr.send_alert(self.telegramID,messaggio, f"glycemia on {parClientID}", f"glycemia off {parClientID}")
+                        self.send_alert(parClientID, self.telegramID, messaggio, f"glycemia on {parClientID}", f"glycemia off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
+
 
     def manageTemperature(self, week, parClientID, parPatientName):
         thresholdsTE = self.thresholdsFile["temperature"]
@@ -189,42 +215,27 @@ class dataAnalysisClass():
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
-                        mybot_dr.send_alert(self.telegramID,messaggio, f"temperature on {parClientID}", f"temperature off {parClientID}")
+                        self.send_alert(parClientID, self.telegramID, messaggio, f"temperature on {parClientID}", f"temperature off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
 
                               
+    def send_alert(self, parClientID, parTelegramID, parMessagio, parCmdOn, parCmdOff):
+        messaggio = {
+            "telegramID": parTelegramID,
+            "Messaggio": parMessagio,
+            "CmdOn": parCmdOn,
+            "CmdOff": parCmdOff
+        }
+        #str_messaggio = json.dumps(messaggio) 
+        local_topic_send_alert = getTopicByParameters(self.topic_send_alert, self.mqtt_base_topic, str(parClientID))
+        self.mqtt_client.myPublish(local_topic_send_alert, messaggio) 
+
 
 if __name__ == "__main__":
     
-    # Gestione servizi MQTT
-    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-    catalog = json.load(open(resouce_filename))
-    services = catalog["services"]
-
-    mqtt_service = getServiceByName(services,"MQTT_analysis")
-    if mqtt_service == None:
-        print("Servizio registrazione non trovato")
-    mqtt_broker = mqtt_service["broker"]
-    mqtt_port = mqtt_service["port"]
-    mqtt_base_topic = mqtt_service["base_topic"]
-    mqtt_api = getApiByName(mqtt_service["APIs"],"send_measure") 
-
-    mqtt_topic_temperature  = mqtt_api["topic_temperature"]
-    mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
-    mqtt_topic_pressure     = mqtt_api["topic_pressure"]
-    mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
-
-    local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, mqtt_base_topic, "+")
-    local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, mqtt_base_topic, "+")
-    local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, mqtt_base_topic, "+")
-    local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, mqtt_base_topic, "+")
-
     MQTTpubsub = dataAnalysisClass()
     MQTTpubsub.start()   
-
-    mybot_dr=DoctorBot(MQTTpubsub)
-    mybot_pz=PatientBot(MQTTpubsub)
 
     while True:
         time.sleep(10)

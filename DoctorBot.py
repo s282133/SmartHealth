@@ -1,4 +1,4 @@
-# TelegramBot gestisce il bot del dottore
+# TelegramBot gestisce il client_bot del dottore
 # abilitando i comandi disponibili e mandando messaggi di allerta
 
 import time
@@ -13,7 +13,7 @@ from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class DoctorBot:
-    def __init__(self, data_analisys_obj):
+    def __init__(self):
 
         # Gestione servizi MQTT
         resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
@@ -25,7 +25,16 @@ class DoctorBot:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
-        mqtt_base_topic = mqtt_service["base_topic"]
+        self.mqtt_base_topic = mqtt_service["base_topic"]
+        mqtt_api_monitoring = getApiByName(mqtt_service["APIs"],"monitoring_on") 
+        self.mqtt_topic_monitoring  = mqtt_api_monitoring["topic"]
+
+        mqtt_api_alert = getApiByName(mqtt_service["APIs"],"receive_alert") 
+        mqtt_topic_alert = mqtt_api_alert["topic"]
+        self.local_topic_alert = mqtt_topic_alert.replace("{{base_topic}}", self.mqtt_base_topic)
+
+        # Oggetto mqtt
+        self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
 
         # Gestione servizi telegram
         TelegramDoctor_service = getServiceByName(services,"TelegramDoctor")
@@ -33,12 +42,10 @@ class DoctorBot:
             print("Servizio registrazione non trovato")
         doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
 
-        # Creazione bot
-        self.bot = telepot.Bot(doctorTelegramToken)
-        self.client = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
-        self.client.start()
-        self.mqttTopic = mqtt_base_topic
-        self.data_analisys_obj = data_analisys_obj
+        # Creazione client_bot
+        self.client_bot = telepot.Bot(doctorTelegramToken)
+        self.client_mqtt = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
+        self.client_mqtt.start()
         self.previous_message="previous_message"
         self.__message = {'bn': "telegramBot",
                           'e':
@@ -47,15 +54,34 @@ class DoctorBot:
                           ]
                           }
      
-        MessageLoop(self.bot, {'chat': self.on_chat_message,
+        MessageLoop(self.client_bot, {'chat': self.on_chat_message,
                 'callback_query': self.on_callback_query}).run_as_thread()
 
 
+    def start(self):
+        self.mqtt_client.start()
+        self.mqtt_client.mySubscribe(self.local_topic_alert)
+
+
+    def notify(self, topic, msg):
+
+        print(f"Il topic è: {topic}")
+        msg_json = json.loads(msg)
+        
+        telegramID = msg_json["telegramID"]
+        messaggio = msg_json["Messaggio"]
+        cmd_on = msg_json["CmdOn"]
+        cmd_off = msg_json["CmdOff"]
+
+        self.send_alert(telegramID,messaggio,cmd_on,cmd_off)
+
+
+       
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
                    InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
         keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-        self.bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
+        self.client_bot.sendMessage(telegramID, text=messaggio, reply_markup=keyboard)
 
 
     def on_chat_message(self, msg):
@@ -81,7 +107,7 @@ class DoctorBot:
             registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
 
             uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
-            self.bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
+            self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
 
 
         if message == "/registrazione_paziente": 
@@ -103,10 +129,10 @@ class DoctorBot:
             patient_registration_uri = patient_registration_uri.replace("{{chat_ID}}", str(chat_ID))
 
             uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
-            self.bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
+            self.client_bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
         if message == "/accesso_dati": 
-            self.bot.sendMessage(chat_ID, text='Access to data at this link: ')
+            self.client_bot.sendMessage(chat_ID, text='Access to data at this link: ')
 
 
     def on_callback_query(self, messaggio):
@@ -117,10 +143,19 @@ class DoctorBot:
                 
         MonitoringID = query_data.split(" ")[2]
         monitoring = query_data.split(" ")[1]
-        
-        top = f"{self.mqttTopic}/{MonitoringID}/monitoring"   
+         
+        local_topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring, self.mqtt_base_topic, str(MonitoringID))
         message =  {"status": monitoring}
-        self.data_analisys_obj.myPublish(top, message)
+        self.mqtt_client.myPublish(local_topic_monitoring, message)
         print(f"{message}")
-        self.bot.sendMessage(chat_ID, text=f"Monitoring {monitoring}")
+
+        self.client_bot.sendMessage(chat_ID, text=f"Monitoring {monitoring}")
  
+
+if __name__=="__main__":
+
+    mybot_dr = DoctorBot()
+    mybot_dr.start()
+
+    while True:
+        time.sleep(1)

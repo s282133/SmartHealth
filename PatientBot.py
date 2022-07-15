@@ -13,7 +13,7 @@ from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class PatientBot:
-    def __init__(self, data_analisys_obj):
+    def __init__(self):
         
         # Gestione servizi MQTT
         resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
@@ -26,6 +26,13 @@ class PatientBot:
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         mqtt_base_topic = mqtt_service["base_topic"]
+
+        mqtt_api_peso = getApiByName(mqtt_service["APIs"],"send_peso") 
+        mqtt_topic_peso = mqtt_api_peso["topic"]
+        self.local_topic_peso = mqtt_topic_peso.replace("{{base_topic}}", self.mqtt_base_topic)
+
+        # Oggetto mqtt
+        self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
         
         # Gestione servizi telegram
         TelegramClient_service = getServiceByName(services,"TelegramClient")
@@ -38,7 +45,6 @@ class PatientBot:
         self.client = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
         self.client.start()
         self.mqttTopic = mqtt_base_topic
-        self.data_analisys_obj = data_analisys_obj
         self.previous_message="previous_message"
         self.__message = {'bn': "telegramBot",
                           'e':
@@ -50,7 +56,11 @@ class PatientBot:
         MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
                 'callback_query': self.on_callback_query}).run_as_thread()
 
- 
+    def start(self):
+        self.mqtt_client.start()
+        self.mqtt_client.mySubscribe(self.local_topic_peso)
+
+
     def on_chat_patient_message(self, msg):
         content_type, chat_type, chat_ID = telepot.glance(msg)
         message = msg['text']
@@ -92,11 +102,13 @@ class PatientBot:
                     print("Paziente non trovato")
                     exit
                 
+
                 topic=f"{self.mqttTopic}/{self.patientID}/peso" 
                 peso =  {"status": message}
                 self.data_analisys_obj.myPublish(topic, peso)
                 print("published")
                 self.previous_message=""
+
 
 
     def on_callback_query(self, messaggio):
@@ -121,4 +133,10 @@ class PatientBot:
     
                               
 
+if __name__ == "__main__":
+    
+    mybot_pz=PatientBot()
+    mybot_pz.start()
 
+    while True:
+        time.sleep(10)

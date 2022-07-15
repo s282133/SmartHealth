@@ -56,6 +56,7 @@ class rpiPub():
         while True:
             self.routineFunction() 
 
+
     def start (self):
         self.client_MQTT.start()
         self.subTopic = f"{mqtt_base_topic}/{self.clientID}/monitoring"    
@@ -65,6 +66,7 @@ class rpiPub():
         self.TopicTempRaspberry = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(self.clientID))
         
         self.client_MQTT.mySubscribe(self.TopicTempRaspberry)
+
 
     def stop (self):
         self.client_MQTT.stop()
