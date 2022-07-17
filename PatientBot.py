@@ -27,10 +27,6 @@ class PatientBot:
         mqtt_port = mqtt_service["port"]
         mqtt_base_topic = mqtt_service["base_topic"]
 
-        mqtt_api_peso = getApiByName(mqtt_service["APIs"],"send_peso") 
-        mqtt_topic_peso = mqtt_api_peso["topic"]
-        self.local_topic_peso = mqtt_topic_peso.replace("{{base_topic}}", self.mqtt_base_topic)
-
         # Oggetto mqtt
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
         
@@ -58,7 +54,6 @@ class PatientBot:
 
     def start(self):
         self.mqtt_client.start()
-        self.mqtt_client.mySubscribe(self.local_topic_peso)
 
 
     def on_chat_patient_message(self, msg):
@@ -102,13 +97,11 @@ class PatientBot:
                     print("Paziente non trovato")
                     exit
                 
-
                 topic=f"{self.mqttTopic}/{self.patientID}/peso" 
                 peso =  {"status": message}
-                self.data_analisys_obj.myPublish(topic, peso)
+                self.mqtt_client.myPublish(topic, peso)
                 print("published")
                 self.previous_message=""
-
 
 
     def on_callback_query(self, messaggio):
@@ -127,10 +120,9 @@ class PatientBot:
                     if patientID == int(message):
                         connectedDevice = patientObject["connectedDevice"]
                         connectedDevice["telegramID"]=chat_ID
-                        print(f"{chat_ID}")
+                        #print(f"{chat_ID}")
             with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
-    
                               
 
 if __name__ == "__main__":

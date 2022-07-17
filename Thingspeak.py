@@ -27,10 +27,12 @@ class Thingspeak():
             print(f"topic del peso: {topic}")
             r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}') 
 
+
         elif not bool(self.patternMonitoring.match(str(topic))): #da cambiare
             print(f"topic non del peso: {topic}")
-            self.bn=message['bn'] 
-            self.clientID = int(self.bn.split("/")[3])
+            # self.bn=message['bn'] 
+            # self.clientID = int(str(self.bn).split("/")[3])
+            self.clientID = int(str(topic).split("/")[2])
             api_key = retrieveTSWriteAPIfromClientID(self.clientID)     
             print(f"Topic is (else){topic}")
             self.measureType = message['e'][0]['n']
@@ -60,8 +62,13 @@ class Thingspeak():
     def start(self): 
         self.mqttClient.start() #mi connetto con mosquitto
 
+
     def subscribe(self): 
-        self.mqttClient.mySubscribe("P4IoT/SmartHealth/#")
+        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/peso")
+        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/temperature")
+        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/glycemia")
+        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/pressure")
+        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/heartrate")
 
 
 if __name__=="__main__":

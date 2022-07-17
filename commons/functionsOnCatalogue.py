@@ -97,7 +97,7 @@ def getWeek(dayOne):
 
 def findDoctorIDwithtelegramID(doctortelegramID):
     doctorID = -1
-    dictionary = json.load(open('..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json','r'))
+    dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json','r'))
     lista = dictionary["resources"]
     for doctorObject in lista:
         connectedDevice = doctorObject["connectedDevice"]
@@ -109,7 +109,7 @@ def findDoctorIDwithtelegramID(doctortelegramID):
 
 
 def findPatient(chat_ID):
-    filename = '..\\CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     f = open(filename)
     catalog = json.load(f)
 

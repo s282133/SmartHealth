@@ -102,11 +102,6 @@
           "functionality_name": "receive_alert",
           "description": "Invio di un messaggio di allerta",
           "topic": "{{base_topic}}/+/send_alert"
-        },
-        {
-          "functionality_name": "send_peso",
-          "description": "Invio di un messaggio di allerta",
-          "topic": "{{base_topic}}/+/peso"
         }
       ]
     },
@@ -202,7 +197,7 @@
           "connectedDevice": {
             "deviceName": "rpi98",
             "onlineSince": "2022-07-14",
-            "telegramID": 298694124,
+            "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1788970,
               "apikeys": [
@@ -256,7 +251,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-15",
+            "onlineSince": "2022-07-17",
             "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -280,7 +275,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-14",
+            "onlineSince": "2022-07-17",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": "123",
@@ -304,8 +299,8 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-15",
-            "telegramID": 0,
+            "onlineSince": "2022-07-17",
+            "telegramID": 786029508,
             "thingspeakInfo": {
               "channel": 1800231,
               "apikeys": [
