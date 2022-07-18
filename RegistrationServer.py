@@ -6,6 +6,7 @@ import time
 import cherrypy
 import requests
 
+from jinja2 import Template
 from PageHTML import *
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
@@ -54,6 +55,7 @@ class Registrazione(object):
             return json.dumps(self.lista) 
 
         # mandare al raspberry il servizio da utilizzare
+        ## qui ci vuole un try except (ServiceUnavailableException)
         if uri[0] == "get_raspberry_parameters":
             # Gestione servizi MQTT
             resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
@@ -123,7 +125,7 @@ class Registrazione(object):
             self.record = json.loads(body)
 
             nameChannel = self.record["patientName"] + " " + self.record["patientSurname"]
-            
+            ## mettere api key in settings!
             channel={
                 "api_key":"OEUWTU8AH5MOIMKZ",
                 "name": nameChannel,
@@ -183,6 +185,7 @@ class Registrazione(object):
                 }    
 
             # ricerca del giusto dottore tramite telegram ID  
+            ## qui ci vuole un try except (DoctorNotFoundException)
             trovatoDottore = False
             doctor_number = 0
             dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
@@ -248,6 +251,7 @@ if __name__=="__main__":
 
 
     # parametri per la registrazione su raspberry
+    ## qui ci vuole un try except per il servizio non trovato (ServiceUnavailableException)
     services = conf["services"]
     PatientRegistrationOnRaspberry = getServiceByName(services,"PatientRegistrationOnRaspberry")
 
