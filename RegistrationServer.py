@@ -10,13 +10,14 @@ from jinja2 import Template
 from PageHTML import *
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
+from commons.customExceptions import *
 
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class Registrazione(object):
     exposed=True
     def GET(self,*uri,**params):
-        
+
         # apertura pagina html per registrazione dottore
         if uri[0] == "start":
 
@@ -28,7 +29,7 @@ class Registrazione(object):
             return fileContent
 
         # apertura pagina html per registrazione paziente
-        if uri[0] == "registrazione_paziente": 
+        elif uri[0] == "registrazione_paziente": 
 
             self.doctortelegramID = int(params["chat_ID"])
             filename = 'PageHTML\\patients.html'
@@ -38,7 +39,7 @@ class Registrazione(object):
             return fileContent
 
         # apertura tabella con dati iniziali
-        if uri[0] == "tabella": 
+        elif uri[0] == "tabella": 
 
             filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f4 = open(filename)
@@ -55,38 +56,56 @@ class Registrazione(object):
             return json.dumps(self.lista) 
 
         # mandare al raspberry il servizio da utilizzare
-        ## qui ci vuole un try except (ServiceUnavailableException)
-        if uri[0] == "get_raspberry_parameters":
+        elif uri[0] == "get_raspberry_parameters":
             # Gestione servizi MQTT
             resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             catalog = json.load(open(resouce_filename))
             services = catalog["services"]
-            mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
-            mqtt_broker = mqtt_service["broker"]
-            mqtt_port = mqtt_service["port"]
-            mqtt_base_topic = mqtt_service["base_topic"]
+            try:
+                mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+                mqtt_broker = mqtt_service["broker"]
+                mqtt_port = mqtt_service["port"]
+                mqtt_base_topic = mqtt_service["base_topic"]
+                if mqtt_service == None:
+                    raise ServiceUnavailableException
+                else:
+                    try:
+                        api_updatepatient = getApiByName(mqtt_service["APIs"],"send_temperature") 
+                        if(api_updatepatient == None):
+                            raise ApiUnavailableException
+                        topic = api_updatepatient["topic"]
 
-            if mqtt_service == None:
-                return ""
+                        # da cambiare con jinja
+                        #"{{base_topic}}/{{patientID}}/temp_raspberry"
+                        local_topic = topic.replace("{{base_topic}}", mqtt_base_topic)
+                        
+                        #print(f"topic template: {topic}, local_topic : {local_topic}")
+                        #local_topic = Template.render()
+                        # boh non mi stampa il topic, non so
 
-            api_updatepatient = getApiByName(mqtt_service["APIs"],"send_temperature") 
-            topic = api_updatepatient["topic"]
+                        mqtt_service = {
+                            "broker": mqtt_broker,
+                            "port": mqtt_port,
+                            "topic": local_topic
+                        }
+                        
+                        return json.dumps(mqtt_service) 
 
-            # da cambiare con jinja
-            #"{{base_topic}}/{{patientID}}/temp_raspberry"
-            local_topic = topic.replace("{{base_topic}}", mqtt_base_topic)
-            
-            mqtt_service = {
-                "broker": mqtt_broker,
-                "port": mqtt_port,
-                "topic": local_topic
-            }
+                    except ApiUnavailableException:
+                        print("[REG_SERVER] Unavailable API.")
 
-            return json.dumps(mqtt_service) 
+            except ServiceUnavailableException:
+                print("[REG_SERVER] Unavailable Service mqtt_service.")
+            except: 
+                print("[REG_SERVER] Generic exception occurred.")  
+
+        else:
+            raise cherrypy.HTTPError(404, "Bad Request")
+          
 
     # aggiungere un dottore alla lista di dottori al SUBMIT
     def POST(self,*uri,**params):
-
+        
         if uri[0] == "doctors": 
             
             body = cherrypy.request.body.read() 
@@ -276,7 +295,7 @@ if __name__=="__main__":
     conf={
         '/':{
             'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
-            'tool.session.on':True
+            'tools.sessions.on':True
         }
     }
     cherrypy.server.socket_host = registration_ipAddress

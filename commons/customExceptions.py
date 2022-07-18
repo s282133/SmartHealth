@@ -17,6 +17,10 @@ class ServiceUnavailableException(Error):
     """Raised when a problem is encountered in the communication with a service"""
     pass
 
+class ApiUnavailableException(Error):
+    """Raised when the requested API is not available"""
+    pass
+
 class InvalidPatientID(Error):
     """Raised when the chatID is invalid"""
     pass
