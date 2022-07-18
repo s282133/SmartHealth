@@ -9,7 +9,7 @@
     {
       "service_name": "Registration",
       "description": "Servizio per la registrazione di dottori e pazienti",
-      "host": "192.168.1.125",
+      "host": "127.0.0.2",
       "port": 8080,
       "APIs": [
         {

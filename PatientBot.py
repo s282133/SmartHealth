@@ -77,32 +77,50 @@ class PatientBot:
             self.previous_message="/help"
 
         elif message == "/survey":
-            self.bot.sendMessage(chat_ID, text="You can complete the survey at this link: ")
+            self.bot.sendMessage(chat_ID, text="You can complete the survey at this link: https://docs.google.com/forms/d/e/1FAIpQLSfLxw1y52kB5xNp6WcHAw0xQ1x2s3ViyXvWUGNDzlVtAdzWIA/viewform")
             self.previous_message="/survey"
 
         elif message == "/peso": 
             self.bot.sendMessage(chat_ID, text="Please send your weight in kg")
             self.previous_message="/peso"
         
-        elif self.previous_message == "/peso":
+        elif self.previous_message == "/peso":        
             
-            if(int(message) < 0 or (int(message) > 100)):
-                self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
-            else:
-                self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
-                print (f"Chat ID: {chat_ID}")
-                self.patientID = findPatient(chat_ID)
+            # if(int(message) < 0 or (int(message) > 100)):
+            #     self.bot.sendMessage(chat_ID, text=f"Your weight is not possible")  
+            # else:
+            #     self.bot.sendMessage(chat_ID, text=f"Your weight is: {message} Kg")
+            #     print (f"Chat ID: {chat_ID}")
+            #     self.patientID = findPatient(chat_ID)
                 
+            #     if self.patientID == 0:
+            #         print("Paziente non trovato")
+            #         exit
+                
+            #     topic=f"{self.mqttTopic}/{self.patientID}/peso" 
+            #     peso =  {"status": message}
+            #     self.mqtt_client.myPublish(topic, peso)
+            #     print("published")
+            #     self.previous_message=""
+            try:
+                int_weight = int(message)
+                if(int_weight < 0 or int_weight > 100):
+                    raise InvalidWeightException
+                print (f"Chat ID: {chat_ID}")
+                self.patientID = findPatient(chat_ID)             
                 if self.patientID == 0:
                     print("Paziente non trovato")
-                    exit
-                
+                    raise PatientNotFoundException 
                 topic=f"{self.mqttTopic}/{self.patientID}/peso" 
                 peso =  {"status": message}
                 self.mqtt_client.myPublish(topic, peso)
-                print("published")
+                print("Weight published.")               
                 self.previous_message=""
-
+                self.bot.sendMessage(chat_ID, text=f"OK! Weight submitted correctly.\nYour weight is {int_weight} Kg")                
+            except:
+                print("[WEIGHT] something went wrong with weight submission.")
+                self.bot.sendMessage(chat_ID, text=f"Weight submission failed.\nTry again, push /peso")
+            
 
     def on_callback_query(self, messaggio):
         query_ID , chat_ID , query_data = telepot.glance(messaggio,flavor='callback_query')
@@ -123,7 +141,17 @@ class PatientBot:
                         #print(f"{chat_ID}")
             with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                 json.dump(self.catalog, f,indent=2)
-                              
+
+class Error(Exception):
+    pass
+
+class InvalidWeightException(Error):
+    """Raised when weight is < 0 or > 100"""
+    pass
+
+class PatientNotFoundException(Error):
+    """Raised when the patient is not found"""
+    pass
 
 if __name__ == "__main__":
     
