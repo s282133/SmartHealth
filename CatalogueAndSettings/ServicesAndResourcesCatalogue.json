@@ -169,8 +169,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 6,
-    "LastDoctorID": 2
+    "LastPatientID": 7,
+    "LastDoctorID": 3
   },
   "resources": [
     {
@@ -251,7 +251,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-17",
+            "onlineSince": "2022-07-18",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1788970,
@@ -299,7 +299,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-17",
+            "onlineSince": "2022-07-18",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1800231,
@@ -362,6 +362,36 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-07-14"
+        }
+      ]
+    },
+    {
+      "doctorID": 3,
+      "doctorName": "Laura",
+      "doctorSurname": "Cube",
+      "doctorMail": "mia@mail",
+      "lastUpdate": "2022-07-18",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": [
+        {
+          "deviceName": "2",
+          "patientID": 7,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-18"
         }
       ]
     }

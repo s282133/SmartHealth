@@ -19,15 +19,15 @@ from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
 TOPIC_TEMP_RASPBERRY = "temp_raspberry"
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR       = 20         # chiedo una misurazione ogni 5 minuti
-POLLING_PERIOD_PRESSURE = 22         # chiedo una misurazione ogni 10 minuti
-POLLING_PERIOD_GLYCEMIA = 24         # chiedo una misurazione ogni 20 minuti
+POLLING_PERIOD_HR       = 60     
+POLLING_PERIOD_PRESSURE = 85        
+POLLING_PERIOD_GLYCEMIA = 115       
 
-POLLING_MONITORING_HR       = 10         # chiedo una misurazione ogni 5 minuti
-POLLING_MONITORING_PRESSURE = 12         # chiedo una misurazione ogni 10 minuti
-POLLING_MONITORING_GLYCEMIA = 14         # chiedo una misurazione ogni 20 minuti
+POLLING_MONITORING_HR       = 25        
+POLLING_MONITORING_PRESSURE = 48      
+POLLING_MONITORING_GLYCEMIA = 71       # potrei chiedere una misurazione ogni 20 minuti
 
-SECONDI_SCADENZA_MONITORING = 30       
+SECONDI_SCADENZA_MONITORING = 300      
 
 ONE_MINUTE_IN_SEC = 0                # per motivi di debug a volte lo metto ad 1 ma deve essere 60
                                      # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
