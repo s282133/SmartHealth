@@ -6,7 +6,7 @@ import time
 import cherrypy
 import requests
 
-from jinja2 import Template
+#from jinja2 import Template
 from PageHTML import *
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *

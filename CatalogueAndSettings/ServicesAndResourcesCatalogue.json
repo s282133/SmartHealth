@@ -130,46 +130,41 @@
       }
     },
     {
-      "service_name": "application_to_raspberry",
-      "host": "192.168.0.3",
-      "APIs": {
-        "http": [],
-        "mqtt": [
-          {
-            "functionality_name": "publish_message",
-            "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
-            "sub_topic": ""
-          },
-          {
-            "functionality_name": "receive_message",
-            "pub_topic": "",
-            "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
-          }
-        ]
-      }
+      "service_name": "Thingspeak",
+      "description": "Adattatore per comuniazione e recezione dei dati da Thingspeak",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "send_data_to_thingspeak",
+          "description": "Invio dei dati su thingspeak",
+          "topic_temperature": "{{base_topic}}/+/temperature",
+          "topic_heartrate": "{{base_topic}}/+/heartrate",
+          "topic_pressure": "{{base_topic}}/+/pressure",
+          "topic_glycemia": "{{base_topic}}/+/glycemia",
+          "topic_peso": "{{base_topic}}/+/peso",
+          "topic_monitoring": "{{base_topic}}/+/monitoring"
+        }
+      ]
     },
     {
-      "naservice_nameme": "raspberry_to_application",
-      "host": "192.168.0.3",
-      "APIs": {
-        "http": [],
-        "mqtt": [
-          {
-            "functionality_name": "publish_message",
-            "pub_topic": "{{base_topic}}/Telegram/{{chatID}}",
-            "sub_topic": ""
-          },
-          {
-            "functionality_name": "receive_message",
-            "pub_topic": "",
-            "sub_topic": "{{base_topic}}/Telegram/{{chatID}}"
-          }
-        ]
-      }
+      "service_name": "Weekly_statistics",
+      "description": "Calcola le statistiche settimanali da mandare a nodered",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "send_statistics",
+          "description": "Invio delle staitistiche a nodered",
+          "topic_statistic": "{{base_topic}}/+/statistic"
+        }
+      ]
     }
   ],
   "resourceState": {
-    "LastPatientID": 7,
+    "LastPatientID": 8,
     "LastDoctorID": 3
   },
   "resources": [
@@ -263,30 +258,6 @@
           }
         },
         {
-          "patientID": 2,
-          "patientName": "Maria",
-          "patientSurname": "Rossi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "maria.rossi@gmail.com",
-            "pregnancyDayOne": "2022-05-03"
-          },
-          "idRegistratoSuRaspberry": "no",
-          "monitoring": "off",
-          "connectedDevice": {
-            "deviceName": "raspberry22",
-            "onlineSince": "2022-07-17",
-            "telegramID": 298694124,
-            "thingspeakInfo": {
-              "channel": "123",
-              "apikeys": [
-                "FRN2A7XGJHIUSN24",
-                "ZDNDUY17T8SJSXRM"
-              ]
-            }
-          }
-        },
-        {
           "patientID": 6,
           "patientName": "Paola",
           "patientSurname": "Rossi",
@@ -299,13 +270,37 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-18",
+            "onlineSince": "2022-07-19",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1800231,
               "apikeys": [
                 "9A2YVSENL1ZNPVWO",
                 "K3QUNSX7XZE3R4T6"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 8,
+          "patientName": "Elena",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "giulia.codagnone@gmail.com",
+            "pregnancyDayOne": "2022-05-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-07-19",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1805232,
+              "apikeys": [
+                "L7CLJZHIYLH36PUQ",
+                "272EVT8TO9JOA783"
               ]
             }
           }
@@ -331,23 +326,6 @@
         },
         {
           "deviceName": "raspberry22",
-          "patientID": 2,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "application_to_raspberry",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-05"
-        },
-        {
-          "deviceName": "raspberry22",
           "patientID": 6,
           "measureType": [
             "Temperature",
@@ -362,23 +340,10 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-07-14"
-        }
-      ]
-    },
-    {
-      "doctorID": 3,
-      "doctorName": "Laura",
-      "doctorSurname": "Cube",
-      "doctorMail": "mia@mail",
-      "lastUpdate": "2022-07-18",
-      "connectedDevice": {
-        "telegramID": 491287865
-      },
-      "patientList": [],
-      "devicesList": [
+        },
         {
-          "deviceName": "2",
-          "patientID": 7,
+          "deviceName": "raspberry22",
+          "patientID": 8,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -391,7 +356,7 @@
           ],
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-18"
+          "lastUpdate": "2022-07-19"
         }
       ]
     }

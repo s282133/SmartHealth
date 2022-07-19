@@ -11,8 +11,36 @@ from commons.functionsOnCatalogue import *
 
 
 class Thingspeak():
+
     def __init__(self,broker,port):
-        self.mqttClient=MyMQTT("thingspeak",broker,port,self) 
+
+        resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+        catalog = json.load(open(resouce_filename))
+        services = catalog["services"]
+
+        mqtt_service = getServiceByName(services,"Thingspeak")
+        if mqtt_service == None:
+            print("Servizio registrazione non trovato")
+        mqtt_broker = mqtt_service["broker"]
+        mqtt_port = mqtt_service["port"]
+        self.mqtt_base_topic = mqtt_service["base_topic"]
+        mqtt_api = getApiByName(mqtt_service["APIs"],"send_data_to_thingspeak") 
+
+        mqtt_topic_temperature  = mqtt_api["topic_temperature"]
+        mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
+        mqtt_topic_pressure     = mqtt_api["topic_pressure"]
+        mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+        mqtt_topic_peso         = mqtt_api["topic_peso"]
+        mqtt_topic_monitoring   = mqtt_api["topic_monitoring"]
+
+        self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
+        self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
+        self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
+        self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
+        self.local_topic_peso        = getTopicByParameters(mqtt_topic_peso, self.mqtt_base_topic, "+")
+        self.local_topic_monitoring  = getTopicByParameters(mqtt_topic_monitoring, self.mqtt_base_topic, "+")
+        
+        self.mqttClient=MyMQTT(None, mqtt_broker, mqtt_port, self) 
         self.cont=0
         self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
         self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
@@ -21,7 +49,7 @@ class Thingspeak():
         self.lastPressureLow=0
         self.lastPressureHigh=0
         self.lastPeso=0
-        
+		
 
     def notify(self,topic,payload): 
         message = json.loads(payload) #trasformiamo in json 
@@ -30,7 +58,7 @@ class Thingspeak():
             api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
             peso=message["status"] 
             print(f"topic del peso: {topic}") 
-            #self.lastPeso = peso 
+            self.lastPeso = peso 
             rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
                 
 
@@ -42,36 +70,23 @@ class Thingspeak():
             
             if(self.newMeasureType == "heartrate"): 
                 self.sensed_heartrate = message['e'][0]['v']
-                #self.lastHeartrate = self.sensed_heartrate 
+                self.lastHeartrate = self.sensed_heartrate 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.sensed_heartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
 
             elif(self.newMeasureType == "glycemia"): 
                 self.sensed_glycemia = message['e'][0]['v']
                 api_key = retrieveTSWriteAPIfromClientID(self.clientID)
-                #self.lastGlycemia = self.sensed_glycemia 
+                self.lastGlycemia = self.sensed_glycemia 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
                     
             elif(self.newMeasureType == "pressureHigh"):
                 api_key = retrieveTSWriteAPIfromClientID(self.clientID)
                 self.sensed_pressureHigh= message['e'][0]['v'] 
                 self.sensed_pressureLow= message['e'][1]['v'] 
-                #self.lastPressureHigh = self.sensed_pressureHigh 
-                #self.lastPressureLow = self.sensed_pressureLow 
+                self.lastPressureHigh = self.sensed_pressureHigh 
+                self.lastPressureLow = self.sensed_pressureLow 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
                 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -116,24 +131,30 @@ class Thingspeak():
                 
             
     def start(self): 
-        self.mqttClient.start() #mi connetto con mosquitto
-
+        self.mqttClient.start() 
 
     def subscribe(self): 
-        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/peso")
-        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/temperature")
-        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/glycemia")
-        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/pressure")
-        self.mqttClient.mySubscribe("P4IoT/SmartHealth/+/heartrate")
+        self.mqttClient.mySubscribe(self.local_topic_heartrate)
+        self.mqttClient.mySubscribe(self.local_topic_temperature)
+        self.mqttClient.mySubscribe(self.local_topic_pressure)
+        self.mqttClient.mySubscribe(self.local_topic_glycemia)
+        self.mqttClient.mySubscribe(self.local_topic_peso)
 
 
 if __name__=="__main__":
-    #mySubscriber=Thingspeak('test.mosquitto.org',1883) #anche questo andrebbe letto dal catalog
-    mySubscriber=Thingspeak("broker.hivemq.com",1883) #anche questo andrebbe letto dal catalog
-   
+    
+    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    catalog = json.load(open(resouce_filename))
+    services = catalog["services"]
+
+    mqtt_service = getServiceByName(services,"Thingspeak")
+    if mqtt_service == None:
+        print("Servizio registrazione non trovato")
+    mqtt_broker = mqtt_service["broker"]
+    mqtt_port = mqtt_service["port"]
+
+    mySubscriber=Thingspeak(mqtt_broker, mqtt_port) 
     mySubscriber.start()
     mySubscriber.subscribe()
-
-
-    while True: #per rimanere connesso in attesa delle notifiche 
+    while True:
         time.sleep(1)
