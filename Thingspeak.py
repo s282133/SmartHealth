@@ -30,7 +30,7 @@ class Thingspeak():
             api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
             peso=message["status"] 
             print(f"topic del peso: {topic}") 
-            self.lastPeso = peso 
+            #self.lastPeso = peso 
             rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
                 
 
@@ -42,21 +42,21 @@ class Thingspeak():
             
             if(self.newMeasureType == "heartrate"): 
                 self.sensed_heartrate = message['e'][0]['v']
-                self.lastHeartrate = self.sensed_heartrate 
+                #self.lastHeartrate = self.sensed_heartrate 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.sensed_heartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
 
             elif(self.newMeasureType == "glycemia"): 
                 self.sensed_glycemia = message['e'][0]['v']
                 api_key = retrieveTSWriteAPIfromClientID(self.clientID)
-                self.lastGlycemia = self.sensed_glycemia 
+                #self.lastGlycemia = self.sensed_glycemia 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
                     
             elif(self.newMeasureType == "pressureHigh"):
                 api_key = retrieveTSWriteAPIfromClientID(self.clientID)
                 self.sensed_pressureHigh= message['e'][0]['v'] 
                 self.sensed_pressureLow= message['e'][1]['v'] 
-                self.lastPressureHigh = self.sensed_pressureHigh 
-                self.lastPressureLow = self.sensed_pressureLow 
+                #self.lastPressureHigh = self.sensed_pressureHigh 
+                #self.lastPressureLow = self.sensed_pressureLow 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
                 
         
