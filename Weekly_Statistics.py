@@ -8,14 +8,17 @@ sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
+ONE_WEEK = 7
 
 class statistics():
 
     # MQTT FUNCTIONS
-    def __init__(self, clientID):
+    def __init__(self, clientID, mqtt_broker, mqtt_port):
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = clientID
+        self.primo = 1
         self.start()
+        self.RoutineFunction()
 
     def start (self):
         self.client_MQTT.start()
@@ -28,13 +31,14 @@ class statistics():
 
         self.client_MQTT.myPublish(topic, message)
         
-    def RoutineFunction():
-        
+    def RoutineFunction(self):
+        pass
 
+    def computeStats():
+        pass
 
 if __name__ == "__main__":
 
-    
     resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     catalog = json.load(open(resouce_filename))
     services = catalog["services"]
@@ -44,7 +48,6 @@ if __name__ == "__main__":
     mqtt_broker = mqtt_service["broker"]
     mqtt_port = mqtt_service["port"]
     mqtt_base_topic = mqtt_service["base_topic"]
-    Statistics=statistics("Weekly_stat")
     mqtt_api = getApiByName(mqtt_service["APIs"],"send_qualcosa") 
     mqtt_topic = mqtt_api["topic"]
-    
+    Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port)
