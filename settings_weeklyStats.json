@@ -14,5 +14,6 @@
         "pressureLow" : "week_pressureLow.json",
         "weight" : "week_weight.json",
         "temperature" : "week_temperature.json"
-    }             
+    },
+    "message_structure" : { "parameter" : "", "statistics" : {"min" : "", "avg" : "", "max" : ""}}
 }
