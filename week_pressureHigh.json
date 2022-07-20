@@ -1,0 +1,90 @@
+{
+    "channel": {
+        "id": 1721151,
+        "name": "channel1",
+        "description": "prova1",
+        "latitude": "41.0",
+        "longitude": "30.0",
+        "field1": "heart_rate",
+        "field2": "pressure_high",
+        "field3": "glycemia",
+        "field4": "pressure_low",
+        "field5": "peso",
+        "field6": "temperature",
+        "created_at": "2022-05-01T15:50:41Z",
+        "updated_at": "2022-07-19T08:24:39Z",
+        "last_entry_id": 45
+    },
+    "feeds": [
+        {
+            "created_at": "2022-07-19T14:57:02Z",
+            "entry_id": 2,
+            "field2": "119"
+        },
+        {
+            "created_at": "2022-07-19T14:59:53Z",
+            "entry_id": 6,
+            "field2": "92"
+        },
+        {
+            "created_at": "2022-07-19T15:02:44Z",
+            "entry_id": 10,
+            "field2": "92"
+        },
+        {
+            "created_at": "2022-07-19T15:04:10Z",
+            "entry_id": 13,
+            "field2": "90"
+        },
+        {
+            "created_at": "2022-07-19T15:07:01Z",
+            "entry_id": 18,
+            "field2": "120"
+        },
+        {
+            "created_at": "2022-07-19T15:09:52Z",
+            "entry_id": 23,
+            "field2": "119"
+        },
+        {
+            "created_at": "2022-07-19T15:11:17Z",
+            "entry_id": 26,
+            "field2": "120"
+        },
+        {
+            "created_at": "2022-07-19T15:12:43Z",
+            "entry_id": 28,
+            "field2": "122"
+        },
+        {
+            "created_at": "2022-07-19T15:14:08Z",
+            "entry_id": 30,
+            "field2": "121"
+        },
+        {
+            "created_at": "2022-07-19T15:16:59Z",
+            "entry_id": 35,
+            "field2": "118"
+        },
+        {
+            "created_at": "2022-07-19T15:18:25Z",
+            "entry_id": 37,
+            "field2": "107"
+        },
+        {
+            "created_at": "2022-07-19T15:19:51Z",
+            "entry_id": 39,
+            "field2": "122"
+        },
+        {
+            "created_at": "2022-07-19T15:21:16Z",
+            "entry_id": 41,
+            "field2": "119"
+        },
+        {
+            "created_at": "2022-07-19T15:22:42Z",
+            "entry_id": 44,
+            "field2": "92"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "fields" : {
+        "heartrate" : "field1",
+        "pressureHigh" : "field2",
+        "glycemia" : "field3",
+        "pressureLow" : "field4",
+        "weight" : "field5",
+        "temperature" : "field6"
+    },
+    "files" : {
+        "heartrate" : "week_heartrate.json",
+        "pressureHigh" : "week_pressureHigh.json",
+        "glycemia" : "week_glycemia.json",
+        "pressureLow" : "week_pressureLow.json",
+        "weight" : "week_weight.json",
+        "temperature" : "week_temperature.json"
+    }             
+}

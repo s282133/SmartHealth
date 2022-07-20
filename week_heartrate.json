@@ -1,0 +1,135 @@
+{
+    "channel": {
+        "id": 1721151,
+        "name": "channel1",
+        "description": "prova1",
+        "latitude": "41.0",
+        "longitude": "30.0",
+        "field1": "heart_rate",
+        "field2": "pressure_high",
+        "field3": "glycemia",
+        "field4": "pressure_low",
+        "field5": "peso",
+        "field6": "temperature",
+        "created_at": "2022-05-01T15:50:41Z",
+        "updated_at": "2022-07-19T08:24:39Z",
+        "last_entry_id": 45
+    },
+    "feeds": [
+        {
+            "created_at": "2022-07-19T14:56:22Z",
+            "entry_id": 1,
+            "field1": "78"
+        },
+        {
+            "created_at": "2022-07-19T14:57:22Z",
+            "entry_id": 3,
+            "field1": "64"
+        },
+        {
+            "created_at": "2022-07-19T14:58:23Z",
+            "entry_id": 4,
+            "field1": "54"
+        },
+        {
+            "created_at": "2022-07-19T15:00:23Z",
+            "entry_id": 7,
+            "field1": "48"
+        },
+        {
+            "created_at": "2022-07-19T15:02:24Z",
+            "entry_id": 9,
+            "field1": "53"
+        },
+        {
+            "created_at": "2022-07-19T15:03:24Z",
+            "entry_id": 12,
+            "field1": "53"
+        },
+        {
+            "created_at": "2022-07-19T15:04:25Z",
+            "entry_id": 14,
+            "field1": "49"
+        },
+        {
+            "created_at": "2022-07-19T15:05:25Z",
+            "entry_id": 16,
+            "field1": "47"
+        },
+        {
+            "created_at": "2022-07-19T15:06:25Z",
+            "entry_id": 17,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-07-19T15:07:26Z",
+            "entry_id": 19,
+            "field1": "76"
+        },
+        {
+            "created_at": "2022-07-19T15:08:26Z",
+            "entry_id": 20,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-07-19T15:09:26Z",
+            "entry_id": 22,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-07-19T15:10:27Z",
+            "entry_id": 24,
+            "field1": "84"
+        },
+        {
+            "created_at": "2022-07-19T15:12:27Z",
+            "entry_id": 27,
+            "field1": "64"
+        },
+        {
+            "created_at": "2022-07-19T15:13:28Z",
+            "entry_id": 29,
+            "field1": "78"
+        },
+        {
+            "created_at": "2022-07-19T15:14:28Z",
+            "entry_id": 31,
+            "field1": "83"
+        },
+        {
+            "created_at": "2022-07-19T15:15:29Z",
+            "entry_id": 33,
+            "field1": "84"
+        },
+        {
+            "created_at": "2022-07-19T15:16:29Z",
+            "entry_id": 34,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-07-19T15:17:29Z",
+            "entry_id": 36,
+            "field1": "84"
+        },
+        {
+            "created_at": "2022-07-19T15:19:30Z",
+            "entry_id": 38,
+            "field1": "82"
+        },
+        {
+            "created_at": "2022-07-19T15:20:31Z",
+            "entry_id": 40,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-07-19T15:21:31Z",
+            "entry_id": 42,
+            "field1": "79"
+        },
+        {
+            "created_at": "2022-07-19T15:23:32Z",
+            "entry_id": 45,
+            "field1": "50"
+        }
+    ]
+}
