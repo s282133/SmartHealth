@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     # Gestione servizi MQTT
     services = catalog["services"]
-    mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+    mqtt_service = getServiceByName(services,"MQTT_analysis")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]

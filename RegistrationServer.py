@@ -62,7 +62,7 @@ class Registrazione(object):
             catalog = json.load(open(resouce_filename))
             services = catalog["services"]
             try:
-                mqtt_service = getServiceByName(services,"MQTT_rilevazione_valori")
+                mqtt_service = getServiceByName(services,"MQTT_analysis")
                 mqtt_broker = mqtt_service["broker"]
                 mqtt_port = mqtt_service["port"]
                 mqtt_base_topic = mqtt_service["base_topic"]

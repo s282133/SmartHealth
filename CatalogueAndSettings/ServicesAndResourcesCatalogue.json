@@ -60,8 +60,8 @@
       ]
     },
     {
-      "service_name": "MQTT_rilevazione_valori",
-      "description": "Servizio utilizzato per l'invio dei parametri letti dai pazienti",
+      "service_name": "MQTT_analysis",
+      "description": "Servizio utilizzato per l'invio dei dati in analisi",
       "broker": "broker.hivemq.com",
       "port": 1883,
       "base_topic": "P4IoT/SmartHealth",
@@ -70,16 +70,7 @@
           "functionality_name": "send_temperature",
           "description": "Invio delle temperature simulate e non dei pazienti",
           "topic": "{{base_topic}}/{{patientID}}/temp_raspberry"
-        }
-      ]
-    },
-    {
-      "service_name": "MQTT_analysis",
-      "description": "Servizio utilizzato per l'invio dei dati in analisi",
-      "broker": "broker.hivemq.com",
-      "port": 1883,
-      "base_topic": "P4IoT/SmartHealth",
-      "APIs": [
+        },
         {
           "functionality_name": "send_measure",
           "description": "Invio dei dati misurati sul paziente",
@@ -270,7 +261,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-19",
+            "onlineSince": "2022-07-20",
             "telegramID": 298694124,
             "thingspeakInfo": {
               "channel": 1800231,
