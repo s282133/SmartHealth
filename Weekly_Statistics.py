@@ -5,6 +5,7 @@ import requests
 import decimal
 # import sys
 import re
+from datetime import datetime
 import sys, os
 from jinja2 import Template
 sys.path.insert(0, os.path.abspath('..'))
@@ -44,33 +45,73 @@ class statistics():
         while True:
             self.counter += 1
             #if self.counter == ONE_WEEK_IN_SECONDS:           
-            if self.counter == 10:       # DA METTERE A 'ONE_WEEK_IN_SECONDS'
+            if self.counter == 3:       # DA METTERE A 'ONE_WEEK_IN_SECONDS'
+                events = []
                 statsHR = self.computeStatsHR()
-                message = self.messageCreation("heartrate", statsHR)
-                # print(f"{message}")
-                self.myPublish(self.pub_topic, message)                
+                eventHR = self.createEvent("heartrate", self.unitHR, self.event_structure, statsHR)
+                print(f"eventHR : {eventHR}")
+                events.append(eventHR)               
                 statsGL = self.computeStatsGL()
-                message = self.messageCreation("glycemia", statsGL)            
-                # print(f"{message}")    
-                self.myPublish(self.pub_topic, message)                               
+                eventGL = self.createEvent("glycemia", self.unitGL, self.event_structure, statsGL)
+                print(f"eventGL : {eventGL}")
+                events.append(eventGL)                            
                 statsPRH = self.computeStatsPRH()
-                message = self.messageCreation("pressure_high", statsPRH)                
-                # print(f"{message}")   
-                self.myPublish(self.pub_topic, message)                                         
+                eventPRH = self.createEvent("pressure_high", self.unitPRH, self.event_structure, statsPRH)
+                print(f"eventPRH : {eventPRH}")
+                events.append(eventPRH)                                      
                 statsPRL = self.computeStatsPRL()
-                message = self.messageCreation("pressure_low", statsPRL)
-                # print(f"{message}")            
-                self.myPublish(self.pub_topic, message)                                      
+                eventPRL = self.createEvent("pressure_low", self.unitPRL, self.event_structure, statsPRL)
+                print(f"eventPRL : {eventPRL}")
+                events.append(eventPRL)                                  
                 statsTE = self.computeStatsTE()
-                message = self.messageCreation("temperature", statsTE)
-                # print(f"{message}")     
-                self.myPublish(self.pub_topic, message)                              
+                eventTE = self.createEvent("temperature", self.unitTE, self.event_structure, statsTE)
+                print(f"eventTE : {eventTE}")
+                events.append(eventTE)                        
                 statsWE = self.computeStatsWE()
-                message = self.messageCreation("weight", statsWE)
-                # print(f"{message}")        
+                eventWE = self.createEvent("weight", self.unitWE, self.event_structure, statsWE)
+                print(f"eventWE : {eventWE}")
+                #events.append(eventWE)       
+                print(f"events list: {events}")
+                message = self.createMessage(self.message_structure, events)
                 self.myPublish(self.pub_topic, message)                           
                 self.counter = 0
+                events = []
             time.sleep(1)
+
+    def createEvent(self, parameter, unit, base_event_structure, stats):
+        event = base_event_structure
+        event["n"] = parameter
+        event["u"] = unit
+        event["t"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        event["v"] = []
+        try:
+            min = list(stats)[0]
+            event["v"].append(min)
+        except:
+            event["v"].append("none")
+        try:
+            avg = list(stats)[1]
+            event["v"].append(avg)
+        except:
+            event["v"].append("none")
+        try:
+            max = list(stats)[2]
+            event["v"].append(max)
+        except:
+            event["v"].append("none")
+        #print(f"event : {event}")
+        return event
+
+    def createMessage(self, message_structure, events):
+        message = message_structure
+        message["e"] = []
+        message["bn"] = str(message["bn"]).replace("{{clientID}}", self.clientID)
+        lista = []
+        for event in events:
+            #print(f"event in for: {event}")
+            lista.append(event)
+        message["e"] = lista
+        return message 
 
     def initialize(self):
         self.counter = 0
@@ -91,23 +132,46 @@ class statistics():
             self.we_file = allfiles["weight"]
             self.te_file = allfiles["temperature"]
             self.message_structure = settings_dict["message_structure"]
+            self.event_structure = settings_dict["event_structure"]
+            units = settings_dict["units"]
+            self.unitHR = units["heartrate"]
+            self.unitPRH = units["pressureHigh"]
+            self.unitGL = units["glycemia"]
+            self.unitPRL = units["pressureLow"]
+            self.unitTE = units["temperature"]
+            self.unitWE = units["weight"]
+                        
 
-    def messageCreation(self, parameter, stats):
-        message = self.message_structure
-        message["parameter"] = parameter
+    def messageCreation(self, parameter, stats, curr_message, unit):
+        event = self.event_structure
+        #print(f"event earlier : {event}")
+        event["v"] = []
+        event["n"] = parameter
+        event["u"] = unit
+        event["t"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        #print(f"event before func:\n{event}")
         try:
-            message["statistics"]["min"] = list(stats)[0]
+            min = list(stats)[0]
+            event["v"].append(min)
         except:
-            message["statistics"]["min"] = "none"
+            event["v"].append("none")
         try:
-            message["statistics"]["avg"] = list(stats)[1]
+            avg = list(stats)[1]
+            event["v"].append(avg)
         except:
-            message["statistics"]["avg"] = "none"
+            event["v"].append("none")
         try:
-            message["statistics"]["max"] = list(stats)[2]
+            max = list(stats)[2]
+            event["v"].append(max)
         except:
-            message["statistics"]["max"] = "none"   
-        return message         
+            event["v"].append("none")
+        #curr_message["e"]
+        lista = list(curr_message["e"])
+        lista.append(event)
+        curr_message["e"] = lista
+        #print(f"event after func:\n{event}")
+        print(f"curr_message:\n{curr_message}")
+        return curr_message         
 
     def start (self):
         self.client_MQTT.start()
@@ -116,7 +180,7 @@ class statistics():
         self.client_MQTT.stop()
 
     def myPublish(self, topic, message):
-        print(f"{self.clientID} publishing {message} to topic: {topic}")
+        #print(f"{self.clientID} publishing {message} to topic: {topic}")
         self.client_MQTT.myPublish(topic, message)
     
     def computeStatsHR(self):

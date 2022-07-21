@@ -15,5 +15,14 @@
         "weight" : "week_weight.json",
         "temperature" : "week_temperature.json"
     },
-    "message_structure" : { "parameter" : "", "statistics" : {"min" : "", "avg" : "", "max" : ""}}
+    "units" : {
+        "heartrate" : "bpm",
+        "pressureHigh" : "mmHg",
+        "glycemia" : "mg/dl",        
+        "pressureLow" : "mmHg",
+        "weight" : "Kg",
+        "temperature" : "C"
+    },
+    "message_structure" : {"bn": "http://SmartHealth.org/{{clientID}}/statistics/", "e": []},
+    "event_structure" : {"n": "", "u": "", "t": -1, "v" : []}
 }
