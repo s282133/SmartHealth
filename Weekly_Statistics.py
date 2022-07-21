@@ -221,7 +221,7 @@ if __name__ == "__main__":
     mqtt_base_topic = mqtt_service["base_topic"]
     mqtt_api = getApiByName(mqtt_service["APIs"],"send_statistics") 
     mqtt_topic = mqtt_api["topic_statistic"]
-    print(f"TOPIC prima: {mqtt_topic}")
+    #print(f"TOPIC prima: {mqtt_topic}")
     pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
-    print(f"TOPIC dopo: {pub_mqtt_topic}")
+    #print(f"TOPIC dopo: {pub_mqtt_topic}")
     Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
