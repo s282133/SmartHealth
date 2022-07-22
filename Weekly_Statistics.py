@@ -48,7 +48,7 @@ class statistics():
     def create_message(self, events):
         message = self.message_structure.copy()
         message["bn"].replace("{{clientID}}", self.clientID)
-        message["v"] = events
+        message["e"] = events
         return message
 
 

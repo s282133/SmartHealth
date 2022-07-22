@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
+DOWNLOAD_TIME = 30
 
 class Thingspeak():
 
@@ -44,12 +45,46 @@ class Thingspeak():
         self.cont=0
         self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
         self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
+        self.initializeSlim()
+        while True:
+            if self.counter == DOWNLOAD_TIME:
+                self.counter = 0
+                self.downloadData()
+            self.counter += 1
+            time.sleep(1)
+		
+    def initializeSlim(self):
+        self.counter = 0
         self.lastHeartrate=0
         self.lastGlycemia=0
         self.lastPressureLow=0
         self.lastPressureHigh=0
         self.lastPeso=0
-		
+        try:
+            with open("settings_weeklyStats.json", "r") as rp:
+                settings_dict = json.load(rp)
+                self.list_parameters = settings_dict["parameters"]
+                self.ts_fields = []
+                self.local_files = []                
+                for parameter in self.list_parameters:
+                    self.ts_fields.append(parameter["ts_field"])
+                    self.local_files.append(parameter["local_file"])
+        except:
+            sys.exit("Errore nella lettura del file settings_weeklyStats.json")
+
+    def downloadData(self):
+        for i in range(len(self.list_parameters)):
+            field = self.ts_fields[i]
+            fieldnumber = int(str(field).strip("field"))
+            #print("Downloading data from field " + fieldnumber)
+            #downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?days=1&min=1')
+            downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?results=8000&min=1')
+            if downloaded_catalogue.status_code == 200:
+                with open(self.local_files[i], "w") as wp:
+                    json.dump(downloaded_catalogue.json(), wp, indent=4)
+            else:
+                print("Error. Status code: " + str(downloaded_catalogue.status_code))
+                sys.exit()
 
     def notify(self,topic,payload): 
         message = json.loads(payload) #trasformiamo in json 
