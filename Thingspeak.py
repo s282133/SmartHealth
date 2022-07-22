@@ -54,6 +54,8 @@ class Thingspeak():
             time.sleep(1)
 		
     def initializeSlim(self):
+        self.start()
+        self.subscribe()
         self.counter = 0
         self.lastHeartrate=0
         self.lastGlycemia=0
@@ -189,7 +191,3 @@ if __name__=="__main__":
     mqtt_port = mqtt_service["port"]
 
     mySubscriber=Thingspeak(mqtt_broker, mqtt_port) 
-    mySubscriber.start()
-    mySubscriber.subscribe()
-    while True:
-        time.sleep(1)
