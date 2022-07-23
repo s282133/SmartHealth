@@ -15,11 +15,7 @@ class Thingspeak():
 
     def __init__(self,broker,port):
 
-        resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-        catalog = json.load(open(resouce_filename))
-        services = catalog["services"]
-
-        mqtt_service = getServiceByName(services,"Thingspeak")
+        mqtt_service = getHttpServiceByName("Thingspeak")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
@@ -179,12 +175,8 @@ class Thingspeak():
 
 
 if __name__=="__main__":
-    
-    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-    catalog = json.load(open(resouce_filename))
-    services = catalog["services"]
 
-    mqtt_service = getServiceByName(services,"Thingspeak")
+    mqtt_service = getHttpServiceByName("Thingspeak")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]

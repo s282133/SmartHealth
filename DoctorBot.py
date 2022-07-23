@@ -16,11 +16,7 @@ class DoctorBot:
     def __init__(self):
 
         # Gestione servizi MQTT
-        resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-        catalog = json.load(open(resouce_filename))
-        services = catalog["services"]
-
-        mqtt_service = getServiceByName(services,"MQTT_analysis")
+        mqtt_service = getHttpServiceByName("MQTT_analysis")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
@@ -37,7 +33,7 @@ class DoctorBot:
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
 
         # Gestione servizi telegram
-        TelegramDoctor_service = getServiceByName(services,"TelegramDoctor")
+        TelegramDoctor_service = getHttpServiceByName("TelegramDoctor")
         if TelegramDoctor_service == None:
             print("Servizio registrazione non trovato")
         doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
@@ -91,10 +87,7 @@ class DoctorBot:
         if message == "/start": 
             
             # Gestione Servizi di registrazione dottore
-            conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
-            conf = json.load(open(conf_file))
-            services = conf["services"]
-            registration_service = getServiceByName(services,"Registration")
+            registration_service = getHttpServiceByName("Registration")
             if registration_service == None:
                 print("Servizio registrazione non trovato")
 
@@ -113,10 +106,7 @@ class DoctorBot:
         if message == "/registrazione_paziente": 
 
             # Gestione Servizi di registrazione paziente
-            conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
-            conf = json.load(open(conf_file))
-            services = conf["services"]
-            registration_service = getServiceByName(services,"Registration")
+            registration_service = getHttpServiceByName("Registration")
             if registration_service == None:
                 print("Servizio registrazione non trovato")
 

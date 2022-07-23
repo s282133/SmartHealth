@@ -17,11 +17,8 @@ class dataAnalysisClass():
     def __init__(self):
 
         # Gestione servizi MQTT
-        resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-        catalog = json.load(open(resouce_filename))
-        services = catalog["services"]
+        mqtt_service = getHttpServiceByName("MQTT_analysis")
 
-        mqtt_service = getServiceByName(services,"MQTT_analysis")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
@@ -143,9 +140,6 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: heart rate is in range")
                 else:
                     print(f"DataAnalysisBlock: heart rate is NOT in range") 
-                    catalog_fn = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-                    self.catalog = json.load(open(catalog_fn))
-                    self.lista = self.catalog["resources"]
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
@@ -168,9 +162,6 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
-                    catalog_fn = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-                    self.catalog = json.load(open(catalog_fn))
-                    self.lista = self.catalog["resources"]
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
@@ -188,9 +179,6 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: glycemia is in range")
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
-                    catalog_fn = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-                    self.catalog = json.load(open(catalog_fn))
-                    self.lista = self.catalog["resources"]
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:
@@ -209,9 +197,6 @@ class dataAnalysisClass():
                     print(f"DataAnalysisBlock: temperature is in range")
                 else:
                     print(f"DataAnalysisBlock: temperature is NOT in range") 
-                    catalog_fn = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-                    self.catalog = json.load(open(catalog_fn))
-                    self.lista = self.catalog["resources"]
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
                     if self.telegramID >= 0:

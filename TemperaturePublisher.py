@@ -38,8 +38,8 @@ if __name__ == "__main__":
                 lista_pazienti_simulati.append(patientID)
 
     # Gestione servizi MQTT
-    services = catalog["services"]
-    mqtt_service = getServiceByName(services,"MQTT_analysis")
+
+    mqtt_service = getHttpServiceByName("MQTT_analysis")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]

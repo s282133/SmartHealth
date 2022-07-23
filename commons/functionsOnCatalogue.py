@@ -3,7 +3,7 @@ import sys, os
 import json
 sys.path.insert(0, os.path.abspath('..'))
 import time
-import string
+import requests
 
 
 def retrievePregnancyDayOne(patient_ID):
@@ -19,6 +19,7 @@ def retrievePregnancyDayOne(patient_ID):
                 data= _patients["personalData"] 
                 filepointer.close()    
                 return data["pregnancyDayOne"]
+                
 
 def retrieveOnlineSince(patient_ID):
     filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
@@ -149,11 +150,6 @@ def findDoctorTelegramIdFromPatientId(parPatientID):
     return telegramID    
 
 
-def getServiceByName(parServices,parName):
-    first_or_default = next((x for x in parServices if x["service_name"]==parName), None)
-    return first_or_default 
-
-
 def getApiByName(parAPIs,parName):
     first_or_default = next((x for x in parAPIs if x["functionality_name"]==parName), None)
     return first_or_default 
@@ -225,3 +221,28 @@ def setOnlineSinceFromClientID(patient_ID):
                 with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
                     json.dump(dictionaryCatalog, f, indent=2)
         
+
+def getLocalServiceByName(parServiceName):
+    filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+    dictionaryCatalog = json.load(open(filename))
+    services = dictionaryCatalog["services"]
+
+    first_or_default = next((x for x in services if x["service_name"]==parServiceName), None)
+    return first_or_default 
+
+
+def getHttpServiceByName(parServiceName):
+
+    # config.json mi dice qual è il server da interrogare
+    filename = 'CatalogueAndSettings\\config.json'
+    dictionaryCatalog = json.load(open(filename))
+    ipAddress = dictionaryCatalog["ipAddress"]
+    port = dictionaryCatalog["port"]
+
+    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    r = requests.get(f'http://{ipAddress}:{port}/service_name?service_name={parServiceName}') 
+
+    if r.status_code == 200:
+        return r.json()
+    else:
+        return None

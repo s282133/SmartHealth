@@ -120,10 +120,7 @@ class statistics():
 
 if __name__ == "__main__" :
 
-    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-    catalog = json.load(open(resouce_filename))
-    services = catalog["services"]
-    mqtt_service = getServiceByName(services,"Weekly_statistics")
+    mqtt_service = getHttpServiceByName("Weekly_statistics")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]

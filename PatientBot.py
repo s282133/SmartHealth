@@ -17,13 +17,9 @@ class PatientBot:
     def __init__(self):
         
         # Gestione servizi MQTT
-        resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-        catalog = json.load(open(resouce_filename))
-        services = catalog["services"]
-
         try:
-            mqtt_service = getServiceByName(services,"MQTT_analysis")
-            TelegramClient_service = getServiceByName(services,"TelegramClient")
+            mqtt_service = getHttpServiceByName("MQTT_analysis")
+            TelegramClient_service = getHttpServiceByName("TelegramClient")
             if mqtt_service == None or TelegramClient_service == None:
                 raise ServiceUnavailableException
             else:
@@ -69,8 +65,13 @@ class PatientBot:
                 int_message = int(message)      # patientID dato dal medico
                 if(int_message < 0):
                     raise InvalidPatientID
-                self.bot.sendMessage(chat_ID, text=f"Login procedure successful.\nConfirmed PatientID: {message}")                 
-                self.Update_PatientTelegramID(chat_ID,message)
+
+                if self.Update_PatientTelegramID(chat_ID,message):
+                    self.bot.sendMessage(chat_ID, text=f"Login procedure successful.\nConfirmed PatientID: {message}")
+                else:    
+                    self.bot.sendMessage(chat_ID, text=f"Login procedure unsuccessful.\nChoose again /start to insert your PatientID")
+                    #permettere di riscrivere il patient id?
+
                 self.previous_message=""   
             except:
                 print("[PATIENT_BOT] INVALID PATIENT ID.")
@@ -117,31 +118,20 @@ class PatientBot:
 
 
     def Update_PatientTelegramID (self,chat_ID, message):
-            # try except (InvalidChatIdException)
-            try:
-                filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-                f = open(filename)
-                self.catalog = json.load(f)
-                self.lista = self.catalog["resources"]
-                found = 0
-                for doctorObject in self.lista:
-                    patientList = doctorObject["patientList"]
-                    for patientObject in patientList:
-                        patientID = patientObject["patientID"]
-                        if patientID == int(message):
-                            found = 1
-                            connectedDevice = patientObject["connectedDevice"]
-                            connectedDevice["telegramID"]=chat_ID
-                            #print(f"{chat_ID}")
-                if found == 0:
-                    raise PatientNotFoundException
-                else:
-                    found = 0       # lo rimetto com'era
-                    with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
-                        json.dump(self.catalog, f,indent=2)
-            except:
-                print("[PATIENT_BOT] Patient not found")
 
+        # config.json mi dice qual è il server da interrogare
+        filename = 'CatalogueAndSettings\\config.json'
+        dictionaryCatalog = json.load(open(filename))
+        ipAddress = dictionaryCatalog["ipAddress"]
+        port = dictionaryCatalog["port"]
+
+        # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+        r = requests.get(f'http://{ipAddress}:{port}/update_telegram_id?patient_id={message}&chat_id={chat_ID}') 
+
+        if r.text == "OK":
+            return True
+        else:
+            return False
 
 if __name__ == "__main__":
     

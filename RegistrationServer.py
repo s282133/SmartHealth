@@ -58,11 +58,8 @@ class Registrazione(object):
         # mandare al raspberry il servizio da utilizzare
         elif uri[0] == "get_raspberry_parameters":
             # Gestione servizi MQTT
-            resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-            catalog = json.load(open(resouce_filename))
-            services = catalog["services"]
             try:
-                mqtt_service = getServiceByName(services,"MQTT_analysis")
+                mqtt_service = getLocalServiceByName("MQTT_analysis")
                 mqtt_broker = mqtt_service["broker"]
                 mqtt_port = mqtt_service["port"]
                 mqtt_base_topic = mqtt_service["base_topic"]
@@ -99,8 +96,41 @@ class Registrazione(object):
             except: 
                 print("[REG_SERVER] Generic exception occurred.")  
 
-        else:
-            raise cherrypy.HTTPError(404, "Bad Request")
+
+
+
+        # Aggiunte per la gestione del catalogo con http
+        # Restituisce il servizio dal nome del servizio
+        elif uri[0] == "service_name":
+            service_name = params["service_name"]
+
+            resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+            catalog = json.load(open(resouce_filename))
+            services = catalog["services"]
+
+            first_or_default = next((x for x in services if x["service_name"]==service_name), None)
+            return json.dumps(first_or_default)
+
+        # Aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start
+        elif uri[0] == "update_telegram_id":
+            chat_id = params["chat_id"]
+            patient_id = params["patient_id"]
+
+            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+            f = open(filename)
+            self.catalog = json.load(f)
+            self.lista = self.catalog["resources"]
+            for doctorObject in self.lista:
+                patientList = doctorObject["patientList"]
+                for patientObject in patientList:
+                    patientID = patientObject["patientID"]
+                    if patientID == int(patient_id):
+                        connectedDevice = patientObject["connectedDevice"]
+                        connectedDevice["telegramID"]=chat_id
+                        with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
+                            json.dump(self.catalog, f,indent=2)
+                        return "OK"
+            return "Paziente non trovato"
           
 
     # aggiungere un dottore alla lista di dottori al SUBMIT
@@ -266,14 +296,10 @@ class Registrazione(object):
 
 if __name__=="__main__":
 
-    conf_file = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json' 
-    conf = json.load(open(conf_file))
-
-
     # parametri per la registrazione su raspberry
     ## qui ci vuole un try except per il servizio non trovato (ServiceUnavailableException)
-    services = conf["services"]
-    PatientRegistrationOnRaspberry = getServiceByName(services,"PatientRegistrationOnRaspberry")
+
+    PatientRegistrationOnRaspberry = getLocalServiceByName("PatientRegistrationOnRaspberry")
 
     if PatientRegistrationOnRaspberry == None:
         print("Servizio registrazione raspberry non trovato")
@@ -286,7 +312,7 @@ if __name__=="__main__":
 
 
     # host per il server registrazione
-    registration_service = getServiceByName(services,"Registration")
+    registration_service = getLocalServiceByName("Registration")
     if registration_service == None:
         print("Servizio registrazione non trovato")
     registration_ipAddress = registration_service["host"]

@@ -38,6 +38,20 @@ class rpiPub():
 
     # MQTT FUNCTIONS
     def __init__(self, clientID):
+
+        # Gestione servizi MQTT
+        mqtt_service = getHttpServiceByName("MQTT_analysis")
+
+        if mqtt_service == None:
+            print("Servizio registrazione non trovato")
+            exit()
+
+        mqtt_broker = mqtt_service["broker"]
+        mqtt_port = mqtt_service["port"]
+        self.mqtt_base_topic = mqtt_service["base_topic"]
+        mqtt_api = getApiByName(mqtt_service["APIs"],"send_temperature") 
+        self.mqtt_topic = mqtt_api["topic"]
+
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = int(clientID)
 
@@ -59,11 +73,11 @@ class rpiPub():
 
     def start (self):
         self.client_MQTT.start()
-        self.subTopic = f"{mqtt_base_topic}/{self.clientID}/monitoring"    
+        self.subTopic = f"{self.mqtt_base_topic}/{self.clientID}/monitoring"    
         self.client_MQTT.mySubscribe(self.subTopic)
 
         #da sostituire con jinja
-        self.TopicTempRaspberry = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(self.clientID))
+        self.TopicTempRaspberry = getTopicByParameters(self.mqtt_topic, self.mqtt_base_topic, str(self.clientID))
         
         self.client_MQTT.mySubscribe(self.TopicTempRaspberry)
 
@@ -112,10 +126,10 @@ class rpiPub():
 
     def publishHR(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        topicHR = f"{mqtt_base_topic}/{self.clientID}/heartrate"
+        topicHR = f"{self.mqtt_base_topic}/{self.clientID}/heartrate"
         messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicHR, messageHR)
-        print(f"{self.clientID} published {measure} with topic: {mqtt_base_topic}/{self.clientID}/heartrate ({self.monitoring_status})")
+        print(f"{self.clientID} published {measure} with topic: {self.mqtt_base_topic}/{self.clientID}/heartrate ({self.monitoring_status})")
 
     # PRESSURE
 
@@ -129,8 +143,8 @@ class rpiPub():
         pressureLow = measureDict["pressureLow"]
         # TODO : mettere 2 "e", una per min e una per max
         messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
-        self.myPublish(f"{mqtt_base_topic}/{self.clientID}/pressure", messagePR)
-        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {mqtt_base_topic}/{self.clientID}/pressure ({self.monitoring_status})")
+        self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/pressure", messagePR)
+        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {self.mqtt_base_topic}/{self.clientID}/pressure ({self.monitoring_status})")
 
     # GLYCEMIA
 
@@ -141,8 +155,8 @@ class rpiPub():
     def publishGlycemia(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
-        self.myPublish(f"{mqtt_base_topic}/{self.clientID}/glycemia", messageGL)
-        print(f"{self.clientID} published {measure} with topic: {mqtt_base_topic}/{self.clientID}/glycemia ({self.monitoring_status})")
+        self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/glycemia", messageGL)
+        print(f"{self.clientID} published {measure} with topic: {self.mqtt_base_topic}/{self.clientID}/glycemia ({self.monitoring_status})")
 
 
     # TEMPERATURE
@@ -150,8 +164,8 @@ class rpiPub():
     def publishTemperature(self, measureTemp):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         messageTE = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
-        self.myPublish(f"{mqtt_base_topic}/{self.clientID}/temperature", messageTE)
-        print(f"{self.clientID} published {measureTemp} with topic: {mqtt_base_topic}/{self.clientID}/temperature")
+        self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/temperature", messageTE)
+        print(f"{self.clientID} published {measureTemp} with topic: {self.mqtt_base_topic}/{self.clientID}/temperature")
 
 
     # Lettura e pubblicazione dati 
@@ -219,23 +233,10 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    #setOnlineSinceFromClientID(1)
+    setOnlineSinceFromClientID(1)
     #setOnlineSinceFromClientID(2)
     #setOnlineSinceFromClientID(3)
     #setOnlineSinceFromClientID(6)
-
-    # Gestione servizi MQTT
-    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-    catalog = json.load(open(resouce_filename))
-    services = catalog["services"]
-    mqtt_service = getServiceByName(services,"MQTT_analysis")
-    if mqtt_service == None:
-        print("Servizio registrazione non trovato")
-    mqtt_broker = mqtt_service["broker"]
-    mqtt_port = mqtt_service["port"]
-    mqtt_base_topic = mqtt_service["base_topic"]
-    mqtt_api = getApiByName(mqtt_service["APIs"],"send_temperature") 
-    mqtt_topic = mqtt_api["topic"]
 
     cicli=0
     while True:
