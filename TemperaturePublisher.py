@@ -39,13 +39,13 @@ if __name__ == "__main__":
 
     # Gestione servizi MQTT
 
-    mqtt_service = getHttpServiceByName("MQTT_analysis")
+    mqtt_service = http_getServiceByName("MQTT_analysis")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]
     mqtt_port = mqtt_service["port"]
     mqtt_base_topic = mqtt_service["base_topic"]
-    mqtt_api = getApiByName(mqtt_service["APIs"],"send_temperature") 
+    mqtt_api = http_getApiByName("MQTT_analysis","send_temperature") 
     mqtt_topic = mqtt_api["topic"]
 
     myPublisher = sensor_publisher(mqtt_broker,mqtt_port)

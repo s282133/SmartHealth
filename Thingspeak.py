@@ -15,13 +15,13 @@ class Thingspeak():
 
     def __init__(self,broker,port):
 
-        mqtt_service = getHttpServiceByName("Thingspeak")
+        mqtt_service = http_getServiceByName("Thingspeak")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = getApiByName(mqtt_service["APIs"],"send_data_to_thingspeak") 
+        mqtt_api = http_getApiByName("Thingspeak","send_data_to_thingspeak") 
 
         mqtt_topic_temperature  = mqtt_api["topic_temperature"]
         mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
@@ -88,7 +88,7 @@ class Thingspeak():
         message = json.loads(payload) #trasformiamo in json 
         if bool(self.patternWeight.match(str(topic))): 
             self.clientID = int(str(topic).split("/")[2]) 
-            api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
+            api_key = http_retrieveTSWriteAPIfromClientID(self.clientID) 
             peso=message["status"] 
             print(f"topic del peso: {topic}") 
             self.lastPeso = peso 
@@ -98,7 +98,7 @@ class Thingspeak():
         elif not bool(self.patternMonitoring.match(str(topic))): 
             print(f"topic non del peso: {topic}")
             self.clientID = int(str(topic).split("/")[2])
-            api_key = retrieveTSWriteAPIfromClientID(self.clientID) 
+            api_key = http_retrieveTSWriteAPIfromClientID(self.clientID) 
             self.newMeasureType = message['e'][0]['n'] 
             
             if(self.newMeasureType == "heartrate"): 
@@ -108,12 +108,12 @@ class Thingspeak():
 
             elif(self.newMeasureType == "glycemia"): 
                 self.sensed_glycemia = message['e'][0]['v']
-                api_key = retrieveTSWriteAPIfromClientID(self.clientID)
+                api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.lastGlycemia = self.sensed_glycemia 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
                     
             elif(self.newMeasureType == "pressureHigh"):
-                api_key = retrieveTSWriteAPIfromClientID(self.clientID)
+                api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.sensed_pressureHigh= message['e'][0]['v'] 
                 self.sensed_pressureLow= message['e'][1]['v'] 
                 self.lastPressureHigh = self.sensed_pressureHigh 
@@ -126,7 +126,7 @@ class Thingspeak():
         # message = json.loads(payload) #trasformiamo in json
         # if bool(self.patternWeight.match(str(topic))):
         #     self.clientID = int(str(topic).split("/")[2])
-        #     api_key = retrieveTSWriteAPIfromClientID(self.clientID)
+        #     api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
         #     peso=message["status"]
         #     print(f"topic del peso: {topic}")
         #     r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}') 
@@ -137,7 +137,7 @@ class Thingspeak():
         #     # self.bn=message['bn'] 
         #     # self.clientID = int(str(self.bn).split("/")[3])
         #     self.clientID = int(str(topic).split("/")[2])
-        #     api_key = retrieveTSWriteAPIfromClientID(self.clientID)     
+        #     api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)     
         #     print(f"Topic is (else){topic}")
         #     self.measureType = message['e'][0]['n']
 
@@ -176,7 +176,7 @@ class Thingspeak():
 
 if __name__=="__main__":
 
-    mqtt_service = getHttpServiceByName("Thingspeak")
+    mqtt_service = http_getServiceByName("Thingspeak")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]

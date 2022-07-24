@@ -16,16 +16,17 @@ class DoctorBot:
     def __init__(self):
 
         # Gestione servizi MQTT
-        mqtt_service = getHttpServiceByName("MQTT_analysis")
+        mqtt_service = http_getServiceByName("MQTT_analysis")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api_monitoring = getApiByName(mqtt_service["APIs"],"monitoring_on") 
+
+        mqtt_api_monitoring = http_getApiByName("MQTT_analysis","monitoring_on") 
         self.mqtt_topic_monitoring  = mqtt_api_monitoring["topic"]
 
-        mqtt_api_alert = getApiByName(mqtt_service["APIs"],"receive_alert") 
+        mqtt_api_alert = http_getApiByName("MQTT_analysis","receive_alert") 
         mqtt_topic_alert = mqtt_api_alert["topic"]
         self.local_topic_alert = mqtt_topic_alert.replace("{{base_topic}}", self.mqtt_base_topic)
 
@@ -33,7 +34,7 @@ class DoctorBot:
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
 
         # Gestione servizi telegram
-        TelegramDoctor_service = getHttpServiceByName("TelegramDoctor")
+        TelegramDoctor_service = http_getServiceByName("TelegramDoctor")
         if TelegramDoctor_service == None:
             print("Servizio registrazione non trovato")
         doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
@@ -87,13 +88,14 @@ class DoctorBot:
         if message == "/start": 
             
             # Gestione Servizi di registrazione dottore
-            registration_service = getHttpServiceByName("Registration")
+            registration_service = http_getServiceByName("Registration")
             if registration_service == None:
                 print("Servizio registrazione non trovato")
 
             registration_ipAddress = registration_service["host"]
             registration_port = registration_service["port"]
-            api_start = getApiByName(registration_service["APIs"],"start") 
+
+            api_start = http_getApiByName("Registration","start") 
             registration_uri = api_start["uri"]
 
             #da cambiare con jinja
@@ -106,13 +108,14 @@ class DoctorBot:
         if message == "/registrazione_paziente": 
 
             # Gestione Servizi di registrazione paziente
-            registration_service = getHttpServiceByName("Registration")
+            registration_service = http_getServiceByName("Registration")
             if registration_service == None:
                 print("Servizio registrazione non trovato")
 
             patient_registration_ipAddress = registration_service["host"]
             patient_registration_port = registration_service["port"]
-            api_start = getApiByName(registration_service["APIs"],"registrazione_paziente") 
+
+            api_start = http_getApiByName("Registration","registrazione_paziente") 
             patient_registration_uri = api_start["uri"]
 
             #da cambiare con jinja

@@ -120,13 +120,13 @@ class statistics():
 
 if __name__ == "__main__" :
 
-    mqtt_service = getHttpServiceByName("Weekly_statistics")
+    mqtt_service = http_getServiceByName("Weekly_statistics")
     if mqtt_service == None:
         print("Servizio registrazione non trovato")
     mqtt_broker = mqtt_service["broker"]
     mqtt_port = mqtt_service["port"]
     mqtt_base_topic = mqtt_service["base_topic"]
-    mqtt_api = getApiByName(mqtt_service["APIs"],"send_statistics") 
+    mqtt_api = http_getApiByName("Weekly_statistics","send_statistics") 
     mqtt_topic = mqtt_api["topic_statistic"]
     pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
     Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)

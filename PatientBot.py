@@ -18,8 +18,8 @@ class PatientBot:
         
         # Gestione servizi MQTT
         try:
-            mqtt_service = getHttpServiceByName("MQTT_analysis")
-            TelegramClient_service = getHttpServiceByName("TelegramClient")
+            mqtt_service = http_getServiceByName("MQTT_analysis")
+            TelegramClient_service = http_getServiceByName("TelegramClient")
             if mqtt_service == None or TelegramClient_service == None:
                 raise ServiceUnavailableException
             else:
@@ -96,8 +96,8 @@ class PatientBot:
                 if(int_weight < 0 or int_weight > 100):
                     raise InvalidWeightException
                 print (f"Chat ID: {chat_ID}")
-                self.patientID = findPatient(chat_ID)             
-                if self.patientID == 0:
+                self.patientID = http_findPatient(chat_ID)             
+                if self.patientID == -1:
                     print("Paziente non trovato")
                     raise PatientNotFoundException 
                 topic=f"{self.mqttTopic}/{self.patientID}/peso" 

@@ -40,7 +40,7 @@ class rpiPub():
     def __init__(self, clientID):
 
         # Gestione servizi MQTT
-        mqtt_service = getHttpServiceByName("MQTT_analysis")
+        mqtt_service = http_getServiceByName("MQTT_analysis")
 
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
@@ -49,13 +49,13 @@ class rpiPub():
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = getApiByName(mqtt_service["APIs"],"send_temperature") 
+        mqtt_api = http_getApiByName("MQTT_analysis","send_temperature") 
         self.mqtt_topic = mqtt_api["topic"]
 
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = int(clientID)
 
-        self.monitoring_status = getMonitoringStateFromClientID(self.clientID)
+        self.monitoring_status = http_getMonitoringStateFromClientID(self.clientID)
         if self.monitoring_status == "on":
             self.monitoring = True
         else:
@@ -101,7 +101,7 @@ class rpiPub():
             elif self.monitoring_status=="off":
                 self.monitoring = False
 
-            setMonitorinStatefromClientID(self.monitoring_status, self.clientID)
+            http_setMonitorinStatefromClientID(self.clientID, self.monitoring_status)
 
         elif subtopic == TOPIC_TEMP_RASPBERRY:      
             newMeasureTempRaspberry = msg["e"][0]["v"]
@@ -205,7 +205,7 @@ class rpiPub():
                 self.monitoring_counter = 0
                 self.monitoring_status ="off"
                 self.monitoring = False
-                setMonitorinStatefromClientID(self.monitoring_status, self.clientID)
+                http_setMonitorinStatefromClientID(self.clientID, self.monitoring_status)
 
 
 # def getWeek(dayOne):

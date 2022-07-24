@@ -17,14 +17,14 @@ class dataAnalysisClass():
     def __init__(self):
 
         # Gestione servizi MQTT
-        mqtt_service = getHttpServiceByName("MQTT_analysis")
+        mqtt_service = http_getServiceByName("MQTT_analysis")
 
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = getApiByName(mqtt_service["APIs"],"send_measure") 
+        mqtt_api = http_getApiByName("MQTT_analysis","send_measure") 
 
         mqtt_topic_temperature  = mqtt_api["topic_temperature"]
         mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
@@ -36,7 +36,7 @@ class dataAnalysisClass():
         self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
         self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
 
-        mqtt_topic_send_alert = getApiByName(mqtt_service["APIs"],"send_alert") 
+        mqtt_topic_send_alert = http_getApiByName("MQTT_analysis","send_alert") 
         self.topic_send_alert  = mqtt_topic_send_alert["topic"]
 
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
@@ -81,7 +81,7 @@ class dataAnalysisClass():
         # #print(f"DataAnalysisBlock: current day is {currDays}")
 
         # #print(f"DataAnalysisBlock: clientID : {local_clientID}")
-        # dayOne = retrievePregnancyDayOne(int(local_clientID))            
+        # dayOne = http_retrievePregnancyDayOne(int(local_clientID))            
         # #print(f"DataAnalysisBlock: dayOne : {dayOne}")
         # dayoneY = dayOne.split("-")[0]
         # dayoneM = dayOne.split("-")[1]
@@ -95,13 +95,13 @@ class dataAnalysisClass():
         # if(week == 0): 
         #     week = 1
 
-        monitoringState = getMonitoringStateFromClientID(local_clientID)
+        monitoringState = http_getMonitoringStateFromClientID(local_clientID)
         if monitoringState == "on":
             return
 
-        dayOne = retrievePregnancyDayOne(local_clientID)
+        dayOne = http_retrievePregnancyDayOne(local_clientID)
 
-        patientName = getNameFromClientID(local_clientID)
+        patientName = http_getNameFromClientID(local_clientID)
 
         week = getWeek(dayOne)
 
@@ -141,11 +141,12 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: heart rate is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID >= 0:
+                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
+                    if self.telegramID != None:
                         self.send_alert(parClientID, self.telegramID, messaggio, f"heartrate on {parClientID}", f"heartrate off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
+
 
     def managePressure(self, week, parClientID, parPatientName):
         thresholdsPR = self.thresholdsFile["pressure"]
@@ -163,8 +164,8 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID >= 0:
+                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
+                    if self.telegramID != None:
                         self.send_alert(parClientID, self.telegramID, messaggio, f"pression on {parClientID}", f"pression off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
@@ -180,8 +181,8 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID >= 0:
+                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
+                    if self.telegramID != None:
                         self.send_alert(parClientID, self.telegramID, messaggio, f"glycemia on {parClientID}", f"glycemia off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
@@ -198,8 +199,8 @@ class dataAnalysisClass():
                 else:
                     print(f"DataAnalysisBlock: temperature is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID >= 0:
+                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
+                    if self.telegramID != None:
                         self.send_alert(parClientID, self.telegramID, messaggio, f"temperature on {parClientID}", f"temperature off {parClientID}")
                     else:
                         print("Doctor not found for this patient")
