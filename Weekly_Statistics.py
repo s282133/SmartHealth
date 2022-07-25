@@ -4,6 +4,7 @@ from datetime import datetime
 import sys,os
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
+from commons.customExceptions import *
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -121,14 +122,14 @@ class statistics():
 if __name__ == "__main__" :
 
     mqtt_service = http_getServiceByName("Weekly_statistics")
-    if mqtt_service == None:
-        print("Servizio registrazione non trovato")
-    mqtt_broker = mqtt_service["broker"]
-    mqtt_port = mqtt_service["port"]
-    mqtt_base_topic = mqtt_service["base_topic"]
-    mqtt_api = http_getApiByName("Weekly_statistics","send_statistics") 
-    mqtt_topic = mqtt_api["topic_statistic"]
-    pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
-    Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
-
+    try:
+        mqtt_broker = mqtt_service["broker"]
+        mqtt_port = mqtt_service["port"]
+        mqtt_base_topic = mqtt_service["base_topic"]
+        mqtt_api = http_getApiByName("Weekly_statistics","send_statistics") 
+        mqtt_topic = mqtt_api["topic_statistic"]
+        pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
+        Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
+    except TypeError:
+        print("Weekly_Statistics could not be initialized.")
     # crea funzione wrapper per sto casino

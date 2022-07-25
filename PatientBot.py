@@ -20,32 +20,32 @@ class PatientBot:
         try:
             mqtt_service = http_getServiceByName("MQTT_analysis")
             TelegramClient_service = http_getServiceByName("TelegramClient")
-            if mqtt_service == None or TelegramClient_service == None:
-                raise ServiceUnavailableException
-            else:
-                mqtt_broker = mqtt_service["broker"]
-                mqtt_port = mqtt_service["port"]
-                mqtt_base_topic = mqtt_service["base_topic"]         
-                # Oggetto mqtt
-                self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)           
-                # Gestione servizi telegram
-                patientTelegramToken = TelegramClient_service["patientTelegramToken"]       
-                # Creazione bot
-                self.bot = telepot.Bot(patientTelegramToken)
-                self.client = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
-                self.client.start()
-                self.mqttTopic = mqtt_base_topic
-                self.previous_message="previous_message"
-                self.__message = {'bn': "telegramBot",
-                                'e':
-                                [
-                                    {'n': 'switch', 'v': '', 't': '', 'u': 'bool'},
-                                ]
-                                }
-                MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
-                        'callback_query': self.on_callback_query}).run_as_thread()      
         except:
-            print("[PATIENT_BOT] Uno o più servizi non trovati")
+            print("Patient_Bot could not be initialized [ERR 1]")
+        try:
+            mqtt_broker = mqtt_service["broker"]
+            mqtt_port = mqtt_service["port"]
+            mqtt_base_topic = mqtt_service["base_topic"]    
+        except:
+                print("Patient_Bot could not be initialized [ERR 2]")     
+        # Oggetto mqtt
+        self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)           
+        # Gestione servizi telegram
+        patientTelegramToken = TelegramClient_service["patientTelegramToken"]       
+        # Creazione bot
+        self.bot = telepot.Bot(patientTelegramToken)
+        self.client = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
+        self.client.start()
+        self.mqttTopic = mqtt_base_topic
+        self.previous_message="previous_message"
+        self.__message = {'bn': "telegramBot",
+                        'e':
+                        [
+                            {'n': 'switch', 'v': '', 't': '', 'u': 'bool'},
+                        ]
+                        }
+        MessageLoop(self.bot, {'chat': self.on_chat_patient_message,
+                'callback_query': self.on_callback_query}).run_as_thread()      
 
 
     def start(self):

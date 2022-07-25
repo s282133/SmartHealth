@@ -8,6 +8,7 @@ from gettext import Catalog
 
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
+from commons.customExceptions import *
 
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
@@ -17,15 +18,21 @@ class DoctorBot:
 
         # Gestione servizi MQTT
         mqtt_service = http_getServiceByName("MQTT_analysis")
-        if mqtt_service == None:
-            print("Servizio registrazione non trovato")
-        mqtt_broker = mqtt_service["broker"]
-        mqtt_port = mqtt_service["port"]
-        self.mqtt_base_topic = mqtt_service["base_topic"]
-
-        mqtt_api_monitoring = http_getApiByName("MQTT_analysis","monitoring_on") 
-        self.mqtt_topic_monitoring  = mqtt_api_monitoring["topic"]
-
+        try:
+            mqtt_broker = mqtt_service["broker"]
+            mqtt_port = mqtt_service["port"]
+            self.mqtt_base_topic = mqtt_service["base_topic"]
+        except TypeError:
+            print("MQTT_analysis could not be initialized [ERR 1].")
+        try:
+            mqtt_api_monitoring = http_getApiByName("MQTT_analysis","monitoring_on") 
+            self.mqtt_topic_monitoring  = mqtt_api_monitoring["topic"]
+        except TypeError:
+            print("MQTT_analysis could not be initialized [ERR 2].")
+        except KeyError:
+            print("MQTT_analysis could not be initialized [ERR 3].")
+        except:
+            print("MQTT_analysis could not be initialized [ERR 4].")
         mqtt_api_alert = http_getApiByName("MQTT_analysis","receive_alert") 
         mqtt_topic_alert = mqtt_api_alert["topic"]
         self.local_topic_alert = mqtt_topic_alert.replace("{{base_topic}}", self.mqtt_base_topic)
@@ -34,11 +41,15 @@ class DoctorBot:
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
 
         # Gestione servizi telegram
-        TelegramDoctor_service = http_getServiceByName("TelegramDoctor")
-        if TelegramDoctor_service == None:
-            print("Servizio registrazione non trovato")
-        doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
-
+        try:
+            TelegramDoctor_service = http_getServiceByName("TelegramDoctor")
+            doctorTelegramToken = TelegramDoctor_service["doctorTelegramToken"]
+        except TypeError:
+            print("TelegramDoctor could not be initialized [ERR 5].")
+        except KeyError:
+            print("TelegramDoctor could not be initialized [ERR 6].")
+        except:
+            print("TelegramDoctor could not be initialized [ERR 7].")
         # Creazione client_bot
         self.client_bot = telepot.Bot(doctorTelegramToken)
         self.client_mqtt = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
@@ -89,44 +100,51 @@ class DoctorBot:
             
             # Gestione Servizi di registrazione dottore
             registration_service = http_getServiceByName("Registration")
-            if registration_service == None:
-                print("Servizio registrazione non trovato")
+            try:
+                registration_ipAddress = registration_service["host"]
+                registration_port = registration_service["port"]
+            except:
+                print("Registration - error [ERR 8].")
+                
+            try:    
+                api_start = http_getApiByName("Registration","start") 
+                registration_uri = api_start["uri"]
+            except:
+                print("Registration - error [ERR 9].")
 
-            registration_ipAddress = registration_service["host"]
-            registration_port = registration_service["port"]
-
-            api_start = http_getApiByName("Registration","start") 
-            registration_uri = api_start["uri"]
-
-            #da cambiare con jinja
             registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
 
             uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
             self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
 
 
-        if message == "/registrazione_paziente": 
+        elif message == "/registrazione_paziente": 
 
             # Gestione Servizi di registrazione paziente
             registration_service = http_getServiceByName("Registration")
-            if registration_service == None:
-                print("Servizio registrazione non trovato")
+            try:
+                patient_registration_ipAddress = registration_service["host"]
+                patient_registration_port = registration_service["port"]
+            except:
+                print("Registration - error [ERR 10].")
+           
+            try:
+                api_start = http_getApiByName("Registration","registrazione_paziente") 
+                patient_registration_uri = api_start["uri"]
+            except:
+                print("Registration - error [ERR 11].")
 
-            patient_registration_ipAddress = registration_service["host"]
-            patient_registration_port = registration_service["port"]
-
-            api_start = http_getApiByName("Registration","registrazione_paziente") 
-            patient_registration_uri = api_start["uri"]
-
-            #da cambiare con jinja
-            patient_registration_uri = patient_registration_uri.replace("{{chat_ID}}", str(chat_ID))
+            patient_registration_uri = str(patient_registration_uri).replace("{{chat_ID}}", str(chat_ID))
 
             uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
             self.client_bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
-        if message == "/accesso_dati": 
+        elif message == "/accesso_dati": 
             self.client_bot.sendMessage(chat_ID, text='Access to data at this link: ')
+        # QUALE LINK?
 
+        else:
+            self.client_bot.sendMessage(chat_ID, text="* Send /start to log in;\n* Send /registrazione_paziente to submit a new patient;\n* Send /accesso_dati to monitor patients' data.") 
 
     def on_callback_query(self, messaggio):
         query_ID , chat_ID , query_data = telepot.glance(messaggio,flavor='callback_query')

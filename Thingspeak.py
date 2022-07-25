@@ -5,6 +5,8 @@ import requests
 # import sys
 import re
 import sys, os
+
+from commons.customExceptions import ServiceUnavailableException
 sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
@@ -175,11 +177,11 @@ class Thingspeak():
 
 
 if __name__=="__main__":
-
+    
     mqtt_service = http_getServiceByName("Thingspeak")
-    if mqtt_service == None:
-        print("Servizio registrazione non trovato")
-    mqtt_broker = mqtt_service["broker"]
-    mqtt_port = mqtt_service["port"]
-
-    mySubscriber=Thingspeak(mqtt_broker, mqtt_port) 
+    try:
+        mqtt_broker = mqtt_service["broker"]
+        mqtt_port = mqtt_service["port"]
+        mySubscriber=Thingspeak(mqtt_broker, mqtt_port) 
+    except TypeError:
+        print("Thingspeak could not be initialized.")
