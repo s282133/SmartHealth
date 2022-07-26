@@ -16,7 +16,7 @@ class statistics():
     def __init__(self, clientID, mqtt_broker, mqtt_port, mqtt_topic):
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = clientID
-        self.pub_topic = str(mqtt_topic).replace("+", clientID)
+        #self.pub_topic = str(mqtt_topic).replace("+", clientID)
         self.start()        # MQTT functions start
         self.initialize()   # settings read by script
         while True:
@@ -33,6 +33,7 @@ class statistics():
                     event = self.create_event(parameter_name, parameter_unit, min, avg, max)
                     self.events.append(event)
                 message = self.create_message(self.events)
+                self.pub_topic = str(mqtt_topic).replace("+", self.patientID)
                 self.myPublish(self.pub_topic, message)
             time.sleep(COUNTER_RESOLUTION)
 
@@ -48,7 +49,7 @@ class statistics():
 
     def create_message(self, events):
         message = self.message_structure.copy()
-        message["bn"].replace("{{clientID}}", self.clientID)
+        message["bn"] =str(message["bn"]).replace("{{clientID}}", self.patientID)
         message["e"] = events
         return message
 
@@ -62,6 +63,8 @@ class statistics():
                 avg = 0
                 invalid = 0
                 dict = json.load(f)
+                self.patientID = dict["channel"]["name"]
+                print(f"{self.clientID} patientID: {self.patientID}")
                 feeds = dict["feeds"]
                 for feed in feeds:
                     measure = feed[parameter_ts_field]
