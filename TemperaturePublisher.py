@@ -28,7 +28,6 @@ if __name__ == "__main__":
     lista_pazienti_simulati = json_lista["lista_pazienti_simulati"]
 
     # Gestione servizi MQTT
-
     mqtt_service = http_getServiceByName("MQTT_analysis")
     try:
         mqtt_broker = mqtt_service["broker"]
@@ -41,7 +40,7 @@ if __name__ == "__main__":
     except:
         print("Temperature_Publisher could not be initialized [ERR 3].")
     try:
-        mqtt_api = http_getApiByName("MQTT_analysis","send_temperature") 
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_temperature") 
         mqtt_topic = mqtt_api["topic"]
     except TypeError:
         print("Temperature_Publisher could not be initialized [ERR 4].")

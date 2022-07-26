@@ -19,13 +19,14 @@ class Registrazione(object):
     def GET(self,*uri,**params):
 
 # start : apertura pagina html per registrazione dottore 
-        if uri[0] == "start":
+        if uri[0] == "registrazione_dottore":
             self.telegramID = int(params["chat_ID"])
             filename = 'PageHTML\\doctors.html'
             f1 = open(filename)
             fileContent = f1.read()      
             f1.close()
             return fileContent
+            
 
 # registrazione_paziente : apertura pagina html per registrazione paziente
         elif uri[0] == "registrazione_paziente": 
@@ -38,7 +39,7 @@ class Registrazione(object):
 
 
 # tabella : apertura tabella con dati iniziali
-        elif uri[0] == "tabella": 
+        elif uri[0] == "tabella_pazienti": 
             filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
@@ -414,18 +415,19 @@ if __name__=="__main__":
     PatientRegistrationOnRaspberry = main_getServiceByName("PatientRegistrationOnRaspberry")
     if PatientRegistrationOnRaspberry == None:
         print("Servizio registrazione raspberry non trovato")
-    rasp_ipAddress = PatientRegistrationOnRaspberry["host"]
-    rasp_port = PatientRegistrationOnRaspberry["port"]
+
+    rasp_ipAddress  = PatientRegistrationOnRaspberry["host"]
+    rasp_port       = PatientRegistrationOnRaspberry["port"]
+
     api_updatepatient = main_getApiByServiceAndName(PatientRegistrationOnRaspberry["APIs"],"updatepatient") 
-    rasp_uri = api_updatepatient["uri"]
-    rasp_json = api_updatepatient["json_post"]
+    rasp_uri    = api_updatepatient["uri"]
+    rasp_json   = api_updatepatient["json_post"]
 
 
     # attivazione microservizio per ottenere l'host del server
-    registration_service = main_getServiceByName("Registration")
-    if registration_service == None:
-        print("Servizio registrazione non trovato")
-    registration_ipAddress = registration_service["host"]
+    catalog = openCatalogue()
+    server_host = catalog["server_host"]
+    server_port = catalog["server_port"]
 
     cherrypy.tree.mount(Registrazione(),'/')
     conf={
@@ -434,7 +436,8 @@ if __name__=="__main__":
             'tools.sessions.on':True
         }
     }
-    cherrypy.server.socket_host = registration_ipAddress
+    cherrypy.server.socket_host = server_host
+    cherrypy.server.socket_port = server_port
     cherrypy.tree.mount(Registrazione(),'/',conf)
     cherrypy.config.update(conf)
     cherrypy.engine.start() 

@@ -24,7 +24,8 @@ class dataAnalysisClass():
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = http_getApiByName("MQTT_analysis","send_measure") 
+        mqtt_api = get_api_from_service_and_name( mqtt_service, "send_measure" )
+
 
         mqtt_topic_temperature  = mqtt_api["topic_temperature"]
         mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
@@ -36,7 +37,8 @@ class dataAnalysisClass():
         self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
         self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
 
-        mqtt_topic_send_alert = http_getApiByName("MQTT_analysis","send_alert") 
+        mqtt_topic_send_alert = get_api_from_service_and_name(mqtt_service,"send_alert") 
+
         self.topic_send_alert  = mqtt_topic_send_alert["topic"]
 
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)

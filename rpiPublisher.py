@@ -48,7 +48,8 @@ class rpiPub():
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = http_getApiByName("MQTT_analysis","send_temperature") 
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_temperature") 
+
         self.mqtt_topic = mqtt_api["topic"]
 
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)

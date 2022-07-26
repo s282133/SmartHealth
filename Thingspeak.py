@@ -21,7 +21,7 @@ class Thingspeak():
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = http_getApiByName("Thingspeak","send_data_to_thingspeak") 
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
 
         mqtt_topic_temperature  = mqtt_api["topic_temperature"]
         mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]

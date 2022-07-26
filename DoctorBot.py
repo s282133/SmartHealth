@@ -25,7 +25,8 @@ class DoctorBot:
         except TypeError:
             print("MQTT_analysis could not be initialized [ERR 1].")
         try:
-            mqtt_api_monitoring = http_getApiByName("MQTT_analysis","monitoring_on") 
+            mqtt_api_monitoring = get_api_from_service_and_name(mqtt_service,"monitoring_on") 
+
             self.mqtt_topic_monitoring  = mqtt_api_monitoring["topic"]
         except TypeError:
             print("MQTT_analysis could not be initialized [ERR 2].")
@@ -33,7 +34,9 @@ class DoctorBot:
             print("MQTT_analysis could not be initialized [ERR 3].")
         except:
             print("MQTT_analysis could not be initialized [ERR 4].")
-        mqtt_api_alert = http_getApiByName("MQTT_analysis","receive_alert") 
+        mqtt_api_alert = get_api_from_service_and_name(mqtt_service,"receive_alert") 
+
+
         mqtt_topic_alert = mqtt_api_alert["topic"]
         self.local_topic_alert = mqtt_topic_alert.replace("{{base_topic}}", self.mqtt_base_topic)
         # Oggetto mqtt
@@ -92,16 +95,17 @@ class DoctorBot:
 
         if message == "/start": 
             
-            registration_service = http_getServiceByName("Registration")
+            registration_service = http_getServiceByName("ResourceService")
             try:
-                registration_ipAddress = registration_service["host"]
-                registration_port = registration_service["port"]
+                registration_ipAddress  = registration_service["host"]
+                registration_port       = registration_service["port"]
             except:
                 print("Registration - error [ERR 8].")
                 
             try:    
-                api_start = http_getApiByName("Registration","start") 
-                registration_uri = api_start["uri"]
+                api_registrazione_dottore = get_api_from_service_and_name( registration_service, "registrazione_dottore" )
+               
+                registration_uri = api_registrazione_dottore["uri"]
             except:
                 print("Registration - error [ERR 9].")
 
@@ -112,7 +116,7 @@ class DoctorBot:
 
         elif message == "/registrazione_paziente": 
 
-            registration_service = http_getServiceByName("Registration")
+            registration_service = http_getServiceByName("ResourceService")
             try:
                 patient_registration_ipAddress = registration_service["host"]
                 patient_registration_port = registration_service["port"]
@@ -120,7 +124,8 @@ class DoctorBot:
                 print("Registration - error [ERR 10].")
            
             try:
-                api_start = http_getApiByName("Registration","registrazione_paziente") 
+                api_start = get_api_from_service_and_name(registration_service,"registrazione_paziente") 
+
                 patient_registration_uri = api_start["uri"]
             except:
                 print("Registration - error [ERR 11].")
@@ -146,15 +151,17 @@ class DoctorBot:
         payload['e'][0]['v'] = query_data
         payload['e'][0]['t'] = time.time()
                 
-        MonitoringID = query_data.split(" ")[2]
-        monitoring = query_data.split(" ")[1]
-         
-        local_topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring, self.mqtt_base_topic, str(MonitoringID))
-        message =  {"status": monitoring}
+        patientID = query_data.split(" ")[2]
+        monitoring_state = query_data.split(" ")[1]
+
+        patient_name = http_getNameFromClientID(patientID)
+        
+        local_topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring, self.mqtt_base_topic, str(patientID))
+        message =  {"status": monitoring_state}
         self.mqtt_client.myPublish(local_topic_monitoring, message)
         print(f"{message}")
 
-        self.client_bot.sendMessage(chat_ID, text=f"Monitoring {monitoring}")
+        self.client_bot.sendMessage(chat_ID, text=f"Monitoring {monitoring_state} ({patient_name} - ID: {patientID})")
  
 
 if __name__=="__main__":

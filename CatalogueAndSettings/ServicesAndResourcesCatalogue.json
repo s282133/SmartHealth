@@ -1,17 +1,18 @@
 {
-  "Catalog_url": "http://127.0.0.1:8080",
+  "server_host": "127.0.0.1",
+  "server_port": 8080,
   "services": [
     {
-      "service_name": "Registration",
+      "service_name": "ResourceService",
       "description": "Servizio per la registrazione di dottori e pazienti",
       "host": "127.0.0.1",
       "port": 8080,
       "APIs": [
         {
-          "functionality_name": "start",
+          "functionality_name": "registrazione_dottore",
           "description": "Form per la registrazione del dottore",
           "access_mode": "GET",
-          "uri": "start?chat_ID={{chat_ID}}"
+          "uri": "registrazione_dottore?chat_ID={{chat_ID}}"
         },
         {
           "functionality_name": "registrazione_paziente",
@@ -20,10 +21,82 @@
           "uri": "registrazione_paziente?chat_ID={{chat_ID}}"
         },
         {
-          "functionality_name": "tabella",
+          "functionality_name": "tabella_pazienti",
           "description": "Form per visualizzare i pazienti del dottore in tabella",
           "access_mode": "GET",
-          "uri": "tabella"
+          "uri": "tabella_pazienti"
+        },
+        {
+          "functionality_name": "get_raspberry_parameters",
+          "description": "Mandare al raspberry il servizio da utilizzare",
+          "access_mode": "GET",
+          "uri": "get_raspberry_parameters"
+        },
+        {
+          "functionality_name": "monitoring_state",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "monitoring_state?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "retrieve_pregnancy_day_one",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "pregnancy_state?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "get_name_from_clientID",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "get_name_from_id?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "find_doctor_telegram_id_from_patient_id",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "get_telegram_from_id?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "set_monitoring_state_from_client_ID",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "set_monitoring_by_id?patient_id={{patient_ID}}&monitoring={{monitoring}}"
+        },
+        {
+          "functionality_name": "find_patient_from_chat_ID",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "find_patient_by_chat_id?chat_id={{chat_ID}}"
+        },
+        {
+          "functionality_name": "retrieve_TS_write_API_from_client_ID",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "get_ts_from_id?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "get_lista_pazienti_simulati",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "get_lista_pazienti_simulati"
+        },
+        {
+          "functionality_name": "contolla_scadenza_week",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "contolla_scadenza_week"
+        },
+        {
+          "functionality_name": "lista_pazienti_da_monitorare",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "lista_pazienti_da_monitorare"
+        },
+        {
+          "functionality_name": "set_patient_in_monitoring",
+          "description": "M",
+          "access_mode": "GET",
+          "uri": "set_patient_in_monitoring"
         },
         {
           "functionality_name": "doctors",
@@ -103,17 +176,14 @@
     },
     {
       "service_name": "NodeRed",
-      "host": "192.168.0.3",
-      "APIs": {
-        "http": [
-          {
-            "functionality_name": "post_temperature_data",
-            "access_mode": "POST",
-            "full_uri": "/post_temperature/{{patientID}}"
-          }
-        ],
-        "mqtt": []
-      }
+      "host": "abc",
+      "APIs": [
+        {
+          "functionality_name": "abc",
+          "description": "abc",
+          "topic": "abc"
+        }
+      ]
     },
     {
       "service_name": "Thingspeak",
@@ -231,10 +301,10 @@
           },
           "idRegistratoSuRaspberry": "yes",
           "state": "attivo",
-          "monitoring": "off",
+          "monitoring": "on",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-26",
+            "onlineSince": -1,
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,
