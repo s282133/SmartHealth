@@ -1,26 +1,25 @@
-# Il server per la registrazione permette al medico di registrarsi per la prima volta o 
-# di inserire un paziente nella sua lista iscrivendolo e associandogli un raspberry
+# Il MainServer contiene tutte le funzioni GET, PUT, POST che servono per la gestione del catalogo in remoto
 
 import json                     
 import time
 import cherrypy
 import requests
 
-#from jinja2 import Template
 from PageHTML import *
 from commons.MyMQTT import *
-from commons.mainFunctions import *
+from commons.ServerFunctions import *
 from commons.customExceptions import *
 
+#from jinja2 import Template
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class Registrazione(object):
     exposed=True
+    
     def GET(self,*uri,**params):
 
 # start : apertura pagina html per registrazione dottore 
         if uri[0] == "start":
-
             self.telegramID = int(params["chat_ID"])
             filename = 'PageHTML\\doctors.html'
             f1 = open(filename)
@@ -30,7 +29,6 @@ class Registrazione(object):
 
 # registrazione_paziente : apertura pagina html per registrazione paziente
         elif uri[0] == "registrazione_paziente": 
-
             self.doctortelegramID = int(params["chat_ID"])
             filename = 'PageHTML\\patients.html'
             f2 = open(filename)
@@ -41,7 +39,6 @@ class Registrazione(object):
 
 # tabella : apertura tabella con dati iniziali
         elif uri[0] == "tabella": 
-
             filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
             f4 = open(filename)
             self.catalog = json.load(f4)
@@ -57,9 +54,9 @@ class Registrazione(object):
             return json.dumps(self.lista) 
 
 
-        # mandare al raspberry il servizio da utilizzare
+# get_raspberry_parameters: mandare al raspberry il servizio da utilizzare
         elif uri[0] == "get_raspberry_parameters":
-            # Gestione servizi MQTT
+        
             try:
                 mqtt_service = main_getServiceByName("MQTT_analysis")
                 mqtt_broker = mqtt_service["broker"]
@@ -100,9 +97,7 @@ class Registrazione(object):
                 print("[REG_SERVER] Generic exception occurred.")  
 
 
-        # Aggiunte per la gestione del catalogo con http
-
-        # Aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start
+# update_telegram_id: aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start
         elif uri[0] == "update_telegram_id":
             chat_id = params["chat_id"]
             patient_id = params["patient_id"]
@@ -124,7 +119,7 @@ class Registrazione(object):
             return "Paziente non trovato"
         
 
-        # Restituisce il servizio dal nome del servizio
+# service_by_name: restituisce il servizio dal nome del servizio
         elif uri[0] == "service_by_name":
             service_name = params["service_name"]
 
@@ -139,7 +134,7 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Service not found")
 
 
-        # Restituisce l'api dando il nome dle servizio e quello dell'api
+# api_by_name: restituisce l'api dando il nome dle servizio e quello dell'api
         elif uri[0] == "api_by_name":
             service_name = params["service_name"]
             api_name = params["api_name"]
@@ -150,7 +145,7 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Api not found")
 
 
-        # Restituisce 
+# monitoring_state: restituisce lo stato di monitoraggio in cui è il paziente (on o off) 
         elif uri[0] == "monitoring_state":
             patient_ID = params["patient_id"]
             MonitoringState = getMonitoringStateFromClientID(patient_ID)
@@ -160,17 +155,17 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Monitoring State not found")
 
 
-        # Restituisce 
+# pregnancy_state: restituisce il dayOne di gravidanza 
         elif uri[0] == "pregnancy_state":
             patient_ID = params["patient_id"]
-            pregnancy_state = retrievePregnancyDayOne(patient_ID)
-            if pregnancy_state != None:
-                return pregnancy_state
+            dayOne = retrievePregnancyDayOne(patient_ID)
+            if dayOne != None:
+                return dayOne
             else:
                 raise cherrypy.HTTPError(500, "Pregnancy State not found")
 
 
-        # Restituisce 
+# get_name_from_id: restituisce il nome del paziente dal suo ID 
         elif uri[0] == "get_name_from_id":
             patient_ID = params["patient_id"]
             name = getNameFromClientID(patient_ID)
@@ -180,7 +175,7 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Name not found")
 
 
-        # Restituisce 
+# get_telegram_from_id: restituisce il telegram ID del paziente dal suo ID 
         elif uri[0] == "get_telegram_from_id":
             patient_ID = params["patient_id"]
             telegram_id = findDoctorTelegramIdFromPatientId(patient_ID)
@@ -190,27 +185,28 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Telegram ID not found")
           
 
-        # Restituisce 
+# set_monitoring_by_id: restituisce il monitoring del paziente dal suo ID 
         elif uri[0] == "set_monitoring_by_id":
             patient_ID = params["patient_id"]
-            success = setMonitorinStatefromClientID(patient_ID)
+            monitoring = params["monitoring"]
+            success = setMonitorinStatefromClientID(patient_ID, monitoring)
             if success:
                 return "OK"
             else:
                 raise cherrypy.HTTPError(500, "Patient not found")
 
 
-        # Restituisce 
+# find_patient_by_chat_id: restituisce il paziente dal suo ID 
         elif uri[0] == "find_patient_by_chat_id":
             chat_ID = params["chat_id"]
-            patient_ID = findPatient(chat_ID)
+            patient_ID = findPatientFromChatID(chat_ID)
             if patient_ID != None:
                 return str(patient_ID)
             else:
                 raise cherrypy.HTTPError(500, "Patient not found")
 
 
-        # Restituisce 
+# get_ts_from_id: restituisce il thingspeak del paziente dal suo ID 
         elif uri[0] == "get_ts_from_id":
             patient_ID = params["patient_id"]
             api_keys = retrieveTSWriteAPIfromClientID(patient_ID)
@@ -220,9 +216,38 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Patient not found")
 
 
-    # aggiungere un dottore alla lista di dottori al SUBMIT
+# get_lista_pazienti_simulati: restituisce lista dei pazienti con raspberry simulati per l'invio delle temperature
+        elif uri[0] == "get_lista_pazienti_simulati":
+            lista_pazienti = get_lista_pazienti_simulati()
+            return lista_pazienti
+
+
+# contolla_scadenza_week: controllo sulla week
+        elif uri[0] == "contolla_scadenza_week":
+            contolla_scadenza_week()            
+
+
+# lista_pazienti_da_monitorare: restituisce lista dei pazienti
+        elif uri[0] == "lista_pazienti_da_monitorare":
+            lista_pazienti_da_monitorare = get_lista_pazienti_da_monitorare()
+            return lista_pazienti_da_monitorare
+
+
+
+    
+    def PUT(self,*uri,**params):
+
+# aggiorna i pazienti a stato di monitoraggio (da -1 a monitorato)       
+        if uri[0] == "set_patient_in_monitoring": 
+            patient_ID = params["patient_id"]
+            set_lista_pazienti_in_monitoring(patient_ID)
+
+
+
+
     def POST(self,*uri,**params):
         
+# doctors: aggiungere un dottore alla lista di dottori al SUBMIT
         if uri[0] == "doctors": 
             
             body = cherrypy.request.body.read() 
@@ -254,14 +279,15 @@ class Registrazione(object):
                 json.dump(self.dictionary, f, indent=2)
             return json.dumps(self.dictionary)
 
-        # aggiungere un paziente alla lista dei pazienti al SUBMIT
+
+# patients: aggiungere un paziente alla lista dei pazienti al SUBMIT
         if uri[0] == "patients": 
 
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
-
             nameChannel = self.record["patientName"] + " " + self.record["patientSurname"]
-            ## mettere api key in settings!
+
+            ## ATTENZIONE: mettere api key in settings!
             channel={
                 "api_key":"OEUWTU8AH5MOIMKZ",
                 "name": nameChannel,
@@ -280,9 +306,6 @@ class Registrazione(object):
             self.api_keys_write=self.api_key_w["api_key"]
             self.api_keys_read = self.dicty["api_keys"][1]["api_key"]
             channel_id=self.dicty["id"]
-            # channel_id="123"
-            # self.api_keys_write="abc"
-            # self.api_keys_read="def"
 
             self.dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
             self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]
@@ -306,6 +329,7 @@ class Registrazione(object):
                     "pregnancyDayOne": self.record["pregnancyDayOne"]
                 },
                 "idRegistratoSuRaspberry": registratoSuRaspberry,
+                "state": "attivo",
                 "monitoring": "off",
                 "connectedDevice": {
                     "deviceName": self.record["deviceName"],
@@ -321,8 +345,10 @@ class Registrazione(object):
                 }
                 }    
 
-            # ricerca del giusto dottore tramite telegram ID  
-            ## qui ci vuole un try except (DoctorNotFoundException)
+            # ATTENZIONE: ricerca del giusto dottore tramite telegram ID DA TRASFORMARE in funzione  
+
+            ## ATTENZIONE: qui ci vuole un try except (DoctorNotFoundException)
+
             trovatoDottore = False
             doctor_number = 0
             dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'))
@@ -342,7 +368,6 @@ class Registrazione(object):
             
             self.dictionary["resources"][doctor_number]['patientList'].append(patient)
 
-            # aggiunta del device contemporaneamente al paziente
             device = {
                 "deviceName": self.record["deviceName"],
                 "patientID": patient["patientID"],
@@ -383,14 +408,12 @@ class Registrazione(object):
 
 if __name__=="__main__":
 
-    # parametri per la registrazione su raspberry
-    ## qui ci vuole un try except per il servizio non trovato (ServiceUnavailableException)
+    ## ATTENZIONE: qui ci vuole un try except per il servizio non trovato (ServiceUnavailableException)
 
+    # attivazione microservizio per la registrazione dei parametri per il raspberry 
     PatientRegistrationOnRaspberry = main_getServiceByName("PatientRegistrationOnRaspberry")
-
     if PatientRegistrationOnRaspberry == None:
         print("Servizio registrazione raspberry non trovato")
-
     rasp_ipAddress = PatientRegistrationOnRaspberry["host"]
     rasp_port = PatientRegistrationOnRaspberry["port"]
     api_updatepatient = main_getApiByServiceAndName(PatientRegistrationOnRaspberry["APIs"],"updatepatient") 
@@ -398,13 +421,12 @@ if __name__=="__main__":
     rasp_json = api_updatepatient["json_post"]
 
 
-    # host per il server registrazione
+    # attivazione microservizio per ottenere l'host del server
     registration_service = main_getServiceByName("Registration")
     if registration_service == None:
         print("Servizio registrazione non trovato")
     registration_ipAddress = registration_service["host"]
 
-    # server registrazione
     cherrypy.tree.mount(Registrazione(),'/')
     conf={
         '/':{

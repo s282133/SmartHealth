@@ -24,18 +24,8 @@ class sensor_publisher:
 
 if __name__ == "__main__":
 
-    # Lista pazienti con raspberry simulati per l'invio delle temperature
-    resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-    catalog = json.load(open(resouce_filename))
-    lista_pazienti_simulati = []
-    lista = catalog["resources"]
-    for doctorObject in lista:
-        patientList = doctorObject["patientList"]
-        for patientObject in patientList:
-            patientID = patientObject["patientID"]
-            idRegistratoSuRaspberry = patientObject["idRegistratoSuRaspberry"]
-            if idRegistratoSuRaspberry == "no":
-                lista_pazienti_simulati.append(patientID)
+    json_lista = http_get_lista_pazienti_simulati()
+    lista_pazienti_simulati = json_lista["lista_pazienti_simulati"]
 
     # Gestione servizi MQTT
 

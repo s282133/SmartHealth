@@ -1,10 +1,5 @@
 {
   "Catalog_url": "http://127.0.0.1:8080",
-  "mqtt_broker_info": {
-    "mqtt_broker": "broker.hivemq.com",
-    "mqtt_broker_port": 1883,
-    "base_topic": "IoT_Project"
-  },
   "services": [
     {
       "service_name": "Registration",
@@ -179,6 +174,7 @@
             "pregnancyDayOne": "2022-05-29"
           },
           "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
@@ -234,11 +230,12 @@
             "pregnancyDayOne": "2022-05-29"
           },
           "idRegistratoSuRaspberry": "yes",
+          "state": "attivo",
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-23",
-            "telegramID": 298694124,
+            "onlineSince": "2022-07-26",
+            "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,
               "apikeys": [
@@ -258,6 +255,7 @@
             "pregnancyDayOne": "2022-05-03"
           },
           "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
@@ -282,11 +280,12 @@
             "pregnancyDayOne": "2022-05-03"
           },
           "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
             "onlineSince": "2022-07-19",
-            "telegramID": 0,
+            "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1805232,
               "apikeys": [

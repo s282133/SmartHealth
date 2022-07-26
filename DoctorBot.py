@@ -36,10 +36,8 @@ class DoctorBot:
         mqtt_api_alert = http_getApiByName("MQTT_analysis","receive_alert") 
         mqtt_topic_alert = mqtt_api_alert["topic"]
         self.local_topic_alert = mqtt_topic_alert.replace("{{base_topic}}", self.mqtt_base_topic)
-
         # Oggetto mqtt
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
-
         # Gestione servizi telegram
         try:
             TelegramDoctor_service = http_getServiceByName("TelegramDoctor")
@@ -72,19 +70,15 @@ class DoctorBot:
 
 
     def notify(self, topic, msg):
-
         print(f"Il topic è: {topic}")
         msg_json = json.loads(msg)
-        
         telegramID = msg_json["telegramID"]
         messaggio = msg_json["Messaggio"]
         cmd_on = msg_json["CmdOn"]
         cmd_off = msg_json["CmdOff"]
-
         self.send_alert(telegramID,messaggio,cmd_on,cmd_off)
 
 
-       
     def send_alert(self,telegramID,messaggio,cmd_on,cmd_off): 
         buttons = [[InlineKeyboardButton(text=f'MONITORING 🟡',    callback_data=cmd_on), 
                    InlineKeyboardButton(text=f'NOT MONITORING ⚪', callback_data=cmd_off)]]
@@ -98,7 +92,6 @@ class DoctorBot:
 
         if message == "/start": 
             
-            # Gestione Servizi di registrazione dottore
             registration_service = http_getServiceByName("Registration")
             try:
                 registration_ipAddress = registration_service["host"]
@@ -117,10 +110,8 @@ class DoctorBot:
             uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
             self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
 
-
         elif message == "/registrazione_paziente": 
 
-            # Gestione Servizi di registrazione paziente
             registration_service = http_getServiceByName("Registration")
             try:
                 patient_registration_ipAddress = registration_service["host"]
@@ -141,10 +132,13 @@ class DoctorBot:
 
         elif message == "/accesso_dati": 
             self.client_bot.sendMessage(chat_ID, text='Access to data at this link: ')
-        # QUALE LINK?
+        
+        # ATTENZIONE: riposta al commento    
+        # QUALE LINK? ---> LINK A NODERED
 
         else:
             self.client_bot.sendMessage(chat_ID, text="* Send /start to log in;\n* Send /registrazione_paziente to submit a new patient;\n* Send /accesso_dati to monitor patients' data.") 
+
 
     def on_callback_query(self, messaggio):
         query_ID , chat_ID , query_data = telepot.glance(messaggio,flavor='callback_query')

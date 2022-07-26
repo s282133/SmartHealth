@@ -2,15 +2,20 @@ import json
 import requests
 import time
 
-def http_getServiceByName(parServiceName):
-
+def get_host_and_port():
     # config.json mi dice qual è il server da interrogare
     filename = 'CatalogueAndSettings\\config.json'
     dictionaryCatalog = json.load(open(filename))
     ipAddress = dictionaryCatalog["ipAddress"]
     port = dictionaryCatalog["port"]
+    return ipAddress, port
 
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+# Questa raccolta di funzioni http permette (con le chiamate request.get, post e put) 
+# di interrogare il MainServer che ha le funzionalità GET e l'accesso al catalogo 
+
+def http_getServiceByName(parServiceName):
+
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
 
     if r.status_code == 200:
@@ -21,13 +26,7 @@ def http_getServiceByName(parServiceName):
 
 def http_getApiByName(parServiceName,parApiName):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/api_by_name?service_name={parServiceName}&api_name={parApiName}') 
 
     if r.status_code == 200:
@@ -38,13 +37,7 @@ def http_getApiByName(parServiceName,parApiName):
 
 def http_getMonitoringStateFromClientID(patient_ID):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/monitoring_state?patient_id={patient_ID}') 
 
     if r.status_code == 200:
@@ -55,13 +48,7 @@ def http_getMonitoringStateFromClientID(patient_ID):
 
 def http_retrievePregnancyDayOne(patient_ID):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/pregnancy_state?patient_id={patient_ID}') 
 
     if r.status_code == 200:
@@ -72,13 +59,7 @@ def http_retrievePregnancyDayOne(patient_ID):
 
 def http_getNameFromClientID(patient_ID):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/get_name_from_id?patient_id={patient_ID}') 
 
     if r.status_code == 200:
@@ -89,13 +70,7 @@ def http_getNameFromClientID(patient_ID):
 
 def http_findDoctorTelegramIdFromPatientId(parPatientID):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/get_telegram_from_id?patient_id={parPatientID}') 
 
     if r.status_code == 200:
@@ -106,13 +81,7 @@ def http_findDoctorTelegramIdFromPatientId(parPatientID):
 
 def http_setMonitorinStatefromClientID(patient_ID, monitoring):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/set_monitoring_by_id?patient_id={patient_ID}&monitoring={monitoring}') 
 
     if r.status_code == 200:
@@ -121,15 +90,9 @@ def http_setMonitorinStatefromClientID(patient_ID, monitoring):
         return None
 
 
-def http_findPatient(chat_ID):
+def http_findPatientFromChatID(chat_ID):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/find_patient_by_chat_id?chat_id={chat_ID}') 
 
     if r.status_code == 200:
@@ -140,19 +103,47 @@ def http_findPatient(chat_ID):
 
 def http_retrieveTSWriteAPIfromClientID(patient_ID):
 
-    # config.json mi dice qual è il server da interrogare
-    filename = 'CatalogueAndSettings\\config.json'
-    dictionaryCatalog = json.load(open(filename))
-    ipAddress = dictionaryCatalog["ipAddress"]
-    port = dictionaryCatalog["port"]
-
-    # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+    ipAddress, port = get_host_and_port()
     r = requests.get(f'http://{ipAddress}:{port}/get_ts_from_id?patient_id={patient_ID}') 
 
     if r.status_code == 200:
         return r.text
     else:
         return None
+
+
+def http_get_lista_pazienti_simulati():
+
+    ipAddress, port = get_host_and_port()
+    r = requests.get(f'http://{ipAddress}:{port}/get_lista_pazienti_simulati') 
+
+    if r.status_code == 200:
+        return r.json()
+    else:
+        return None
+
+
+def http_contolla_scadenza_week():
+
+    ipAddress, port = get_host_and_port()
+    requests.get(f'http://{ipAddress}:{port}/contolla_scadenza_week') 
+
+
+def http_get_lista_pazienti_da_monitorare():
+
+    ipAddress, port = get_host_and_port()
+    r = requests.get(f'http://{ipAddress}:{port}/lista_pazienti_da_monitorare') 
+    
+    if r.status_code == 200:
+        return r.json()
+    else:
+        return None
+
+
+def http_set_patient_in_monitoring(parPatientID):
+
+    ipAddress, port = get_host_and_port()
+    r = requests.put(f'http://{ipAddress}:{port}/set_patient_in_monitoring?patient_id={parPatientID}') 
 
 
 def getTopicByParameters(parTopic, parBaseTopic, parPatientID):
@@ -162,6 +153,7 @@ def getTopicByParameters(parTopic, parBaseTopic, parPatientID):
     return local_topic
 
 
+# esiste una copia identica in ServerFunctions
 def getWeek(dayOne):
     print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
@@ -185,7 +177,8 @@ def getWeek(dayOne):
     week = int(elapsedDays / 7)
     return week
 
-    
+
+# da cancellare alla fine, serve solo per inserire il -1 in automatico (quando si debugga è utile)    
 def setOnlineSinceFromClientID(patient_ID):
     filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
     filepointer = open(filename)

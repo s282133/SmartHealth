@@ -1,5 +1,7 @@
-### Description: MQTT subscriber that processes data from the MQTT broker, evaluating if it is according to thresholds
+# MQTT subscriber that processes data from the MQTT broker, evaluating if it is according to thresholds
 # telegramID Laura = 491287865
+# telegramID Giulia = 786029508
+# telegramID Antuan = 298694124
 
 import time
 import json
@@ -11,8 +13,6 @@ from gettext import Catalog
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class dataAnalysisClass():
-
-    # MQTT FUNCTIONS
 
     def __init__(self):
 
@@ -64,7 +64,6 @@ class dataAnalysisClass():
         print(f"Il topic è: {topic}")
         d = json.loads(msg)
         self.bn = d["bn"]
-        #variabile locale per evitare problemi legati alla concorrenza (variabile globale richiamata da un metodo diverso)
         local_clientID = int(self.bn.split("/")[3])  
         self.e = d["e"]
         self.measureType = self.e[0]["n"]
@@ -170,6 +169,7 @@ class dataAnalysisClass():
                     else:
                         print("Doctor not found for this patient")
 
+
     def manageGlycemia(self, week, parClientID, parPatientName):
         thresholdsGL = self.thresholdsFile["glycemia"]
         for rangeGL in thresholdsGL:
@@ -213,7 +213,6 @@ class dataAnalysisClass():
             "CmdOn": parCmdOn,
             "CmdOff": parCmdOff
         }
-        #str_messaggio = json.dumps(messaggio) 
         local_topic_send_alert = getTopicByParameters(self.topic_send_alert, self.mqtt_base_topic, str(parClientID))
         self.mqtt_client.myPublish(local_topic_send_alert, messaggio) 
 

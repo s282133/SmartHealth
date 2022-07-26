@@ -1,8 +1,6 @@
-# from MyMQTT import *
 import json
 import time
 import requests
-# import sys
 import re
 import sys, os
 
@@ -51,6 +49,7 @@ class Thingspeak():
             self.counter += 1
             time.sleep(1)
 		
+
     def initializeSlim(self):
         self.start()
         self.subscribe()
@@ -72,6 +71,7 @@ class Thingspeak():
         except:
             sys.exit("Errore nella lettura del file settings_weeklyStats.json")
 
+
     def downloadData(self):
         for i in range(len(self.list_parameters)):
             field = self.ts_fields[i]
@@ -86,8 +86,9 @@ class Thingspeak():
                 print("Error. Status code: " + str(downloaded_catalogue.status_code))
                 sys.exit()
 
+
     def notify(self,topic,payload): 
-        message = json.loads(payload) #trasformiamo in json 
+        message = json.loads(payload) 
         if bool(self.patternWeight.match(str(topic))): 
             self.clientID = int(str(topic).split("/")[2]) 
             api_key = http_retrieveTSWriteAPIfromClientID(self.clientID) 
@@ -96,7 +97,6 @@ class Thingspeak():
             self.lastPeso = peso 
             rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
                 
-
         elif not bool(self.patternMonitoring.match(str(topic))): 
             print(f"topic non del peso: {topic}")
             self.clientID = int(str(topic).split("/")[2])
@@ -122,8 +122,6 @@ class Thingspeak():
                 self.lastPressureLow = self.sensed_pressureLow 
                 r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
                 
-        
-        
         
         # message = json.loads(payload) #trasformiamo in json
         # if bool(self.patternWeight.match(str(topic))):
@@ -167,6 +165,7 @@ class Thingspeak():
             
     def start(self): 
         self.mqttClient.start() 
+
 
     def subscribe(self): 
         self.mqttClient.mySubscribe(self.local_topic_heartrate)

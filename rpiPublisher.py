@@ -25,18 +25,17 @@ POLLING_PERIOD_GLYCEMIA = 115
 
 POLLING_MONITORING_HR       = 25        
 POLLING_MONITORING_PRESSURE = 48      
-POLLING_MONITORING_GLYCEMIA = 71       # potrei chiedere una misurazione ogni 20 minuti
+POLLING_MONITORING_GLYCEMIA = 71       
 
 SECONDI_SCADENZA_MONITORING = 300      
 
-ONE_MINUTE_IN_SEC = 0                # per motivi di debug a volte lo metto ad 1 ma deve essere 60
-                                     # ai fini della dimostrazione potrebbe essere troppo alto e potremmo decidere di abbassarlo
+ONE_MINUTE_IN_SEC = 0                
+                                   
 SEC_WAIT_NO_MONITORING = 1
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3
 
 class rpiPub():
 
-    # MQTT FUNCTIONS
     def __init__(self, clientID):
 
         # Gestione servizi MQTT
@@ -75,19 +74,19 @@ class rpiPub():
         self.client_MQTT.start()
         self.subTopic = f"{self.mqtt_base_topic}/{self.clientID}/monitoring"    
         self.client_MQTT.mySubscribe(self.subTopic)
-
-        #da sostituire con jinja
+        #da sostituire con jinja?
         self.TopicTempRaspberry = getTopicByParameters(self.mqtt_topic, self.mqtt_base_topic, str(self.clientID))
-        
         self.client_MQTT.mySubscribe(self.TopicTempRaspberry)
 
 
     def stop (self):
         self.client_MQTT.stop()
 
+
     def myPublish(self, topic, message):
         #print(f"{self.clientID} publishing {message} to topic: {topic}")
         self.client_MQTT.myPublish(topic, message)
+
 
     def notify(self, topic, message):
         msg = json.loads(message)
@@ -100,9 +99,7 @@ class rpiPub():
                 self.monitoring = True
             elif self.monitoring_status=="off":
                 self.monitoring = False
-
             http_setMonitorinStatefromClientID(self.clientID, self.monitoring_status)
-
         elif subtopic == TOPIC_TEMP_RASPBERRY:      
             newMeasureTempRaspberry = msg["e"][0]["v"]
             #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
@@ -131,6 +128,7 @@ class rpiPub():
         self.myPublish(topicHR, messageHR)
         print(f"{self.clientID} published {measure} with topic: {self.mqtt_base_topic}/{self.clientID}/heartrate ({self.monitoring_status})")
 
+
     # PRESSURE
 
     def getPressuremeasure(self, counter):
@@ -145,6 +143,7 @@ class rpiPub():
         messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
         self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/pressure", messagePR)
         print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {self.mqtt_base_topic}/{self.clientID}/pressure ({self.monitoring_status})")
+
 
     # GLYCEMIA
 
@@ -173,8 +172,7 @@ class rpiPub():
     def routineFunction(self):
         time.sleep(1)
         if(self.monitoring == False):
-            #print("Monitoraggio OFF")
-            #time.sleep(SEC_WAIT_NO_MONITORING)
+
             if self.counter % POLLING_PERIOD_HR == 0:
                 newMeasureHR = int(self.getHRmeasure(self.counter))
                 self.publishHR(newMeasureHR)
@@ -185,10 +183,7 @@ class rpiPub():
                 newMeasureGlycemia = int(self.getGlycemia(self.counter))
                 self.publishGlycemia(newMeasureGlycemia)
             self.counter = self.counter + 1
-            #time.sleep(ONE_MINUTE_IN_SEC)
         else:
-            #print("Monitoraggio ON")
-            #time.sleep(SEC_WAIT_MONITORING)
             if self.counter % POLLING_MONITORING_HR == 0:
                 newMeasureHR = int(self.getHRmeasure(self.counter))
                 self.publishHR(newMeasureHR)
@@ -233,48 +228,26 @@ class rpiPub():
 
 if __name__ == "__main__":
 
+    # da eliminare alla fine: imposta in automatico il -1 sul paziente 1 per far pubblicare su di lui
     setOnlineSinceFromClientID(1)
-    #setOnlineSinceFromClientID(2)
-    #setOnlineSinceFromClientID(3)
-    #setOnlineSinceFromClientID(6)
+
+    # da decidere dove metterla?
+    http_contolla_scadenza_week()
 
     cicli=0
     while True:
         if cicli % 200 == 0:
 
-            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-            f = open(filename)
-            catalog = json.load(f)
+            json_lista = http_get_lista_pazienti_da_monitorare()
+            lista_pazienti_da_monitorare = json_lista["lista_pazienti_da_monitorare"]
+            
+            for patientID in lista_pazienti_da_monitorare:
 
-            doctorList = catalog["resources"]
-            if len(doctorList) > 0:
+                http_set_patient_in_monitoring(patientID)  
 
-                for doctorObject in doctorList:
-                    patientList = doctorObject["patientList"]
-                    if len(patientList) > 0:
+                thread = Thread(target=rpiPub, args=(str(patientID),))
+                thread.start()
+                print(f"{patientID} is online")
 
-                        for userObject in patientList:
-                            connectedDevice = userObject["connectedDevice"]
-
-                            if connectedDevice["onlineSince"] == -1:
-                                
-                                connectedDevice["onlineSince"] = time.strftime("%Y-%m-%d") 
-                                with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
-                                    json.dump(catalog, f, indent=2)
-                                patientID = userObject["patientID"]
-
-                                thread = Thread(target=rpiPub, args=(str(patientID),))
-                                thread.start()
-                                print(f"{patientID} is online")
-
-                            # remove entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
-                            dayOne = userObject["personalData"]["pregnancyDayOne"] 
-                            week = getWeek(dayOne)
-                            print(f'Patient {userObject["patientID"]} is in week {week}')
-                            if int(week) >= 36:
-                                patientList.remove(userObject)
-                                with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
-                                    json.dump(catalog, f, indent=2)
         cicli+=1
         time.sleep(0.1)
-        #time.sleep(60)

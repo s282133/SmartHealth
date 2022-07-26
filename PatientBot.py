@@ -9,7 +9,6 @@ from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 from commons.customExceptions import *
 
-#from unicodedata import name
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -62,7 +61,7 @@ class PatientBot:
         
         elif  self.previous_message == "/start":
             try:
-                int_message = int(message)      # patientID dato dal medico
+                int_message = int(message)      
                 if(int_message < 0):
                     raise InvalidPatientID
 
@@ -70,7 +69,8 @@ class PatientBot:
                     self.bot.sendMessage(chat_ID, text=f"Login procedure successful.\nConfirmed PatientID: {message}")
                 else:    
                     self.bot.sendMessage(chat_ID, text=f"Login procedure unsuccessful.\nChoose again /start to insert your PatientID")
-                    #permettere di riscrivere il patient id?
+                    
+                    #ATTENZIONE: permettere di riscrivere il patient id se fa un errore di scrittura?
 
                 self.previous_message=""   
             except:
@@ -96,7 +96,7 @@ class PatientBot:
                 if(int_weight < 0 or int_weight > 100):
                     raise InvalidWeightException
                 print (f"Chat ID: {chat_ID}")
-                self.patientID = http_findPatient(chat_ID)             
+                self.patientID = http_findPatientFromChatID(chat_ID)             
                 if self.patientID == -1:
                     print("Paziente non trovato")
                     raise PatientNotFoundException 
@@ -119,13 +119,7 @@ class PatientBot:
 
     def Update_PatientTelegramID (self,chat_ID, message):
 
-        # config.json mi dice qual è il server da interrogare
-        filename = 'CatalogueAndSettings\\config.json'
-        dictionaryCatalog = json.load(open(filename))
-        ipAddress = dictionaryCatalog["ipAddress"]
-        port = dictionaryCatalog["port"]
-
-        # interroga il server serverRegistation che ha le funzionalità GET e l'accesso al catalogo 
+        ipAddress, port = get_host_and_port()
         r = requests.get(f'http://{ipAddress}:{port}/update_telegram_id?patient_id={message}&chat_id={chat_ID}') 
 
         if r.text == "OK":
