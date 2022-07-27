@@ -1,0 +1,42 @@
+{
+	"message_structure" : {"bn": "http://SmartHealth.org/{{clientID}}/statistics/", "e": []},
+    "event_structure" : {"n": "", "u": "", "t": -1, "v" : []},
+    "parameters" : [
+		{
+		"name" : "heartrate",
+		"ts_field" : "field1",
+		"local_file" : "week_heartrate.json",
+		"unit" : "bpm"
+		},
+		{
+		"name" : "pressureHigh",
+		"ts_field" : "field2",
+		"local_file" : "week_pressureHigh.json",
+		"unit" : "mmHg"
+		},
+		{
+		"name" : "glycemia",
+		"ts_field" : "field3",
+		"local_file" : "week_glycemia.json",
+		"unit" : "mg/dl"
+		},
+		{
+		"name" : "pressureLow",
+		"ts_field" : "field4",
+		"local_file" : "week_pressureLow.json",
+		"unit" : "mmHg"
+		},
+		{
+		"name" : "weight",
+		"ts_field" : "field5",
+		"local_file" : "week_weight.json",
+		"unit" : "Kg"
+		},
+		{
+		"name" : "temperature",
+		"ts_field" : "field6",
+		"local_file" : "week_temperature.json",
+		"unit" : "C"
+		}
+	]
+}
