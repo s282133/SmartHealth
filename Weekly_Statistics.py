@@ -79,6 +79,7 @@ class statistics():
                         invalid += 1
                 if(len(feeds) > 0 and len(feeds) > invalid):
                     avg = sum / (len(feeds) - invalid)
+                    avg = float("{0:.2f}".format(avg))
                 else:
                     min = None
                     avg = None
