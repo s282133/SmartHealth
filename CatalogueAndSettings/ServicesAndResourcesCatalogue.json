@@ -301,7 +301,7 @@
           },
           "idRegistratoSuRaspberry": "yes",
           "state": "attivo",
-          "monitoring": "on",
+          "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
             "onlineSince": -1,

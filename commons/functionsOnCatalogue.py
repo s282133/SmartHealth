@@ -36,6 +36,12 @@ def http_getServiceByName(parServiceName):
     ipAddress, port = get_host_and_port() #presi da config
     r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
 
+    if r.status_code != 200:
+        r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
+
+    if r.status_code != 200:
+        r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
+
     if r.status_code == 200:
         return r.json()
     else:
@@ -132,6 +138,12 @@ def http_setMonitorinStatefromClientID(patient_ID, monitoring):
     local_final_uri = local_uri.replace("{{monitoring}}", monitoring) 
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}') 
+
+    if r.status_code != 200:
+        r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}') 
+
+    if r.status_code != 200:
+        r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}') 
 
     # ipAddress, port = get_host_and_port()
     # r = requests.get(f'http://{ipAddress}:{port}/set_monitoring_by_id?patient_id={patient_ID}&monitoring={monitoring}') 
