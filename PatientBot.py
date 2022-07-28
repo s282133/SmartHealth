@@ -19,6 +19,7 @@ class PatientBot:
         try:
             mqtt_service = http_getServiceByName("MQTT_analysis")
             TelegramClient_service = http_getServiceByName("TelegramClient")
+            self.api_send_peso = get_api_from_service_and_name( TelegramClient_service, "send_peso" )
         except:
             print("Patient_Bot could not be initialized [ERR 1]")
         try:
@@ -65,7 +66,7 @@ class PatientBot:
                 if(int_message < 0):
                     raise InvalidPatientID
 
-                if self.Update_PatientTelegramID(chat_ID,message):
+                if http_Update_PatientTelegramID(chat_ID, message):
                     self.bot.sendMessage(chat_ID, text=f"Login procedure successful.\nConfirmed PatientID: {message}")
                 else:    
                     self.bot.sendMessage(chat_ID, text=f"Login procedure unsuccessful.\nChoose again /start to insert your PatientID")
@@ -100,9 +101,18 @@ class PatientBot:
                 if self.patientID == -1:
                     print("Paziente non trovato")
                     raise PatientNotFoundException 
-                topic=f"{self.mqttTopic}/{self.patientID}/peso" 
+
+                topic = self.api_send_peso["topic"]
+                #{{base_topic}}/{{patientID}}/peso
+
+                topic_send_peso = getTopicByParameters(topic, self.mqttTopic, self.patientID)
+                #P4IoT/SmartHealth/1/peso
+
+                # DEBUG: lasciato per sicurezza, ma è da eliminare la prossima riga
+                #topic=f"{self.mqttTopic}/{self.patientID}/peso" 
+                
                 peso =  {"status": message}
-                self.mqtt_client.myPublish(topic, peso)
+                self.mqtt_client.myPublish(topic_send_peso, peso)
                 print("Weight published.")               
                 self.previous_message=""
                 self.bot.sendMessage(chat_ID, text=f"Weight submitted correctly.\nYour weight is {int_weight} Kg")                
@@ -117,15 +127,16 @@ class PatientBot:
         query_ID , chat_ID , query_data = telepot.glance(messaggio,flavor='callback_query')
 
 
-    def Update_PatientTelegramID (self,chat_ID, message):
+    # def Update_PatientTelegramID (self, chat_ID, message):
 
-        ipAddress, port = get_host_and_port()
-        r = requests.get(f'http://{ipAddress}:{port}/update_telegram_id?patient_id={message}&chat_id={chat_ID}') 
+    #     ipAddress, port = get_host_and_port()
 
-        if r.text == "OK":
-            return True
-        else:
-            return False
+    #     r = requests.get(f'http://{ipAddress}:{port}/update_telegram_id?patient_id={message}&chat_id={chat_ID}') 
+
+    #     if r.text == "OK":
+    #         return True
+    #     else:
+    #         return False
 
 if __name__ == "__main__":
     

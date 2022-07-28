@@ -2,6 +2,8 @@ import json
 import sys, os
 import json
 import time
+
+
 sys.path.insert(0, os.path.abspath('..'))
 
 # Questa raccolta di funzioni si trova sullo stesso server del MainServer 
@@ -9,8 +11,10 @@ sys.path.insert(0, os.path.abspath('..'))
 
 def openCatalogue():
     filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+
     f = open(filename)
     catalog = json.load(f)
+    #time.sleep(1)
     return catalog
 
 
@@ -258,3 +262,13 @@ def set_lista_pazienti_in_monitoring(patient_ID):
 #             doctorID = currentDoctor["doctorID"] 
 #             return doctorID
 #     return None
+
+
+def file_in_use(fpath):
+    if os.path.exists(fpath):
+        try:
+            os.rename(fpath, fpath)
+            return False
+        except OSError as e:
+            return True
+

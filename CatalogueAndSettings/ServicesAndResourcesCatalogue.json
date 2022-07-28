@@ -96,17 +96,23 @@
           "functionality_name": "set_patient_in_monitoring",
           "description": "M",
           "access_mode": "GET",
-          "uri": "set_patient_in_monitoring"
+          "uri": "set_patient_in_monitoring?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "update_chat_id",
+          "description": "Aggiornamento chat id del paziente",
+          "access_mode": "PUT",
+          "uri": "update_telegram_id?patient_id={{message}}&chat_id={{chat_ID}}"
         },
         {
           "functionality_name": "doctors",
-          "description": "Registrazione nel catalogo del dottore",
+          "description": "Registrazione nel catalogo del dottore (usata da doctors.html)",
           "access_mode": "POST",
           "uri": "doctors"
         },
         {
           "functionality_name": "patients",
-          "description": "Registrazione nel catalogo del paziente",
+          "description": "Registrazione nel catalogo del paziente (usata da patients.html)",
           "access_mode": "POST",
           "uri": "patients"
         }
@@ -159,8 +165,28 @@
         },
         {
           "functionality_name": "receive_alert",
-          "description": "Invio di un messaggio di allerta",
+          "description": "Monitoring dei messaggi di allerta",
           "topic": "{{base_topic}}/+/send_alert"
+        },
+        {
+          "functionality_name": "heartrate",
+          "description": "Posta heartrate",
+          "topic": "{{base_topic}}/{{patientID}}/heartrate"
+        },
+        {
+          "functionality_name": "temperature",
+          "description": "Posta temperature",
+          "topic": "{{base_topic}}/{{patientID}}/temperature"
+        },
+        {
+          "functionality_name": "glycemia",
+          "description": "Posta glycemia",
+          "topic": "{{base_topic}}/{{patientID}}/glycemia"
+        },
+        {
+          "functionality_name": "pressure",
+          "description": "Posta pressure",
+          "topic": "{{base_topic}}/{{patientID}}/pressure"
         }
       ]
     },
@@ -172,7 +198,13 @@
     {
       "service_name": "TelegramClient",
       "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
-      "APIs": []
+      "APIs": [
+        {
+          "functionality_name": "send_peso",
+          "description": "Invio del peso del paziente",
+          "topic": "{{base_topic}}/{{patientID}}/peso"
+        }
+      ]
     },
     {
       "service_name": "NodeRed",
@@ -304,7 +336,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": -1,
+            "onlineSince": "2022-07-28",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,

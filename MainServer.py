@@ -26,7 +26,7 @@ class Registrazione(object):
             fileContent = f1.read()      
             f1.close()
             return fileContent
-            
+
 
 # registrazione_paziente : apertura pagina html per registrazione paziente
         elif uri[0] == "registrazione_paziente": 
@@ -96,43 +96,30 @@ class Registrazione(object):
                 print("[REG_SERVER] Unavailable Service mqtt_service.")
             except: 
                 print("[REG_SERVER] Generic exception occurred.")  
-
-
-# update_telegram_id: aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start
-        elif uri[0] == "update_telegram_id":
-            chat_id = params["chat_id"]
-            patient_id = params["patient_id"]
-
-            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-            f = open(filename)
-            self.catalog = json.load(f)
-            self.lista = self.catalog["resources"]
-            for doctorObject in self.lista:
-                patientList = doctorObject["patientList"]
-                for patientObject in patientList:
-                    patientID = patientObject["patientID"]
-                    if patientID == int(patient_id):
-                        connectedDevice = patientObject["connectedDevice"]
-                        connectedDevice["telegramID"]=chat_id
-                        with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
-                            json.dump(self.catalog, f,indent=2)
-                        return "OK"
-            return "Paziente non trovato"
-        
+      
 
 # service_by_name: restituisce il servizio dal nome del servizio
         elif uri[0] == "service_by_name":
-            service_name = params["service_name"]
+            try:
+                service_name = params["service_name"]
 
-            resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-            catalog = json.load(open(resouce_filename))
-            services = catalog["services"]
+                resouce_filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
 
-            service = next((x for x in services if x["service_name"]==service_name), None)
-            if service != None:
-                return json.dumps(service)
-            else:
-                raise cherrypy.HTTPError(500, "Service not found")
+                catalog = json.load(open(resouce_filename))
+                #time.sleep(1)
+                services = catalog["services"]
+
+                service = next((x for x in services if x["service_name"]==service_name), None)
+
+                if service != None:
+                    return json.dumps(service)
+                else:
+                    raise cherrypy.HTTPError(500, "Service not found")
+            except Exception as inst:
+                # print(type(inst))    
+                # print(inst.args)     
+                print(inst)          
+                raise cherrypy.HTTPError(500, "Service not found exception")        
 
 
 # api_by_name: restituisce l'api dando il nome dle servizio e quello dell'api
@@ -188,13 +175,20 @@ class Registrazione(object):
 
 # set_monitoring_by_id: restituisce il monitoring del paziente dal suo ID 
         elif uri[0] == "set_monitoring_by_id":
-            patient_ID = params["patient_id"]
-            monitoring = params["monitoring"]
-            success = setMonitorinStatefromClientID(patient_ID, monitoring)
-            if success:
-                return "OK"
-            else:
-                raise cherrypy.HTTPError(500, "Patient not found")
+            try:
+                patient_ID = params["patient_id"]
+                monitoring = params["monitoring"]
+
+                success = setMonitorinStatefromClientID(patient_ID, monitoring)
+                if success:
+                    return "OK"
+                else:
+                    raise cherrypy.HTTPError(500, "Patient not found")
+            except Exception as inst:
+                # print(type(inst))    
+                # print(inst.args)     
+                print(inst)          
+                raise cherrypy.HTTPError(500, "Service not found exception")        
 
 
 # find_patient_by_chat_id: restituisce il paziente dal suo ID 
@@ -244,6 +238,26 @@ class Registrazione(object):
             set_lista_pazienti_in_monitoring(patient_ID)
 
 
+# update_telegram_id: aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start
+        elif uri[0] == "update_telegram_id":
+            chat_id = params["chat_id"]
+            patient_id = params["patient_id"]
+
+            filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
+            f = open(filename)
+            self.catalog = json.load(f)
+            self.lista = self.catalog["resources"]
+            for doctorObject in self.lista:
+                patientList = doctorObject["patientList"]
+                for patientObject in patientList:
+                    patientID = patientObject["patientID"]
+                    if patientID == int(patient_id):
+                        connectedDevice = patientObject["connectedDevice"]
+                        connectedDevice["telegramID"]=chat_id
+                        with open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json', "w") as f:
+                            json.dump(self.catalog, f,indent=2)
+                        return "OK"
+            return "Paziente non trovato"
 
 
     def POST(self,*uri,**params):

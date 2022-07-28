@@ -28,6 +28,8 @@ POLLING_MONITORING_PRESSURE = 48
 POLLING_MONITORING_GLYCEMIA = 71       
 
 SECONDI_SCADENZA_MONITORING = 300      
+SECONDI_CONTROLLO_NUOVI_PAZIENTI = 30
+SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA = 3600*24
 
 ONE_MINUTE_IN_SEC = 0                
                                    
@@ -48,9 +50,21 @@ class rpiPub():
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_temperature") 
 
-        self.mqtt_topic = mqtt_api["topic"]
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_temperature") 
+        self.mqtt_topic_temperature = mqtt_api["topic"]
+
+        mqtt_api_monitoring = get_api_from_service_and_name(mqtt_service,"monitoring_on") 
+        self.mqtt_topic_monitoring_on  = mqtt_api_monitoring["topic"]
+
+        mqtt_api_heartrate = get_api_from_service_and_name(mqtt_service,"heartrate") 
+        self.mqtt_topic_heartrate  = mqtt_api_heartrate["topic"]
+        mqtt_api_pressure = get_api_from_service_and_name(mqtt_service,"pressure") 
+        self.mqtt_topic_pressure  = mqtt_api_pressure["topic"]
+        mqtt_api_glycemia = get_api_from_service_and_name(mqtt_service,"glycemia") 
+        self.mqtt_topic_glycemia  = mqtt_api_glycemia["topic"]
+        mqtt_api_temperature = get_api_from_service_and_name(mqtt_service,"temperature") 
+        self.mqtt_topic_temperature  = mqtt_api_temperature["topic"]
 
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = int(clientID)
@@ -73,11 +87,14 @@ class rpiPub():
 
     def start (self):
         self.client_MQTT.start()
-        self.subTopic = f"{self.mqtt_base_topic}/{self.clientID}/monitoring"    
-        self.client_MQTT.mySubscribe(self.subTopic)
-        #da sostituire con jinja?
-        self.TopicTempRaspberry = getTopicByParameters(self.mqtt_topic, self.mqtt_base_topic, str(self.clientID))
-        self.client_MQTT.mySubscribe(self.TopicTempRaspberry)
+
+        TopicTempRaspberry = getTopicByParameters(self.mqtt_topic_temperature, self.mqtt_base_topic, self.clientID)
+        self.client_MQTT.mySubscribe(TopicTempRaspberry)
+
+        #{{base_topic}}/{{patientID}}/monitoring
+        topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring_on, self.mqtt_base_topic, self.clientID)
+        self.client_MQTT.mySubscribe(topic_monitoring)
+
 
 
     def stop (self):
@@ -100,7 +117,9 @@ class rpiPub():
                 self.monitoring = True
             elif self.monitoring_status=="off":
                 self.monitoring = False
+
             http_setMonitorinStatefromClientID(self.clientID, self.monitoring_status)
+
         elif subtopic == TOPIC_TEMP_RASPBERRY:      
             newMeasureTempRaspberry = msg["e"][0]["v"]
             #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
@@ -124,10 +143,13 @@ class rpiPub():
 
     def publishHR(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        topicHR = f"{self.mqtt_base_topic}/{self.clientID}/heartrate"
+
+        topicHR = getTopicByParameters(self.mqtt_topic_heartrate, self.mqtt_base_topic, self.clientID)
+        #topicHR = f"{self.mqtt_base_topic}/{self.clientID}/heartrate"
+
         messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicHR, messageHR)
-        print(f"{self.clientID} published {measure} with topic: {self.mqtt_base_topic}/{self.clientID}/heartrate ({self.monitoring_status})")
+        print(f"{self.clientID} published {measure} with topic: {topicHR} ({self.monitoring_status})")
 
 
     # PRESSURE
@@ -140,10 +162,14 @@ class rpiPub():
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         pressureHigh = measureDict["pressureHigh"]
         pressureLow = measureDict["pressureLow"]
+
+        topicPR= getTopicByParameters(self.mqtt_topic_pressure, self.mqtt_base_topic, self.clientID)
+        #f"{self.mqtt_base_topic}/{self.clientID}/pressure"
+        
         # TODO : mettere 2 "e", una per min e una per max
         messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
-        self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/pressure", messagePR)
-        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {self.mqtt_base_topic}/{self.clientID}/pressure ({self.monitoring_status})")
+        self.myPublish(topicPR, messagePR)
+        print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {topicPR} ({self.monitoring_status})")
 
 
     # GLYCEMIA
@@ -154,18 +180,24 @@ class rpiPub():
 
     def publishGlycemia(self, measure):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        topicGL= getTopicByParameters(self.mqtt_topic_glycemia, self.mqtt_base_topic, self.clientID)
+
         messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
-        self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/glycemia", messageGL)
-        print(f"{self.clientID} published {measure} with topic: {self.mqtt_base_topic}/{self.clientID}/glycemia ({self.monitoring_status})")
+        self.myPublish(topicGL, messageGL)
+        print(f"{self.clientID} published {measure} with topic: {topicGL} ({self.monitoring_status})")
 
 
     # TEMPERATURE
 
     def publishTemperature(self, measureTemp):
         timeOfMessage = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        topicTE = getTopicByParameters(self.mqtt_topic_temperature, self.mqtt_base_topic, self.clientID)
+
         messageTE = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
-        self.myPublish(f"{self.mqtt_base_topic}/{self.clientID}/temperature", messageTE)
-        print(f"{self.clientID} published {measureTemp} with topic: {self.mqtt_base_topic}/{self.clientID}/temperature")
+        self.myPublish(topicTE, messageTE)
+        print(f"{self.clientID} published {measureTemp} with topic: {topicTE}")
 
 
     # Lettura e pubblicazione dati 
@@ -204,40 +236,17 @@ class rpiPub():
                 http_setMonitorinStatefromClientID(self.clientID, self.monitoring_status)
 
 
-# def getWeek(dayOne):
-#     currTime = time.strftime("%Y-%m-%d")
-#     currY = currTime.split("-")[0]
-#     currM = currTime.split("-")[1]
-#     currD = currTime.split("-")[2]
-#     #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
-#     currDays = int(currY)*365 + int(currM)*30 + int(currD)
-#     #print(f"DataAnalysisBlock: current day is {currDays}")
-
-#     #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
-#     #print(f"DataAnalysisBlock: dayOne : {dayOne}")
-#     dayoneY = dayOne.split("-")[0]
-#     dayoneM = dayOne.split("-")[1]
-#     dayoneD = dayOne.split("-")[2]
-#     #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
-#     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-#     #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
-
-#     elapsedDays = currDays - dayoneDays
-#     week = int(elapsedDays / 7)
-#     return week
-
 
 if __name__ == "__main__":
 
-    # da eliminare alla fine: imposta in automatico il -1 sul paziente 1 per far pubblicare su di lui
+    # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 1 per far pubblicare su di lui
     setOnlineSinceFromClientID(1)
-
-    # da decidere dove metterla?
-    http_contolla_scadenza_week()
 
     cicli=0
     while True:
-        if cicli % 200 == 0:
+
+        # Eseguito ogni 30 secondi
+        if cicli % SECONDI_CONTROLLO_NUOVI_PAZIENTI == 0:
 
             json_lista = http_get_lista_pazienti_da_monitorare()
             lista_pazienti_da_monitorare = json_lista["lista_pazienti_da_monitorare"]
@@ -250,5 +259,9 @@ if __name__ == "__main__":
                 thread.start()
                 print(f"{patientID} is online")
 
+        # Eseguito all'avvio e ogni 24 ore
+        if cicli % SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA == 0:
+            http_contolla_scadenza_week()
+
         cicli+=1
-        time.sleep(0.1)
+        time.sleep(1)

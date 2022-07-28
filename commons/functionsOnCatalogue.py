@@ -34,13 +34,13 @@ def http_get_host_and_port(parServiceName):
 def http_getServiceByName(parServiceName):
 
     ipAddress, port = get_host_and_port() #presi da config
-    r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
+    r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}',timeout=5) 
 
     if r.status_code != 200:
-        r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
+        r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}',timeout=5) 
 
     if r.status_code != 200:
-        r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}') 
+        r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}',timeout=5) 
 
     if r.status_code == 200:
         return r.json()
@@ -133,17 +133,19 @@ def http_setMonitorinStatefromClientID(patient_ID, monitoring):
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
     api = get_api_from_service_and_name( ResourceService, "set_monitoring_state_from_client_ID" )
 
+    # uri: set_monitoring_by_id
+
     uri = api["uri"]
     local_uri = uri.replace("{{patient_ID}}", str(patient_ID)) 
     local_final_uri = local_uri.replace("{{monitoring}}", monitoring) 
 
-    r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}') 
+    r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}',timeout=5) 
 
     if r.status_code != 200:
-        r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}') 
+        r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}',timeout=5) 
 
     if r.status_code != 200:
-        r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}') 
+        r = requests.get(f'http://{ipAddress}:{port}/{local_final_uri}',timeout=5) 
 
     # ipAddress, port = get_host_and_port()
     # r = requests.get(f'http://{ipAddress}:{port}/set_monitoring_by_id?patient_id={patient_ID}&monitoring={monitoring}') 
@@ -247,18 +249,38 @@ def http_set_patient_in_monitoring(parPatientID):
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
     api = get_api_from_service_and_name( ResourceService, "set_patient_in_monitoring" )
 
-    local_uri = api["uri"]
+    uri = api["uri"]
+    local_uri = uri.replace("{{patient_ID}}", str(parPatientID)) 
 
-    r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
+    r = requests.put(f'http://{ipAddress}:{port}/{local_uri}') 
 
     # ipAddress, port = get_host_and_port()
     # r = requests.put(f'http://{ipAddress}:{port}/set_patient_in_monitoring?patient_id={parPatientID}') 
 
 
+def http_Update_PatientTelegramID(chat_ID, message):
+
+    ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
+    api = get_api_from_service_and_name( ResourceService, "update_chat_id" )
+
+    uri = api["uri"]
+    local_uri = uri.replace("{{chat_ID}}", str(chat_ID)) 
+    local_final_uri = local_uri.replace("{{message}}", str(message)) 
+
+    r = requests.put(f'http://{ipAddress}:{port}/{local_final_uri}') 
+
+    #r = requests.get(f'http://{ipAddress}:{port}/update_telegram_id?patient_id={message}&chat_id={chat_ID}') 
+
+    if r.text == "OK":
+        return True
+    else:
+        return False
+
+
 def getTopicByParameters(parTopic, parBaseTopic, parPatientID):
     #"topic_temperature": "{{base_topic}}/{{patientID}}/temperature",
     local_topic = parTopic.replace("{{base_topic}}", parBaseTopic)
-    local_topic = local_topic.replace("{{patientID}}", parPatientID) #parPatient da passare come stringa
+    local_topic = local_topic.replace("{{patientID}}", str(parPatientID)) #parPatient da passare come stringa
     return local_topic
 
 
