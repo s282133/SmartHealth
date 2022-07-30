@@ -137,8 +137,6 @@ class DoctorBot:
 
         elif message == "/accesso_dati": 
 
-            # Prova microservizio nodered
-            #uri = "http://192.168.1.41:1880"
             accesso_dati_service = http_getServiceByName("NodeRed")
             try:
                 accesso_dati_ipAddress = accesso_dati_service["host"]
@@ -156,8 +154,6 @@ class DoctorBot:
             uri = f"http://{accesso_dati_ipAddress}:{accesso_dati_port}/{accesso_dati_uri}"
             self.client_bot.sendMessage(chat_ID, text=f'Access to data at this link: {uri}')
         
-        # ATTENZIONE: riposta al commento    
-        # QUALE LINK? ---> LINK A NODERED
 
         else:
             self.client_bot.sendMessage(chat_ID, text="* Send /start to log in;\n* Send /registrazione_paziente to submit a new patient;\n* Send /accesso_dati to monitor patients' data.") 

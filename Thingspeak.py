@@ -21,7 +21,7 @@ class Thingspeak():
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"thingspeak_subscriptions") 
 
         mqtt_topic_temperature  = mqtt_api["topic_temperature"]
         mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
@@ -77,8 +77,20 @@ class Thingspeak():
             field = self.ts_fields[i]
             fieldnumber = int(str(field).strip("field"))
             #print("Downloading data from field " + fieldnumber)
-            #downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?days=1&min=1')
-            downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?results=8000&min=1')
+            
+
+            # Da scommentare la prossima riga se non funziona il test sotto:
+            # downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?results=8000&min=1')
+
+
+            # DA TESTARE (con Laura)
+            download_data_api = get_api_from_service_and_name(mqtt_service,"download_data_from_thingspeak") 
+            download_data_uri  = download_data_api["uri"]
+            download_uri = download_data_uri.replace("{{fieldnumber}}", str(fieldnumber))
+            downloaded_catalogue = requests.get(f'{download_uri}')
+
+            # Microservizio DA CAMBIARE ANCHE ALRE COSE NELL'URI ???
+
             if downloaded_catalogue.status_code == 200:
                 with open(self.local_files[i], "w") as wp:
                     json.dump(downloaded_catalogue.json(), wp, indent=4)
@@ -95,8 +107,20 @@ class Thingspeak():
             peso=message["status"] 
             print(f"topic del peso: {topic}") 
             self.lastPeso = peso 
-            rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
-                
+
+            # Microservizio
+            send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
+            send_data_uri  = send_data_api["uri"]
+            uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
+            uri_field1 = uri_api_key.replace("{{field1}}", str(self.lastHeartrate))
+            uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
+            uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
+            uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+            uri = uri_field4.replace("{{field5}}", peso)
+
+            #rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
+            rp = requests.get(f'{uri}') 
+
         elif not bool(self.patternMonitoring.match(str(topic))): 
             print(f"topic non del peso: {topic}")
             self.clientID = int(str(topic).split("/")[2])
@@ -106,62 +130,58 @@ class Thingspeak():
             if(self.newMeasureType == "heartrate"): 
                 self.sensed_heartrate = message['e'][0]['v']
                 self.lastHeartrate = self.sensed_heartrate 
-                r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.sensed_heartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
+
+                # Microservizio
+                send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
+                send_data_uri  = send_data_api["uri"]
+                uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
+                uri_field1 = uri_api_key.replace("{{field1}}", str(self.sensed_heartrate))
+                uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
+                uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
+                uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+                uri = uri_field4.replace("{{field5}}", str(self.lastPeso))
+                
+                #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.sensed_heartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
+                r = requests.get(f'{uri}')
 
             elif(self.newMeasureType == "glycemia"): 
                 self.sensed_glycemia = message['e'][0]['v']
                 api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.lastGlycemia = self.sensed_glycemia 
-                r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
-                    
+
+                # Microservizio
+                send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
+                send_data_uri  = send_data_api["uri"]
+                uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
+                uri_field1 = uri_api_key.replace("{{field1}}", str(self.lastHeartrate))
+                uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
+                uri_field3 = uri_field2.replace("{{field3}}", str(self.sensed_glycemia))
+                uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+                uri = uri_field4.replace("{{field5}}", str(self.lastPeso))
+                
+                # r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
+                r = requests.get(f'{uri}')
+
             elif(self.newMeasureType == "pressureHigh"):
                 api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.sensed_pressureHigh= message['e'][0]['v'] 
                 self.sensed_pressureLow= message['e'][1]['v'] 
                 self.lastPressureHigh = self.sensed_pressureHigh 
                 self.lastPressureLow = self.sensed_pressureLow 
-                r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
-                
-        
-        # message = json.loads(payload) #trasformiamo in json
-        # if bool(self.patternWeight.match(str(topic))):
-        #     self.clientID = int(str(topic).split("/")[2])
-        #     api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
-        #     peso=message["status"]
-        #     print(f"topic del peso: {topic}")
-        #     r2 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}&field5={peso}') 
 
+                # Microservizio
+                send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
+                send_data_uri  = send_data_api["uri"]
+                uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
+                uri_field1 = uri_api_key.replace("{{field1}}", str(self.lastHeartrate))
+                uri_field2 = uri_field1.replace("{{field2}}", str(self.sensed_pressureHigh))
+                uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
+                uri_field4 = uri_field3.replace("{{field4}}", str(self.sensed_pressureLow))
+                uri = uri_field4.replace("{{field5}}", str(self.lastPeso))
 
-        # elif not bool(self.patternMonitoring.match(str(topic))): #da cambiare
-        #     print(f"topic non del peso: {topic}")
-        #     # self.bn=message['bn'] 
-        #     # self.clientID = int(str(self.bn).split("/")[3])
-        #     self.clientID = int(str(topic).split("/")[2])
-        #     api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)     
-        #     print(f"Topic is (else){topic}")
-        #     self.measureType = message['e'][0]['n']
+                #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
+                r = requests.get(f'{uri}')
 
-        #     if self.measureType=="heartrate":
-        #         heart_rate=int(message['e'][0]['v'])
-        #         r1 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={heart_rate}')
-        #         print(f"Field1: {heart_rate}")
-
-        #     elif message['e'][0]['n']=="glycemia":
-        #         glycemia=int(message['e'][0]['v'])
-        #         r2=requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field3={glycemia}')
-        #         print(f"Field3: {glycemia}")
-
-        #     elif message['e'][0]['n']=="pressureHigh":
-        #     #elif message['e'][0]['n']=="pressure": #se lo facciamo usl topic
-        #         self.sensed_pressureHigh=message['e'][0]['v']
-        #         self.sensed_pressureLow=message['e'][1]['v']
-        #         r3 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field2={self.sensed_pressureHigh}&field4={self.sensed_pressureLow}')
-        #         #r4 = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field4={self.sensed_pressureLow}')
-        #         #r3 = requests.get(f'https://api.thingspeak.com/update?api_key={api_key}')     
-        #         print(f"Field2: {self.sensed_pressureHigh}")
-        #         print(f"Field4: {self.sensed_pressureLow}")
-                
-                
             
     def start(self): 
         self.mqttClient.start() 

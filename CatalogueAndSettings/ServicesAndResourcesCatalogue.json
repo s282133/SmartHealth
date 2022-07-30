@@ -226,7 +226,7 @@
       "base_topic": "P4IoT/SmartHealth",
       "APIs": [
         {
-          "functionality_name": "send_data_to_thingspeak",
+          "functionality_name": "thingspeak_subscriptions",
           "description": "Invio dei dati su thingspeak",
           "topic_temperature": "{{base_topic}}/+/temperature",
           "topic_heartrate": "{{base_topic}}/+/heartrate",
@@ -234,6 +234,16 @@
           "topic_glycemia": "{{base_topic}}/+/glycemia",
           "topic_peso": "{{base_topic}}/+/peso",
           "topic_monitoring": "{{base_topic}}/+/monitoring"
+        },
+        {
+          "functionality_name": "download_data_from_thingspeak",
+          "description": "Download catalogo da thingspeak",
+          "uri": ""
+        },
+        {
+          "functionality_name": "send_data_to_thingspeak",
+          "description": "Invio dei dati su thingspeak",
+          "uri": "http://api.thingspeak.com/update?api_key={{api_key}}&field1={{field1}}&field2={{field2}}&field3={{field3}}&field4={{field4}}&field5={{field5}}"
         }
       ]
     },
@@ -253,7 +263,7 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 8,
+    "LastPatientID": 9,
     "LastDoctorID": 3
   },
   "resources": [
@@ -337,7 +347,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-28",
+            "onlineSince": "2022-07-30",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,
@@ -349,33 +359,8 @@
           }
         },
         {
-          "patientID": 6,
-          "patientName": "Paola",
-          "patientSurname": "Rossi",
-          "personalData": {
-            "taxIDcode": "ABCDEFGH",
-            "userEmail": "mario.rossi@gmail.com",
-            "pregnancyDayOne": "2022-05-03"
-          },
-          "idRegistratoSuRaspberry": "no",
-          "state": "attivo",
-          "monitoring": "off",
-          "connectedDevice": {
-            "deviceName": "raspberry22",
-            "onlineSince": "2022-07-20",
-            "telegramID": "491287865",
-            "thingspeakInfo": {
-              "channel": 1800231,
-              "apikeys": [
-                "9A2YVSENL1ZNPVWO",
-                "K3QUNSX7XZE3R4T6"
-              ]
-            }
-          }
-        },
-        {
-          "patientID": 8,
-          "patientName": "Elena",
+          "patientID": 9,
+          "patientName": "Giulia",
           "patientSurname": "Codagnone",
           "personalData": {
             "taxIDcode": "ABCDEFGH",
@@ -387,13 +372,13 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-19",
-            "telegramID": "786029508",
+            "onlineSince": "2022-07-30",
+            "telegramID": 0,
             "thingspeakInfo": {
-              "channel": 1805232,
+              "channel": 1816577,
               "apikeys": [
-                "L7CLJZHIYLH36PUQ",
-                "272EVT8TO9JOA783"
+                "XLLSH06ZI0TXTCBY",
+                "BYZDTSDCZ6NZB5KE"
               ]
             }
           }
@@ -419,7 +404,7 @@
         },
         {
           "deviceName": "raspberry22",
-          "patientID": 6,
+          "patientID": 9,
           "measureType": [
             "Temperature",
             "Battito cardiaco",
@@ -432,24 +417,7 @@
           ],
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-14"
-        },
-        {
-          "deviceName": "raspberry22",
-          "patientID": 8,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "application_to_raspberry",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-07-19"
+          "lastUpdate": "2022-07-30"
         }
       ]
     }
