@@ -54,7 +54,7 @@ def get_service_host_and_port(parServiceName):
     port        = Service["port"]
     return Service, ipAddress, port
 
-# da fare anche sugli altri
+
 def http_getMonitoringStateFromClientID(patient_ID):
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")

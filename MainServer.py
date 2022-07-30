@@ -163,7 +163,7 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Name not found")
 
 
-# get_telegram_from_id: restituisce il telegram ID del paziente dal suo ID 
+# get_telegram_from_id: restituisce il telegram ID del dottore dall'ID del paziente  
         elif uri[0] == "get_telegram_from_id":
             patient_ID = params["patient_id"]
             telegram_id = findDoctorTelegramIdFromPatientId(patient_ID)
@@ -201,7 +201,7 @@ class Registrazione(object):
                 raise cherrypy.HTTPError(500, "Patient not found")
 
 
-# get_ts_from_id: restituisce il thingspeak del paziente dal suo ID 
+# get_ts_from_id: restituisce l'API di scrittura di thingspeak del paziente dal suo ID 
         elif uri[0] == "get_ts_from_id":
             patient_ID = params["patient_id"]
             api_keys = retrieveTSWriteAPIfromClientID(patient_ID)

@@ -34,73 +34,73 @@
         },
         {
           "functionality_name": "monitoring_state",
-          "description": "M",
+          "description": "Restituisce lo stato di monitoraggio in cui è il paziente (on o off) ",
           "access_mode": "GET",
           "uri": "monitoring_state?patient_id={{patient_ID}}"
         },
         {
           "functionality_name": "retrieve_pregnancy_day_one",
-          "description": "M",
+          "description": "Restituisce il dayOne di gravidanza ",
           "access_mode": "GET",
           "uri": "pregnancy_state?patient_id={{patient_ID}}"
         },
         {
           "functionality_name": "get_name_from_clientID",
-          "description": "M",
+          "description": "Restituisce il nome del paziente dal suo ID ",
           "access_mode": "GET",
           "uri": "get_name_from_id?patient_id={{patient_ID}}"
         },
         {
           "functionality_name": "find_doctor_telegram_id_from_patient_id",
-          "description": "M",
+          "description": "Restituisce il telegram ID del dottore cercandolo dal patient ID",
           "access_mode": "GET",
           "uri": "get_telegram_from_id?patient_id={{patient_ID}}"
         },
         {
           "functionality_name": "set_monitoring_state_from_client_ID",
-          "description": "M",
+          "description": "Restituisce il monitoring del paziente dal suo ID",
           "access_mode": "GET",
           "uri": "set_monitoring_by_id?patient_id={{patient_ID}}&monitoring={{monitoring}}"
         },
         {
           "functionality_name": "find_patient_from_chat_ID",
-          "description": "M",
+          "description": "Restituisce il paziente dal suo ID ",
           "access_mode": "GET",
           "uri": "find_patient_by_chat_id?chat_id={{chat_ID}}"
         },
         {
           "functionality_name": "retrieve_TS_write_API_from_client_ID",
-          "description": "M",
+          "description": "Restituisce l'API di scrittura di thingspeak del paziente dal suo ID ",
           "access_mode": "GET",
           "uri": "get_ts_from_id?patient_id={{patient_ID}}"
         },
         {
           "functionality_name": "get_lista_pazienti_simulati",
-          "description": "M",
+          "description": "Restituisce lista dei pazienti con raspberry simulati per l'invio delle temperature",
           "access_mode": "GET",
           "uri": "get_lista_pazienti_simulati"
         },
         {
           "functionality_name": "contolla_scadenza_week",
-          "description": "M",
+          "description": "controllo sulla week per aggiornare lo stato del paziente a 'aggiornato'",
           "access_mode": "GET",
           "uri": "contolla_scadenza_week"
         },
         {
           "functionality_name": "lista_pazienti_da_monitorare",
-          "description": "M",
+          "description": "Restituisce lista dei pazienti da monitorare",
           "access_mode": "GET",
           "uri": "lista_pazienti_da_monitorare"
         },
         {
           "functionality_name": "set_patient_in_monitoring",
-          "description": "M",
+          "description": "aggiorna i pazienti a stato di monitoraggio (da -1 a monitorato)",
           "access_mode": "GET",
           "uri": "set_patient_in_monitoring?patient_id={{patient_ID}}"
         },
         {
           "functionality_name": "update_chat_id",
-          "description": "Aggiornamento chat id del paziente",
+          "description": "Aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start",
           "access_mode": "PUT",
           "uri": "update_telegram_id?patient_id={{message}}&chat_id={{chat_ID}}"
         },
