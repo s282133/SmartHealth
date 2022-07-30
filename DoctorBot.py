@@ -138,9 +138,23 @@ class DoctorBot:
         elif message == "/accesso_dati": 
 
             # Prova microservizio nodered
-            uri = "http://192.168.1.41:1880"
-            #uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
-            self.client_bot.sendMessage(chat_ID, text='Access to data at this link: {uri}')
+            #uri = "http://192.168.1.41:1880"
+            accesso_dati_service = http_getServiceByName("NodeRed")
+            try:
+                accesso_dati_ipAddress = accesso_dati_service["host"]
+                accesso_dati_port = accesso_dati_service["port"]
+            except:
+                print("Accesso dati - error [ERR 10].")
+           
+            try:
+                api_accesso_dati = get_api_from_service_and_name(accesso_dati_service,"accesso_dati") 
+
+                accesso_dati_uri = api_accesso_dati["uri"]
+            except:
+                print("Accesso dati - error [ERR 11].")
+
+            uri = f"http://{accesso_dati_ipAddress}:{accesso_dati_port}/{accesso_dati_uri}"
+            self.client_bot.sendMessage(chat_ID, text=f'Access to data at this link: {uri}')
         
         # ATTENZIONE: riposta al commento    
         # QUALE LINK? ---> LINK A NODERED

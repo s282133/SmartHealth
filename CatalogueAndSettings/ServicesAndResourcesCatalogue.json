@@ -34,7 +34,7 @@
         },
         {
           "functionality_name": "monitoring_state",
-          "description": "Restituisce lo stato di monitoraggio in cui è il paziente (on o off) ",
+          "description": "Restituisce lo stato di monitoraggio in cui \u00c3\u00a8 il paziente (on o off) ",
           "access_mode": "GET",
           "uri": "monitoring_state?patient_id={{patient_ID}}"
         },
@@ -208,12 +208,13 @@
     },
     {
       "service_name": "NodeRed",
-      "host": "abc",
+      "host": "192.168.1.41",
+      "port": 1880,
       "APIs": [
         {
-          "functionality_name": "abc",
-          "description": "abc",
-          "topic": "abc"
+          "functionality_name": "accesso_dati",
+          "description": "interfaccia medico su nodered con i grafici e i dati delle pazienti",
+          "uri": "ui"
         }
       ]
     },
@@ -362,7 +363,7 @@
           "connectedDevice": {
             "deviceName": "raspberry22",
             "onlineSince": "2022-07-20",
-            "telegramID": 298694124,
+            "telegramID": "491287865",
             "thingspeakInfo": {
               "channel": 1800231,
               "apikeys": [
