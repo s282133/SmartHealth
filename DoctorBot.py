@@ -136,7 +136,11 @@ class DoctorBot:
             self.client_bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
         elif message == "/accesso_dati": 
-            self.client_bot.sendMessage(chat_ID, text='Access to data at this link: ')
+
+            # Prova microservizio nodered
+            uri = "http://192.168.1.41:1880"
+            #uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
+            self.client_bot.sendMessage(chat_ID, text='Access to data at this link: {uri}')
         
         # ATTENZIONE: riposta al commento    
         # QUALE LINK? ---> LINK A NODERED
