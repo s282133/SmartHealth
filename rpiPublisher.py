@@ -51,8 +51,8 @@ class rpiPub():
         mqtt_port = mqtt_service["port"]
         self.mqtt_base_topic = mqtt_service["base_topic"]
 
-        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_temperature") 
-        self.mqtt_topic_temperature = mqtt_api["topic"]
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"temp_raspberry") 
+        self.mqtt_topic_temp_raspberry = mqtt_api["topic"]
 
         mqtt_api_monitoring = get_api_from_service_and_name(mqtt_service,"monitoring_on") 
         self.mqtt_topic_monitoring_on  = mqtt_api_monitoring["topic"]
@@ -88,7 +88,7 @@ class rpiPub():
     def start (self):
         self.client_MQTT.start()
 
-        TopicTempRaspberry = getTopicByParameters(self.mqtt_topic_temperature, self.mqtt_base_topic, self.clientID)
+        TopicTempRaspberry = getTopicByParameters(self.mqtt_topic_temp_raspberry, self.mqtt_base_topic, self.clientID)
         self.client_MQTT.mySubscribe(TopicTempRaspberry)
 
         #{{base_topic}}/{{patientID}}/monitoring

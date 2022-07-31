@@ -68,7 +68,7 @@ class Registrazione(object):
                     raise ServiceUnavailableException
                 else:
                     try:
-                        api_updatepatient = main_getApiByServiceAndName(mqtt_service["APIs"],"send_temperature") 
+                        api_updatepatient = main_getApiByServiceAndName(mqtt_service["APIs"],"temp_raspberry") 
                         if(api_updatepatient == None):
                             raise ApiUnavailableException
                         topic = api_updatepatient["topic"]

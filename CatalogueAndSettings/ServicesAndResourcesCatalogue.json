@@ -1,5 +1,5 @@
 {
-  "server_host": "127.0.0.1",
+  "server_host": "0.0.0.0",
   "server_port": 8080,
   "services": [
     {
@@ -141,7 +141,7 @@
       "base_topic": "P4IoT/SmartHealth",
       "APIs": [
         {
-          "functionality_name": "send_temperature",
+          "functionality_name": "temp_raspberry",
           "description": "Invio delle temperature simulate e non dei pazienti",
           "topic": "{{base_topic}}/{{patientID}}/temp_raspberry"
         },
@@ -238,7 +238,7 @@
         {
           "functionality_name": "download_data_from_thingspeak",
           "description": "Download catalogo da thingspeak",
-          "uri": ""
+          "uri": "https://api.thingspeak.com/channels/1721151/fields/{{fieldnumber}}.json?results=8000&min=1"
         },
         {
           "functionality_name": "send_data_to_thingspeak",
@@ -347,7 +347,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-30",
+            "onlineSince": "2022-07-31",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,

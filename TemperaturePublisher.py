@@ -40,7 +40,7 @@ if __name__ == "__main__":
     except:
         print("Temperature_Publisher could not be initialized [ERR 3].")
     try:
-        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_temperature") 
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"temp_raspberry") 
         mqtt_topic = mqtt_api["topic"]
     except TypeError:
         print("Temperature_Publisher could not be initialized [ERR 4].")
