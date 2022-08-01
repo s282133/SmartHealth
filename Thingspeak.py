@@ -83,13 +83,11 @@ class Thingspeak():
             # downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?results=8000&min=1')
 
 
-            # DA TESTARE (con Laura)
+            # DA TESTARE (con Antuan)
             download_data_api = get_api_from_service_and_name(mqtt_service,"download_data_from_thingspeak") 
             download_data_uri  = download_data_api["uri"]
             download_uri = download_data_uri.replace("{{fieldnumber}}", str(fieldnumber))
             downloaded_catalogue = requests.get(f'{download_uri}')
-
-            # Microservizio DA CAMBIARE ANCHE ALRE COSE NELL'URI ???
 
             if downloaded_catalogue.status_code == 200:
                 with open(self.local_files[i], "w") as wp:
