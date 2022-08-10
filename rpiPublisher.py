@@ -147,7 +147,11 @@ class rpiPub():
         topicHR = getTopicByParameters(self.mqtt_topic_heartrate, self.mqtt_base_topic, self.clientID)
         #topicHR = f"{self.mqtt_base_topic}/{self.clientID}/heartrate"
 
+        # Perchè le misure non sono nel vettore "e"? Per quale motivo è conveniente?
+        # Perchè non abbiamo specificayo mai il sensore ma solo il raspberry? E' sufficiente?
+
         messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
+        #messageHR = {"bn": f"{self.clientID}", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicHR, messageHR)
         print(f"{self.clientID} published {measure} with topic: {topicHR} ({self.monitoring_status})")
 

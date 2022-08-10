@@ -84,7 +84,11 @@ class PatientBot:
             self.previous_message="/help"
 
         elif message == "/survey":
-            self.bot.sendMessage(chat_ID, text="You can complete the survey at this link: https://docs.google.com/forms/d/e/1FAIpQLSfLxw1y52kB5xNp6WcHAw0xQ1x2s3ViyXvWUGNDzlVtAdzWIA/viewform")
+
+            survey_service = http_getServiceByName("TelegramClient")
+            api_survey = get_api_from_service_and_name(survey_service,"send_survey_link_to_patient") 
+            survey_uri = api_survey["uri"]
+            self.bot.sendMessage(chat_ID, text= f"You can complete the survey at this link: {survey_uri}")
             self.previous_message="/survey"
 
         elif message == "/peso": 

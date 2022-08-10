@@ -203,6 +203,11 @@
           "functionality_name": "send_peso",
           "description": "Invio del peso del paziente",
           "topic": "{{base_topic}}/{{patientID}}/peso"
+        },
+        {
+          "functionality_name": "send_survey_link_to_patient",
+          "description": "Invio del link del questionario dalla paziente",
+          "uri": "https://docs.google.com/forms/d/e/1FAIpQLSfLxw1y52kB5xNp6WcHAw0xQ1x2s3ViyXvWUGNDzlVtAdzWIA/viewform"
         }
       ]
     },

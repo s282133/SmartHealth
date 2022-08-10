@@ -37,6 +37,7 @@ class statistics():
                 self.myPublish(self.pub_topic, message)
             time.sleep(COUNTER_RESOLUTION)
 
+
     def create_event(self, parameter_name, parameter_unit, min, avg, max):
         event = self.event_structure.copy()         # senza copy non funziona, bah
         event["n"] = parameter_name
@@ -44,7 +45,6 @@ class statistics():
         event["u"] = parameter_unit
         event["v"] = [min, avg, max]
         return event
-
 
 
     def create_message(self, events):
@@ -89,6 +89,7 @@ class statistics():
             print("Error reading local file of weekly measures.")
             return [None, None, None]
 
+
     def initialize(self):
         self.counter = 0
         try:
@@ -110,18 +111,19 @@ class statistics():
             print("Error reading settings file.")
             sys.exit(1)
 
+
     def start (self):
         self.client_MQTT.start()
-                
+
+
     def stop (self):
         self.client_MQTT.stop()
+
 
     def myPublish(self, topic, message):
         print(f"{self.clientID} publishing {message} to topic: {topic}\n\n\n")
         self.client_MQTT.myPublish(topic, message)
     
-
-
 
 if __name__ == "__main__" :
 
