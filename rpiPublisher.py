@@ -180,8 +180,13 @@ class rpiPub():
         topicPR= getTopicByParameters(self.mqtt_topic_pressure, self.mqtt_base_topic, self.clientID)
         #f"{self.mqtt_base_topic}/{self.clientID}/pressure"
         
-        # TODO : mettere 2 "e", una per min e una per max
-        messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
+        ResourceService = http_getServiceByName("ResourceService")
+        bn = get_api_from_service_and_name(ResourceService,"gestione_bn") 
+        basic_uri = bn["basic_uri"]
+        pressureSensor = bn["pressure_sensor"]
+        messagePR = {"bn": f"{basic_uri}/{self.clientID}/{pressureSensor}/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
+
+        #messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
         self.myPublish(topicPR, messagePR)
         print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {topicPR} ({self.monitoring_status})")
 
@@ -197,7 +202,13 @@ class rpiPub():
 
         topicGL= getTopicByParameters(self.mqtt_topic_glycemia, self.mqtt_base_topic, self.clientID)
 
-        messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
+        ResourceService = http_getServiceByName("ResourceService")
+        bn = get_api_from_service_and_name(ResourceService,"gestione_bn") 
+        basic_uri = bn["basic_uri"]
+        glycemiaSensor = bn["glycemia_sensor"]
+        messageGL = {"bn": f"{basic_uri}/{self.clientID}/{glycemiaSensor}/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
+
+        #messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicGL, messageGL)
         print(f"{self.clientID} published {measure} with topic: {topicGL} ({self.monitoring_status})")
 
@@ -209,7 +220,12 @@ class rpiPub():
 
         topicTE = getTopicByParameters(self.mqtt_topic_temperature, self.mqtt_base_topic, self.clientID)
 
-        messageTE = {"bn": f"http://SmartHealth.org/{self.clientID}/temperatureSensor/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
+        ResourceService = http_getServiceByName("ResourceService")
+        bn = get_api_from_service_and_name(ResourceService,"gestione_bn") 
+        basic_uri = bn["basic_uri"]
+        temperatureSensor = bn["temperature_sensor"]
+
+        messageTE = {"bn": f"{basic_uri}/{self.clientID}/{temperatureSensor}/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
         self.myPublish(topicTE, messageTE)
         print(f"{self.clientID} published {measureTemp} with topic: {topicTE}")
 
@@ -253,8 +269,8 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 1 per far pubblicare su di lui
-    setOnlineSinceFromClientID(1)
+    # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 9 per far pubblicare su di lui
+    setOnlineSinceFromClientID(9)
 
     cicli=0
     while True:

@@ -257,7 +257,7 @@
         {
           "functionality_name": "send_data_to_thingspeak",
           "description": "Invio dei dati su thingspeak",
-          "uri": "http://api.thingspeak.com/update?api_key={{api_key}}&field1={{field1}}&field2={{field2}}&field3={{field3}}&field4={{field4}}&field5={{field5}}"
+          "uri": "http://api.thingspeak.com/update?api_key={{api_key}}&field1={{field1}}&field2={{field2}}&field3={{field3}}&field4={{field4}}&field5={{field5}}&field6={{field6}}"
         }
       ]
     },
@@ -277,7 +277,7 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 9,
+    "LastPatientID": 10,
     "LastDoctorID": 3
   },
   "resources": [
@@ -396,6 +396,31 @@
               ]
             }
           }
+        },
+        {
+          "patientID": 10,
+          "patientName": "Elisa",
+          "patientSurname": "Aime",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-05-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-08-10",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1829048,
+              "apikeys": [
+                "86RYU4E3ONQ4M3P1",
+                "23YUH6SD63SC335X"
+              ]
+            }
+          }
         }
       ],
       "devicesList": [
@@ -432,6 +457,23 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-07-30"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 10,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-08-10"
         }
       ]
     }

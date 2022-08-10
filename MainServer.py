@@ -311,6 +311,7 @@ class Registrazione(object):
                 "field3": "glycemia",    
                 "field4": "pressure_low",            
                 "field5": "peso",
+                "field6": "temperature",
                 "public_flag":True
                 }   
             r=requests.post("https://api.thingspeak.com/channels.json",channel)
