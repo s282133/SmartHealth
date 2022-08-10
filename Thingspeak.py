@@ -59,6 +59,7 @@ class Thingspeak():
         self.lastPressureLow=0
         self.lastPressureHigh=0
         self.lastPeso=0
+        self.lastTemperature=0
         try:
             with open("settings_weeklyStats.json", "r") as rp:
                 settings_dict = json.load(rp)
@@ -108,6 +109,7 @@ class Thingspeak():
             uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
             uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
             uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+            uri_field6 = uri_field6.replace("{{field6}}", str(self.lastTemperature))
             uri = uri_field4.replace("{{field5}}", peso)
 
             #rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
@@ -131,6 +133,7 @@ class Thingspeak():
                 uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
                 uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
                 uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+                uri_field6 = uri_field6.replace("{{field6}}", str(self.lastTemperature))
                 uri = uri_field4.replace("{{field5}}", str(self.lastPeso))
                 
                 #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.sensed_heartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
@@ -149,6 +152,7 @@ class Thingspeak():
                 uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
                 uri_field3 = uri_field2.replace("{{field3}}", str(self.sensed_glycemia))
                 uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+                uri_field6 = uri_field6.replace("{{field6}}", str(self.lastTemperature))
                 uri = uri_field4.replace("{{field5}}", str(self.lastPeso))
                 
                 # r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
@@ -169,6 +173,26 @@ class Thingspeak():
                 uri_field2 = uri_field1.replace("{{field2}}", str(self.sensed_pressureHigh))
                 uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
                 uri_field4 = uri_field3.replace("{{field4}}", str(self.sensed_pressureLow))
+                uri_field6 = uri_field6.replace("{{field6}}", str(self.lastTemperature))
+                uri= uri_field4.replace("{{field5}}", str(self.lastPeso))
+
+                #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
+                r = requests.get(f'{uri}')
+                
+            elif(self.newMeasureType == "temperature"):
+                api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
+                self.sensed_temperature= message['e'][0]['v'] 
+                self.lastTemperature= self.sensed_temperature
+            
+                # Microservizio
+                send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
+                send_data_uri  = send_data_api["uri"]
+                uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
+                uri_field1 = uri_api_key.replace("{{field1}}", str(self.lastHeartrate))
+                uri_field2 = uri_field1.replace("{{field2}}", str(self.lastPressureHigh))
+                uri_field3 = uri_field2.replace("{{field3}}", str(self.lastGlycemia))
+                uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
+                uri_field6 = uri_field6.replace("{{field6}}", str(self.sensed_temperature))
                 uri = uri_field4.replace("{{field5}}", str(self.lastPeso))
 
                 #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
