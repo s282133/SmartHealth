@@ -77,13 +77,7 @@ class Thingspeak():
             field = self.ts_fields[i]
             fieldnumber = int(str(field).strip("field"))
             #print("Downloading data from field " + fieldnumber)
-            
-
-            # Da scommentare la prossima riga se non funziona il test sotto:
-            # downloaded_catalogue = requests.get(f'https://api.thingspeak.com/channels/1721151/fields/{fieldnumber}.json?results=8000&min=1')
-
-
-            # DA TESTARE (con Antuan)
+              
             download_data_api = get_api_from_service_and_name(mqtt_service,"download_data_from_thingspeak") 
             download_data_uri  = download_data_api["uri"]
             download_uri = download_data_uri.replace("{{fieldnumber}}", str(fieldnumber))

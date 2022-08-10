@@ -150,7 +150,17 @@ class rpiPub():
         # Perchè le misure non sono nel vettore "e"? Per quale motivo è conveniente?
         # Perchè non abbiamo specificayo mai il sensore ma solo il raspberry? E' sufficiente?
 
-        messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
+        ResourceService = http_getServiceByName("ResourceService")
+        bn = get_api_from_service_and_name(ResourceService,"gestione_bn") 
+        basic_uri = bn["basic_uri"]
+        heartrateSensor = bn["heartrate_sensor"]
+
+        messageHR = {"bn": f"{basic_uri}/{self.clientID}/{heartrateSensor}/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
+
+        #bn non nel settings
+        #messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
+        
+        #Alternativa al bn che inizi per //http
         #messageHR = {"bn": f"{self.clientID}", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
         self.myPublish(topicHR, messageHR)
         print(f"{self.clientID} published {measure} with topic: {topicHR} ({self.monitoring_status})")

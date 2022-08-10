@@ -115,6 +115,15 @@
           "description": "Registrazione nel catalogo del paziente (usata da patients.html)",
           "access_mode": "POST",
           "uri": "patients"
+        },
+        {
+          "functionality_name": "gestione_bn",
+          "description": "Nome di bn quando un valore viene pubblicato",
+          "basic_uri": "http://SmartHealth.org",
+          "heartrate_sensor": "heartrateSensor",
+          "pressure_sensor": "pressureSensor",
+          "glycemia_sensor": "glycemiaSensor",
+          "temperature_sensor": "temperatureSensor"
         }
       ]
     },
@@ -352,7 +361,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-07-31",
+            "onlineSince": "2022-08-10",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,
@@ -377,7 +386,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-07-30",
+            "onlineSince": "2022-08-10",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1816577,
