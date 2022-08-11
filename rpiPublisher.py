@@ -227,7 +227,7 @@ class rpiPub():
 
         messageTE = {"bn": f"{basic_uri}/{self.clientID}/{temperatureSensor}/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
         self.myPublish(topicTE, messageTE)
-        print(f"{self.clientID} published {measureTemp} with topic: {topicTE}")
+        print(f"{self.clientID} published {measureTemp} with topic: {topicTE} ({self.monitoring_status})")
 
 
     # Lettura e pubblicazione dati 
@@ -271,6 +271,8 @@ if __name__ == "__main__":
 
     # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 9 per far pubblicare su di lui
     setOnlineSinceFromClientID(9)
+    setOnlineSinceFromClientID(1)
+
 
     cicli=0
     while True:

@@ -1,13 +1,14 @@
 # Il pubblicatore di temperature pubblica sul topic /temp_raspberry 
 # delle temperature casuali fornite da un generatore 
 
-import json
 import time
 
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
 from DeviceConnectorAndSensors.temperatureSensor import temperatureSensorClass
+
+POLLING_PERIOD_TEMPERATURE = 10
 
 class sensor_publisher:
     def __init__(self, broker, port):
@@ -66,7 +67,7 @@ if __name__ == "__main__":
         if k == 0:
             Ciclo+=1
 
-        time.sleep(3)
+        time.sleep(POLLING_PERIOD_TEMPERATURE)
         time_stamp = str(time.ctime(time.time()))        
 
         temperature = tempSensor[k].getTemperature(Ciclo)
