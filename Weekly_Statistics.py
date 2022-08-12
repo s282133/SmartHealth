@@ -35,8 +35,28 @@ class statistics():
                 message = self.create_message(self.events)
                 self.pub_topic = str(mqtt_topic).replace("+", self.patientID)
                 self.myPublish(self.pub_topic, message)
+
+                # PROVA PER INVIO DATI PERSONALI a nodered
+                # personal_parameters_json = self.get_personal_parameters(self.patientID)
+                # self.pub_topic = str(mqtt_topic).replace("+", self.patientID)
+                # self.myPublish(self.pub_topic, personal_parameters_json)
+
             time.sleep(COUNTER_RESOLUTION)
 
+
+# PROVA PER INVIO DATI PERSONALI a nodered
+
+    def get_personal_parameters(self, patientID):
+        #ricerca dati dal patient ID
+        personal_parameters_json = {
+            "patientID": patientID,
+            "week": "aaa",
+            "mail":  "bbb",
+            "state": "ccc"
+        }
+        return personal_parameters_json
+
+#FINE PROVA INVIO DATI PERSONALI
 
     def create_event(self, parameter_name, parameter_unit, min, avg, max):
         event = self.event_structure.copy()         # senza copy non funziona, bah
