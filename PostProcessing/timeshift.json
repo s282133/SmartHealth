@@ -2,100 +2,100 @@
     "heartrate":[
         {
         "weekrange": "1-8",
-        "min": "60",
+        "min": "50",
         "max": "100"
         },
         {
         "weekrange": "9-12",
-        "min": "61",
-        "max": "102"
+        "min": "50",
+        "max": "100"
         },
         {
         "weekrange": "13-18",
-        "min": "62",
-        "max": "103"
+        "min": "50",
+        "max": "100"
         }, 
         {
         "weekrange": "19-24",
-        "min": "63",
-        "max": "104"
+        "min": "50",
+        "max": "100"
         },
         {
         "weekrange": "25-30",
-        "min": "64",
-        "max": "105"
+        "min": "50",
+        "max": "100"
         },
         {
         "weekrange": "31-36",
-        "min": "65",
-        "max": "106"
+        "min": "50",
+        "max": "100"
         }
     ],
     "pressure":[
         {
             "weekrange": "1-8",
             "high":{
-                "min": "60",
-                "max": "100"
+                "min": "90",
+                "max": "140"
             },
             "low":{
-                "min": "35",
-                "max": "55"
+                "min": "60",
+                "max": "90"
             }
         },
         {
             "weekrange": "9-12",
             "high":{
-                "min": "61",
-                "max": "102"
+                "min": "90",
+                "max": "140"
             },
             "low":{
-                "min": "36",
-                "max": "56"
+                "min": "60",
+                "max": "90"
             }
         },
         {
             "weekrange": "13-18",
             "high":{
-                "min": "62",
-                "max": "103"
+                "min": "90",
+                "max": "140"
             },
             "low":{
-                "min": "37",
-                "max": "57"
+                "min": "60",
+                "max": "90"
             }
         },
         {
             "weekrange": "19-24",
             "high":{
-                "min": "63",
-                "max": "104"
+                "min": "90",
+                "max": "140"
             },
             "low":{
-                "min": "38",
-                "max": "58"
+                "min": "60",
+                "max": "90"
             }
         },
         {
             "weekrange": "25-30",
             "high":{
-                "min": "64",
-                "max": "105"
+                "min": "90",
+                "max": "140"
             },
             "low":{
-                "min": "39",
-                "max": "59"
+                "min": "60",
+                "max": "90"
             }
         },
         {
             "weekrange": "31-36",
             "high":{
-                "min": "65",
-                "max": "106"
+                "min": "90",
+                "max": "140"
             },
             "low":{
-                "min": "40",
-                "max": "60"
+                "min": "60",
+                "max": "90"
             }
         }
     ],
@@ -103,64 +103,64 @@
         {
             "weekrange": "1-8",
             "min": "70",
-            "max": "100"
+            "max": "180"
             },
             {
             "weekrange": "9-12",
-            "min": "61",
-            "max": "102"
+            "min": "70",
+            "max": "180"
             },
             {
             "weekrange": "13-18",
-            "min": "62",
-            "max": "103"
+            "min": "70",
+            "max": "180"
             }, 
             {
             "weekrange": "19-24",
-            "min": "63",
-            "max": "104"
+            "min": "70",
+            "max": "180"
              },
             {
             "weekrange": "25-30",
-            "min": "64",
-            "max": "105"
+            "min": "70",
+            "max": "180"
             },
             {
             "weekrange": "31-36",
-            "min": "65",
-            "max": "106"
+            "min": "70",
+            "max": "180"
             }
     ],
     "temperature": [
             {
             "weekrange": "1-8",
             "min": "35.5",
-            "max": "37"
+            "max": "38"
             },
             {
             "weekrange": "9-12",
             "min": "35.5",
-            "max": "37"
+            "max": "38"
             },
             {
             "weekrange": "13-18",
             "min": "35.5",
-            "max": "37"
+            "max": "37.5"
             }, 
             {
             "weekrange": "19-24",
             "min": "35.5",
-            "max": "37"
+            "max": "37.5"
             },
             {
             "weekrange": "25-30",
             "min": "35.5",
-            "max": "37"
+            "max": "37.5"
             },
             {
             "weekrange": "31-36",
             "min": "35.5",
-            "max": "37"
+            "max": "37.5"
             }      
     ]
 }
