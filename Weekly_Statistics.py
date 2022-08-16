@@ -6,6 +6,8 @@ from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 from commons.customExceptions import *
 
+from Thingspeak import DOWNLOAD_TIME
+
 sys.path.insert(0, os.path.abspath('..'))
 
 COUNTER_RESOLUTION = 1
@@ -112,6 +114,9 @@ class statistics():
 
     def initialize(self):
         self.counter = 0
+        print("Initializing WeeklyStatistics...")
+        time.sleep(DOWNLOAD_TIME * 2)
+        print("... done")
         try:
             with open("settings_weeklyStats.json", "r") as rp:
                 settings_dict = json.load(rp)
