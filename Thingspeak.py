@@ -39,8 +39,25 @@ class Thingspeak():
         
         self.mqttClient=MyMQTT(None, mqtt_broker, mqtt_port, self) 
         self.cont=0
-        self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
-        self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
+
+        # PROVA di microservizio
+        receive_peso_api = get_api_from_service_and_name(mqtt_service,"receive_peso") 
+        receive_peso_topic = receive_peso_api["topic"]
+
+        receive_monitoring_api = get_api_from_service_and_name(mqtt_service,"receive_monitoring") 
+        receive_monitoring_topic = receive_monitoring_api["topic"]
+
+        receive_peso_topic_final = f"{self.mqtt_base_topic}/{receive_peso_topic}"
+        receive_monitoring_topic_final = f"{self.mqtt_base_topic}/{receive_monitoring_topic}"
+
+        self.patternWeight = re.compile(receive_peso_topic_final)
+        self.patternMonitoring = re.compile(receive_monitoring_topic_final)
+        # FINE PROVA
+
+
+        # TOPIC da inserire nel catalogo ma come ? (Antuan)
+        #self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
+        #self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
         self.initializeSlim()
         while True:
             if self.counter == DOWNLOAD_TIME:

@@ -270,7 +270,7 @@ class rpiPub():
 if __name__ == "__main__":
 
     # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 9 per far pubblicare su di lui
-    setOnlineSinceFromClientID(9)
+    setOnlineSinceFromClientID(10)
     setOnlineSinceFromClientID(1)
 
 

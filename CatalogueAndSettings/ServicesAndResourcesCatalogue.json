@@ -258,6 +258,16 @@
           "functionality_name": "send_data_to_thingspeak",
           "description": "Invio dei dati su thingspeak",
           "uri": "http://api.thingspeak.com/update?api_key={{api_key}}&field1={{field1}}&field2={{field2}}&field3={{field3}}&field4={{field4}}&field5={{field5}}&field6={{field6}}"
+        },
+        {
+          "functionality_name": "receive_peso",
+          "description": "Gestione ricezione peso",
+          "topic": ".+/peso"
+        },
+        {
+          "functionality_name": "receive_monitoring",
+          "description": "Gestione ricezione monitoring",
+          "topic": ".+/monitoring"
         }
       ]
     },
@@ -361,7 +371,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "rpi98",
-            "onlineSince": "2022-08-11",
+            "onlineSince": "2022-08-17",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1788970,
@@ -386,7 +396,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-08-11",
+            "onlineSince": "2022-08-17",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1816577,
@@ -408,11 +418,11 @@
           },
           "idRegistratoSuRaspberry": "no",
           "state": "attivo",
-          "monitoring": "off",
+          "monitoring": "on",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-08-10",
-            "telegramID": 0,
+            "onlineSince": "2022-08-17",
+            "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1829048,
               "apikeys": [
