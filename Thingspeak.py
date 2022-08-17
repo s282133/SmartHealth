@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath('..'))
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 
-DOWNLOAD_TIME = 30
+DOWNLOAD_TIME = 0
 
 class Thingspeak():
 

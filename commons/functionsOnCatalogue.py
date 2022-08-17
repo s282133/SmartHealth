@@ -87,6 +87,8 @@ def http_retrievePregnancyDayOne(patient_ID):
     if r.status_code == 200:
         return r.text
     else:
+        # print(r.status_code)
+        # print(r.text)
         return None
 
 

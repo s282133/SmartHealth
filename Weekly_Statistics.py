@@ -5,7 +5,7 @@ import sys,os
 from commons.MyMQTT import *
 from commons.functionsOnCatalogue import *
 from commons.customExceptions import *
-
+import string
 from Thingspeak import DOWNLOAD_TIME
 
 sys.path.insert(0, os.path.abspath('..'))
@@ -37,11 +37,14 @@ class statistics():
                 message = self.create_message(self.events)
                 self.pub_topic = str(mqtt_topic).replace("+", self.patientID)
                 self.myPublish(self.pub_topic, message)
+                
+
 
                 # PROVA PER INVIO DATI PERSONALI a nodered
-                # personal_parameters_json = self.get_personal_parameters(self.patientID)
-                # self.pub_topic = str(mqtt_topic).replace("+", self.patientID)
-                # self.myPublish(self.pub_topic, personal_parameters_json)
+                personal_parameters_json = self.get_personal_parameters(self.patientID)
+                mqtt_info_topic = "P4IoT/SmartHealth/+/info"
+                self.pub_info_topic = str(mqtt_info_topic).replace("+", self.patientID)
+                self.myPublish(self.pub_info_topic, personal_parameters_json)
 
             time.sleep(COUNTER_RESOLUTION)
 
@@ -50,11 +53,15 @@ class statistics():
 
     def get_personal_parameters(self, patientID):
         #ricerca dati dal patient ID
+        patientNumber = str(patientID).strip("channel")
+        full_name = http_getNameFromClientID(patientNumber)
+        state = http_getMonitoringStateFromClientID(patientNumber)
+        pregnancy_day_one = http_retrievePregnancyDayOne(patientNumber)
         personal_parameters_json = {
             "patientID": patientID,
-            "week": "aaa",
-            "mail":  "bbb",
-            "state": "ccc"
+            "full_name": full_name,
+            "day_one": pregnancy_day_one,
+            "state": state
         }
         return personal_parameters_json
 
@@ -149,6 +156,23 @@ class statistics():
         print(f"{self.clientID} publishing {message} to topic: {topic}\n\n\n")
         self.client_MQTT.myPublish(topic, message)
     
+
+    # Publication useful info of patient for doc in nodered
+    # METTERE TOPIC IN ALTRA PARTE
+    # topic : "P4IoT/patientinfo/+" dove + è il patientID
+    def publishPatientInfo(self, patientsList, topic):
+        for patient in patientsList:
+            patientInfo = {
+                "name": patient["patientName"],
+                "surname": patient["patientSurname"],
+                "taxID" : patient["personalData"]["taxID"],
+                "mail": patient["personalData"]["userEmail"],
+                "pregnancyDayOne": patient["pregnancyDayOne"],
+                "device": patient["connectedDevice"]["deviceName"],
+                "state": patient["state"]
+            }
+            topicPatient = str(topic).replace("+", patient["patientID"])
+            self.myPublish(topicPatient, patientInfo)
 
 if __name__ == "__main__" :
 
