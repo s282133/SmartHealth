@@ -17,40 +17,64 @@ class dataAnalysisClass():
     def __init__(self):
 
         # Gestione servizi MQTT
-        mqtt_service = http_getServiceByName("MQTT_analysis")
+        try:
+            mqtt_service = http_getServiceByName("MQTT_analysis")
+            mqtt_broker = mqtt_service["broker"]
+            mqtt_port = mqtt_service["port"]
+            self.mqtt_base_topic = mqtt_service["base_topic"]
+            mqtt_api = get_api_from_service_and_name( mqtt_service, "send_measure" )
 
-        if mqtt_service == None:
-            print("Servizio registrazione non trovato")
-        mqtt_broker = mqtt_service["broker"]
-        mqtt_port = mqtt_service["port"]
-        self.mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = get_api_from_service_and_name( mqtt_service, "send_measure" )
+            mqtt_topic_temperature  = mqtt_api["topic_temperature"]
+            mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
+            mqtt_topic_pressure     = mqtt_api["topic_pressure"]
+            mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+        except:
+            print("dataAnalysis - error [ERR 1]")
+            exit(1)
 
+        try:
+            self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
+            self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
+            self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
+            self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
+        except:
+            print("dataAnalysis - error [ERR 2]")
+            exit(2)
 
-        mqtt_topic_temperature  = mqtt_api["topic_temperature"]
-        mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
-        mqtt_topic_pressure     = mqtt_api["topic_pressure"]
-        mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+        try:
+            mqtt_topic_send_alert = get_api_from_service_and_name(mqtt_service,"send_alert") 
 
-        self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
-        self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
-        self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
-        self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
+            self.topic_send_alert  = mqtt_topic_send_alert["topic"]
 
-        mqtt_topic_send_alert = get_api_from_service_and_name(mqtt_service,"send_alert") 
+            self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
+            timeshift_fn = 'PostProcessing\\timeshift.json'
+        except:
+            print("dataAnalysis - error [ERR 3]")
+            exit(3)
+        
+        try:
+            self.thresholdsFile = json.load(open(timeshift_fn,'r'))
+        except:
+            print("dataAnalysis - error [ERR 4]")
+            exit(4)
 
-        self.topic_send_alert  = mqtt_topic_send_alert["topic"]
-
-        self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
-        timeshift_fn = 'PostProcessing\\timeshift.json'
-        self.thresholdsFile = json.load(open(timeshift_fn,'r'))
 
     def start(self):
-        self.mqtt_client.start()
-        self.mqtt_client.mySubscribe(self.local_topic_temperature)
-        self.mqtt_client.mySubscribe(self.local_topic_heartrate)
-        self.mqtt_client.mySubscribe(self.local_topic_pressure)
-        self.mqtt_client.mySubscribe(self.local_topic_glycemia)
+
+        try:
+            self.mqtt_client.start()
+        except:
+            print("dataAnalysis - error [ERR 5]")
+            exit(5)
+        
+        try:
+            self.mqtt_client.mySubscribe(self.local_topic_temperature)
+            self.mqtt_client.mySubscribe(self.local_topic_heartrate)
+            self.mqtt_client.mySubscribe(self.local_topic_pressure)
+            self.mqtt_client.mySubscribe(self.local_topic_glycemia)
+        except:
+            print("dataAnalysis - error [ERR 6]")
+            exit(6)
 
     def stop(self):
         self.mqtt_client.stop()
@@ -96,15 +120,31 @@ class dataAnalysisClass():
         # if(week == 0): 
         #     week = 1
 
-        monitoringState = http_getMonitoringStateFromClientID(local_clientID)
-        if monitoringState == "on":
-            return
+        try:
+            monitoringState = http_getMonitoringStateFromClientID(local_clientID)
+            if monitoringState == "on":
+                return
+        except:
+            print("DataAnalysisBlock - error [ERR 7]")
+            exit(7)
 
-        dayOne = http_retrievePregnancyDayOne(local_clientID)
-
-        patientName = http_getNameFromClientID(local_clientID)
-
-        week = getWeek(dayOne)
+        try:
+            dayOne = http_retrievePregnancyDayOne(local_clientID)
+        except:
+            print("DataAnalysisBlock - error [ERR 8]")
+            exit(8)
+        
+        try:
+            patientName = http_getNameFromClientID(local_clientID)
+        except:
+            print("DataAnalysisBlock - error [ERR 9]")
+            exit(9)
+        
+        try:
+            week = getWeek(dayOne)
+        except:
+            print("DataAnalysisBlock - error [ERR 10]")
+            exit(10)
 
         #print(f"TEST: week of pregnancy of patient {local_clientID} is {week}, from {dayOne} to {currY}-{currM}-{currD}, {elapsedDays} elapsed days")
 
@@ -132,80 +172,132 @@ class dataAnalysisClass():
 
 
     def manageHeartRate(self, week, parClientID, parPatientName):
-        thresholdsHR = self.thresholdsFile["heartrate"]
+        try:
+            thresholdsHR = self.thresholdsFile["heartrate"]
+        except:
+            print("DataAnalysisBlock - error [ERR 11]")
+            exit(11)
+
         for rangeHR in thresholdsHR:
-            weekmin = rangeHR["weekrange"].split("-")[0]
-            weekmax = rangeHR["weekrange"].split("-")[1]   
+            try:
+                weekmin = rangeHR["weekrange"].split("-")[0]
+                weekmax = rangeHR["weekrange"].split("-")[1]   
+            except:
+                print("DataAnalysisBlock - error [ERR 12]")
+                exit(12)
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
                     print(f"DataAnalysisBlock: heart rate is in range")
                 else:
                     print(f"DataAnalysisBlock: heart rate is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID != None:
+                    try:
+                        self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
                         self.send_alert(parClientID, self.telegramID, messaggio, f"heartrate on {parClientID}", f"heartrate off {parClientID}")
-                    else:
+                    except:
                         print("Doctor not found for this patient")
+                        print("DataAnalysisBlock - error [ERR 13]")
+                        exit(13)
 
 
     def managePressure(self, week, parClientID, parPatientName):
-        thresholdsPR = self.thresholdsFile["pressure"]
+        try:
+            thresholdsPR = self.thresholdsFile["pressure"]
+        except:
+            print("DataAnalysisBlock - error [ERR 14]")
+            exit(14)
+        
         for rangePR in thresholdsPR:
-            weekmin = rangePR["weekrange"].split("-")[0]
-            weekmax = rangePR["weekrange"].split("-")[1]
+            try:
+                weekmin = rangePR["weekrange"].split("-")[0]
+                weekmax = rangePR["weekrange"].split("-")[1]
+            except:
+                print("DataAnalysisBlock - error [ERR 15]")
+                exit(15)
+
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
-                highmax=rangePR["high"]["max"]
-                highmin=rangePR["high"]["min"]
-                lowmax=rangePR["low"]["max"]
-                lowmin=rangePR["low"]["min"]
+                try:
+                    highmax=rangePR["high"]["max"]
+                    highmin=rangePR["high"]["min"]
+                    lowmax=rangePR["low"]["max"]
+                    lowmin=rangePR["low"]["min"]
+                except:
+                    print("DataAnalysisBlock - error [ERR 16]")
+                    exit(16)
+
                 if (int(self.sensed_pressureHigh) >= int(highmax) and int(self.sensed_pressureHigh) <= int(highmin)) and  \
                     (int(self.sensed_pressureLow) >= int(lowmax) and int(self.sensed_pressureLow) <= int(lowmin)) :
                     print(f"DataAnalysisBlock: pressure is in range")
                 else:
                     print(f"DataAnalysisBlock: pressure is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
-                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID != None:
+                    try:
+                        self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
                         self.send_alert(parClientID, self.telegramID, messaggio, f"pression on {parClientID}", f"pression off {parClientID}")
-                    else:
+                    except:
                         print("Doctor not found for this patient")
+                        print("DataAnalysisBlock - error [ERR 17]")
+                        exit(17)
 
 
     def manageGlycemia(self, week, parClientID, parPatientName):
-        thresholdsGL = self.thresholdsFile["glycemia"]
+        try:
+            thresholdsGL = self.thresholdsFile["glycemia"]
+        except:
+            print("DataAnalysisBlock - error [ERR 18]")
+            exit(18)
+
         for rangeGL in thresholdsGL:
-            weekmin = rangeGL["weekrange"].split("-")[0]
-            weekmax = rangeGL["weekrange"].split("-")[1]
+            try:
+                weekmin = rangeGL["weekrange"].split("-")[0]
+                weekmax = rangeGL["weekrange"].split("-")[1]
+            except:
+                print("DataAnalysisBlock - error [ERR 19]")
+                exit(19)
+
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (int(self.value) >= int(rangeGL["min"]) and int(self.value) <= int(rangeGL["max"])):
                     print(f"DataAnalysisBlock: glycemia is in range")
                 else:
                     print(f"DataAnalysisBlock: glycemia is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID != None:
+                    try:
+                        self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
                         self.send_alert(parClientID, self.telegramID, messaggio, f"glycemia on {parClientID}", f"glycemia off {parClientID}")
-                    else:
+                    except:
                         print("Doctor not found for this patient")
+                        print("DataAnalysisBlock - error [ERR 20]")
+                        exit(20)
 
 
     def manageTemperature(self, week, parClientID, parPatientName):
-        thresholdsTE = self.thresholdsFile["temperature"]
+        try:
+            thresholdsTE = self.thresholdsFile["temperature"]
+        except:
+            print("DataAnalysisBlock - error [ERR 21]")
+            exit(21)
+
         for rangeTE in thresholdsTE:
-            weekmin = rangeTE["weekrange"].split("-")[0]
-            weekmax = rangeTE["weekrange"].split("-")[1]
+            try:
+                weekmin = rangeTE["weekrange"].split("-")[0]
+                weekmax = rangeTE["weekrange"].split("-")[1]
+            except:
+                print("DataAnalysisBlock - error [ERR 22]")
+                exit(22)
+            
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (float(self.value) >= float(rangeTE["min"]) and float(self.value) <= float(rangeTE["max"])):
                     print(f"DataAnalysisBlock: temperature is in range")
                 else:
                     print(f"DataAnalysisBlock: temperature is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
-                    self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
-                    if self.telegramID != None:
+                    try:
+                        self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
                         self.send_alert(parClientID, self.telegramID, messaggio, f"temperature on {parClientID}", f"temperature off {parClientID}")
-                    else:
+                    except:
                         print("Doctor not found for this patient")
+                        print("DataAnalysisBlock - error [ERR 23]")
+                        exit(23)
 
                               
     def send_alert(self, parClientID, parTelegramID, parMessagio, parCmdOn, parCmdOff):
@@ -215,8 +307,12 @@ class dataAnalysisClass():
             "CmdOn": parCmdOn,
             "CmdOff": parCmdOff
         }
-        local_topic_send_alert = getTopicByParameters(self.topic_send_alert, self.mqtt_base_topic, str(parClientID))
-        self.mqtt_client.myPublish(local_topic_send_alert, messaggio) 
+        try:
+            local_topic_send_alert = getTopicByParameters(self.topic_send_alert, self.mqtt_base_topic, str(parClientID))
+            self.mqtt_client.myPublish(local_topic_send_alert, messaggio) 
+        except:
+            print("DataAnalysisBlock - error [ERR 24]")
+            exit(24)
 
 
 if __name__ == "__main__":

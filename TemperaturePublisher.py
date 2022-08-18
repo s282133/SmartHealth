@@ -25,11 +25,20 @@ class sensor_publisher:
 
 if __name__ == "__main__":
 
-    json_lista = http_get_lista_pazienti_simulati()
-    lista_pazienti_simulati = json_lista["lista_pazienti_simulati"]
+    try:
+        json_lista = http_get_lista_pazienti_simulati()
+        lista_pazienti_simulati = json_lista["lista_pazienti_simulati"]
+    except:
+        print("temperaturePublisher - error [ERR 1]")
+        exit(1)
 
     # Gestione servizi MQTT
-    mqtt_service = http_getServiceByName("MQTT_analysis")
+    try:
+        mqtt_service = http_getServiceByName("MQTT_analysis")
+    except:
+        print("temperaturePublisher - error [ERR 2]")
+        exit(1)
+        
     try:
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
@@ -80,12 +89,14 @@ if __name__ == "__main__":
         
         patientID = lista_pazienti_simulati[k]
         
-        local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
-
-        myPublisher.publish(local_topic,message)
-        print(f"{patientID} published {temperature} with topic: {local_topic}")
-
-        N=N+1
+        try:
+            local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
+            myPublisher.publish(local_topic,message)
+            print(f"{patientID} published {temperature} with topic: {local_topic}")
+            N=N+1
+        except:
+            print("temperaturePublisher - error [ERR 7]")
+            exit(1)
 
     myPublisher.stop()   
 
