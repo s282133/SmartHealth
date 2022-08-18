@@ -22,29 +22,40 @@ class Registrazione(object):
         if uri[0] == "registrazione_dottore":
             self.telegramID = int(params["chat_ID"])
             filename = 'PageHTML\\doctors.html'
-            f1 = open(filename)
-            fileContent = f1.read()      
-            f1.close()
-            return fileContent
+            try:
+                f1 = open(filename)
+                fileContent = f1.read()      
+                f1.close()
+                return fileContent
+            except:
+                print("MainServer - error [ERR 1]")
+                exit(1)
 
 
 # registrazione_paziente : apertura pagina html per registrazione paziente
         elif uri[0] == "registrazione_paziente": 
             self.doctortelegramID = int(params["chat_ID"])
             filename = 'PageHTML\\patients.html'
-            f2 = open(filename)
-            fileContent = f2.read()      
-            f2.close()
-            return fileContent
-
+            try:
+                f2 = open(filename)
+                fileContent = f2.read()      
+                f2.close()
+                return fileContent
+            except:
+                print("MainServer - error [ERR 2]")
+                exit(2)
 
 # tabella : apertura tabella con dati iniziali
         elif uri[0] == "tabella_pazienti": 
             filename = 'CatalogueAndSettings\\ServicesAndResourcesCatalogue.json'
-            f4 = open(filename)
-            self.catalog = json.load(f4)
-            self.lista = self.catalog["resources"]
-            doctor_number = 0
+            try:
+                f4 = open(filename)
+                self.catalog = json.load(f4)
+                self.lista = self.catalog["resources"]
+                doctor_number = 0
+            except:
+                print("MainServer - error [ERR 3]")
+                exit(3)
             for doctorObject in self.lista:
                 connectedDevice = doctorObject["connectedDevice"]
                 telegramID = connectedDevice["telegramID"] 
@@ -90,12 +101,15 @@ class Registrazione(object):
                         return json.dumps(mqtt_service) 
 
                     except ApiUnavailableException:
-                        print("[REG_SERVER] Unavailable API.")
+                        print("MainServer - error [ERR 4]")
+                        exit(4)
 
             except ServiceUnavailableException:
-                print("[REG_SERVER] Unavailable Service mqtt_service.")
+                print("MainServer - error [ERR 5]")
+                exit(5)
             except: 
-                print("[REG_SERVER] Generic exception occurred.")  
+                print("MainServer - error [ERR 6]")
+                exit(6)
       
 
 # service_by_name: restituisce il servizio dal nome del servizio
@@ -224,9 +238,11 @@ class Registrazione(object):
 
 # lista_pazienti_da_monitorare: restituisce lista dei pazienti
         elif uri[0] == "lista_pazienti_da_monitorare":
-            lista_pazienti_da_monitorare = get_lista_pazienti_da_monitorare()
-            return lista_pazienti_da_monitorare
-
+            try:
+                lista_pazienti_da_monitorare = get_lista_pazienti_da_monitorare()
+                return lista_pazienti_da_monitorare
+            except:
+                raise cherrypy.HTTPError(500, "List of patients unavailable")
 
 
     
@@ -429,32 +445,40 @@ if __name__=="__main__":
     # attivazione microservizio per la registrazione dei parametri per il raspberry 
     PatientRegistrationOnRaspberry = main_getServiceByName("PatientRegistrationOnRaspberry")
     if PatientRegistrationOnRaspberry == None:
-        print("Servizio registrazione raspberry non trovato")
+        print("Service not found")
+        exit(-1)
 
     rasp_ipAddress  = PatientRegistrationOnRaspberry["host"]
     rasp_port       = PatientRegistrationOnRaspberry["port"]
 
-    api_updatepatient = main_getApiByServiceAndName(PatientRegistrationOnRaspberry["APIs"],"updatepatient") 
-    rasp_uri    = api_updatepatient["uri"]
-    rasp_json   = api_updatepatient["json_post"]
+    try:
+        api_updatepatient = main_getApiByServiceAndName(PatientRegistrationOnRaspberry["APIs"],"updatepatient") 
+        rasp_uri    = api_updatepatient["uri"]
+        rasp_json   = api_updatepatient["json_post"]
 
 
-    # attivazione microservizio per ottenere l'host del server
-    catalog = openCatalogue()
-    server_host = catalog["server_host"]
-    server_port = catalog["server_port"]
+        # attivazione microservizio per ottenere l'host del server
+        try:
+            catalog = openCatalogue()
+            server_host = catalog["server_host"]
+            server_port = catalog["server_port"]
 
-    cherrypy.tree.mount(Registrazione(),'/')
-    conf={
-        '/':{
-            'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
-            'tools.sessions.on':True
-        }
-    }
-    cherrypy.server.socket_host = server_host
-    cherrypy.server.socket_port = server_port
-    cherrypy.tree.mount(Registrazione(),'/',conf)
-    cherrypy.config.update(conf)
-    cherrypy.engine.start() 
-    cherrypy.engine.block() 
-
+            cherrypy.tree.mount(Registrazione(),'/')
+            conf={
+                '/':{
+                    'request.dispatch':cherrypy.dispatch.MethodDispatcher(),
+                    'tools.sessions.on':True
+                }
+            }
+            cherrypy.server.socket_host = server_host
+            cherrypy.server.socket_port = server_port
+            cherrypy.tree.mount(Registrazione(),'/',conf)
+            cherrypy.config.update(conf)
+            cherrypy.engine.start() 
+            cherrypy.engine.block() 
+        except:
+            print("Catalogue could not be opened")
+            exit(-2)
+    except:
+        print("Service not found")
+        exit(-3)
