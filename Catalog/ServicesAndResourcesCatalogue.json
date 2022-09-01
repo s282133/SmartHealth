@@ -1,0 +1,512 @@
+{
+  "server_host": "Catalog",
+  "server_port": 8085,
+  "services": [
+    {
+      "service_name": "ResourceService",
+      "description": "Servizio per la registrazione di dottori e pazienti",
+      "host": "Catalog",
+      "port": 8085,
+      "APIs": [
+        {
+          "functionality_name": "registrazione_dottore",
+          "description": "Form per la registrazione del dottore",
+          "access_mode": "GET",
+          "uri": "registrazione_dottore?chat_ID={{chat_ID}}"
+        },
+        {
+          "functionality_name": "registrazione_paziente",
+          "description": "Form per la registrazione del paziente",
+          "access_mode": "GET",
+          "uri": "registrazione_paziente?chat_ID={{chat_ID}}"
+        },
+        {
+          "functionality_name": "tabella_pazienti",
+          "description": "Form per visualizzare i pazienti del dottore in tabella",
+          "access_mode": "GET",
+          "uri": "tabella_pazienti"
+        },
+        {
+          "functionality_name": "get_raspberry_parameters",
+          "description": "Mandare al raspberry il servizio da utilizzare",
+          "access_mode": "GET",
+          "uri": "get_raspberry_parameters"
+        },
+        {
+          "functionality_name": "monitoring_state",
+          "description": "Restituisce lo stato di monitoraggio in cui \u00c3\u00a8 il paziente (on o off) ",
+          "access_mode": "GET",
+          "uri": "monitoring_state?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "retrieve_pregnancy_day_one",
+          "description": "Restituisce il dayOne di gravidanza ",
+          "access_mode": "GET",
+          "uri": "pregnancy_state?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "get_name_from_clientID",
+          "description": "Restituisce il nome del paziente dal suo ID ",
+          "access_mode": "GET",
+          "uri": "get_name_from_id?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "find_doctor_telegram_id_from_patient_id",
+          "description": "Restituisce il telegram ID del dottore cercandolo dal patient ID",
+          "access_mode": "GET",
+          "uri": "get_telegram_from_id?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "set_monitoring_state_from_client_ID",
+          "description": "Restituisce il monitoring del paziente dal suo ID",
+          "access_mode": "GET",
+          "uri": "set_monitoring_by_id?patient_id={{patient_ID}}&monitoring={{monitoring}}"
+        },
+        {
+          "functionality_name": "find_patient_from_chat_ID",
+          "description": "Restituisce il paziente dal suo ID ",
+          "access_mode": "GET",
+          "uri": "find_patient_by_chat_id?chat_id={{chat_ID}}"
+        },
+        {
+          "functionality_name": "retrieve_TS_write_API_from_client_ID",
+          "description": "Restituisce l'API di scrittura di thingspeak del paziente dal suo ID ",
+          "access_mode": "GET",
+          "uri": "get_ts_from_id?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "get_lista_pazienti_simulati",
+          "description": "Restituisce lista dei pazienti con raspberry simulati per l'invio delle temperature",
+          "access_mode": "GET",
+          "uri": "get_lista_pazienti_simulati"
+        },
+        {
+          "functionality_name": "contolla_scadenza_week",
+          "description": "controllo sulla week per aggiornare lo stato del paziente a 'aggiornato'",
+          "access_mode": "GET",
+          "uri": "contolla_scadenza_week"
+        },
+        {
+          "functionality_name": "lista_pazienti_da_monitorare",
+          "description": "Restituisce lista dei pazienti da monitorare",
+          "access_mode": "GET",
+          "uri": "lista_pazienti_da_monitorare"
+        },
+        {
+          "functionality_name": "set_patient_in_monitoring",
+          "description": "aggiorna i pazienti a stato di monitoraggio (da -1 a monitorato)",
+          "access_mode": "GET",
+          "uri": "set_patient_in_monitoring?patient_id={{patient_ID}}"
+        },
+        {
+          "functionality_name": "update_chat_id",
+          "description": "Aggiorna il telegram ID dopo che il paziente ha risposto al messaggio /start",
+          "access_mode": "PUT",
+          "uri": "update_telegram_id?patient_id={{message}}&chat_id={{chat_ID}}"
+        },
+        {
+          "functionality_name": "doctors",
+          "description": "Registrazione nel catalogo del dottore (usata da doctors.html)",
+          "access_mode": "POST",
+          "uri": "doctors"
+        },
+        {
+          "functionality_name": "patients",
+          "description": "Registrazione nel catalogo del paziente (usata da patients.html)",
+          "access_mode": "POST",
+          "uri": "patients"
+        },
+        {
+          "functionality_name": "gestione_bn",
+          "description": "Nome di bn quando un valore viene pubblicato",
+          "basic_uri": "http://SmartHealth.org",
+          "heartrate_sensor": "heartrateSensor",
+          "pressure_sensor": "pressureSensor",
+          "glycemia_sensor": "glycemiaSensor",
+          "temperature_sensor": "temperatureSensor"
+        }
+      ]
+    },
+    {
+      "service_name": "PatientRegistrationOnRaspberry",
+      "description": "Associa il raspberry al paziente appena registrato",
+      "host": "192.168.1.254",
+      "port": 8080,
+      "APIs": [
+        {
+          "functionality_name": "updatepatient",
+          "description": "Registrazione in un file json sul raspberry l'ID del paziente",
+          "access_mode": "POST",
+          "json_post": "{ \"ClientID\": {{NewPatientID}} }",
+          "uri": "updatepatient"
+        }
+      ]
+    },
+    {
+      "service_name": "MQTT_analysis",
+      "description": "Servizio utilizzato per l'invio dei dati in analisi",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "temp_raspberry",
+          "description": "Invio delle temperature simulate e non dei pazienti",
+          "topic": "{{base_topic}}/{{patientID}}/temp_raspberry"
+        },
+        {
+          "functionality_name": "send_measure",
+          "description": "Invio dei dati misurati sul paziente",
+          "topic_temperature": "{{base_topic}}/{{patientID}}/temperature",
+          "topic_heartrate": "{{base_topic}}/{{patientID}}/heartrate",
+          "topic_pressure": "{{base_topic}}/{{patientID}}/pressure",
+          "topic_glycemia": "{{base_topic}}/{{patientID}}/glycemia"
+        },
+        {
+          "functionality_name": "monitoring_on",
+          "description": "Attivazione del monitoring",
+          "topic": "{{base_topic}}/{{patientID}}/monitoring"
+        },
+        {
+          "functionality_name": "send_alert",
+          "description": "Invio di un messaggio di allerta",
+          "topic": "{{base_topic}}/{{patientID}}/send_alert"
+        },
+        {
+          "functionality_name": "receive_alert",
+          "description": "Monitoring dei messaggi di allerta",
+          "topic": "{{base_topic}}/+/send_alert"
+        },
+        {
+          "functionality_name": "heartrate",
+          "description": "Posta heartrate",
+          "topic": "{{base_topic}}/{{patientID}}/heartrate"
+        },
+        {
+          "functionality_name": "temperature",
+          "description": "Posta temperature",
+          "topic": "{{base_topic}}/{{patientID}}/temperature"
+        },
+        {
+          "functionality_name": "glycemia",
+          "description": "Posta glycemia",
+          "topic": "{{base_topic}}/{{patientID}}/glycemia"
+        },
+        {
+          "functionality_name": "pressure",
+          "description": "Posta pressure",
+          "topic": "{{base_topic}}/{{patientID}}/pressure"
+        }
+      ]
+    },
+    {
+      "service_name": "FrontEnd",
+      "description": "Servizio per la registrazione di dottori e pazienti",
+      "host": "FrontEnd",
+      "port": 8093,
+      "APIs": [
+        {
+          "functionality_name": "registrazione_dottore",
+          "description": "Form per la registrazione del dottore",
+          "access_mode": "GET",
+          "uri": "registrazione_dottore?chat_ID={{chat_ID}}"
+        },
+        {
+          "functionality_name": "registrazione_paziente",
+          "description": "Form per la registrazione del paziente",
+          "access_mode": "GET",
+          "uri": "registrazione_paziente?chat_ID={{chat_ID}}"
+        }
+      ]
+    },
+    {
+	 
+      "service_name": "TelegramDoctor",
+      "doctorTelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
+      "APIs": []
+    },
+    {
+      "service_name": "TelegramClient",
+      "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
+      "APIs": [
+        {
+          "functionality_name": "send_peso",
+          "description": "Invio del peso del paziente",
+          "topic": "{{base_topic}}/{{patientID}}/peso"
+        },
+        {
+          "functionality_name": "send_survey_link_to_patient",
+          "description": "Invio del link del questionario dalla paziente",
+          "uri": "https://docs.google.com/forms/d/e/1FAIpQLSfLxw1y52kB5xNp6WcHAw0xQ1x2s3ViyXvWUGNDzlVtAdzWIA/viewform"
+        }
+      ]
+    },
+    {
+      "service_name": "NodeRed",
+      "host": "NodeRed",
+      "port": 1880,
+      "APIs": [
+        {
+          "functionality_name": "accesso_dati",
+          "description": "interfaccia medico su nodered con i grafici e i dati delle pazienti",
+          "uri": "ui"
+        }
+      ]
+    },
+    {
+      "service_name": "Thingspeak",
+      "description": "Adattatore per comuniazione e recezione dei dati da Thingspeak",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "thingspeak_subscriptions",
+          "description": "Invio dei dati su thingspeak",
+          "topic_temperature": "{{base_topic}}/+/temperature",
+          "topic_heartrate": "{{base_topic}}/+/heartrate",
+          "topic_pressure": "{{base_topic}}/+/pressure",
+          "topic_glycemia": "{{base_topic}}/+/glycemia",
+          "topic_peso": "{{base_topic}}/+/peso",
+          "topic_monitoring": "{{base_topic}}/+/monitoring"
+        },
+        {
+          "functionality_name": "download_data_from_thingspeak",
+          "description": "Download catalogo da thingspeak",
+          "uri": "https://api.thingspeak.com/channels/1721151/fields/{{fieldnumber}}.json?results=8000&min=1"
+        },
+        {
+          "functionality_name": "send_data_to_thingspeak",
+          "description": "Invio dei dati su thingspeak",
+          "uri": "http://api.thingspeak.com/update?api_key={{api_key}}&field1={{field1}}&field2={{field2}}&field3={{field3}}&field4={{field4}}&field5={{field5}}&field6={{field6}}"
+        },
+        {
+          "functionality_name": "receive_peso",
+          "description": "Gestione ricezione peso",
+          "topic": ".+/peso"
+        },
+        {
+          "functionality_name": "receive_monitoring",
+          "description": "Gestione ricezione monitoring",
+          "topic": ".+/monitoring"
+        }
+      ]
+    },
+    {
+      "service_name": "Weekly_Statistics",
+      "description": "Calcola le statistiche settimanali da mandare a nodered",
+      "broker": "broker.hivemq.com",
+      "port": 1883,
+      "base_topic": "P4IoT/SmartHealth",
+      "APIs": [
+        {
+          "functionality_name": "send_statistics",
+          "description": "Invio delle staitistiche a nodered",
+          "topic_statistic": "{{base_topic}}/+/statistic"
+        }
+      ]
+    }
+  ],
+  "resourceState": {
+    "LastPatientID": 13,
+    "LastDoctorID": 7
+  },
+  "resources": [
+    {
+      "doctorID": 1,
+      "doctorName": "Perry",
+      "doctorSurname": "Cox",
+      "doctorMail": "perrycox@scrubs.com",
+      "lastUpdate": "2022-07-04",
+      "connectedDevice": {
+        "telegramID": 298694124
+      },
+      "patientList": [
+        {
+          "patientID": 3,
+          "patientName": "Robin",
+          "patientSurname": "Scherbatsky",
+          "personalData": {
+            "taxIDcode": "RBNSCH",
+            "userEmail": "robin@himym.com",
+            "pregnancyDayOne": "2022-05-29"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "rpi98",
+            "onlineSince": "2022-07-14",
+            "telegramID": "786029508",
+            "thingspeakInfo": {
+              "channel": 1788970,
+              "apikeys": [
+                "FRN2A7XGJHIUSN24",
+                "ZDNDUY17T8SJSXRM"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "rpi98",
+          "patientID": 3,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-04"
+        }
+      ]
+    },
+    {
+      "doctorID": 2,
+      "doctorName": "Giulia",
+      "doctorSurname": "Codagnone",
+      "doctorMail": "perrycox@scrubs.com",
+      "lastUpdate": "2022-07-04",
+      "connectedDevice": {
+        "telegramID": 786029508
+      },
+      "patientList": [
+        {
+          "patientID": 1,
+          "patientName": "Laura",
+          "patientSurname": "Cubeddu",
+          "personalData": {
+            "taxIDcode": "RBNSCH",
+            "userEmail": "robin@himym.com",
+            "pregnancyDayOne": "2022-05-29"
+          },
+          "idRegistratoSuRaspberry": "yes",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "rpi98",
+            "onlineSince": "2022-08-18",
+            "telegramID": "786029508",
+            "thingspeakInfo": {
+              "channel": 1788970,
+              "apikeys": [
+                "FRN2A7XGJHIUSN24",
+                "ZDNDUY17T8SJSXRM"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 9,
+          "patientName": "Jennifer",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "giulia.codagnone@gmail.com",
+            "pregnancyDayOne": "2022-05-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-08-17",
+            "telegramID": "491287865",
+            "thingspeakInfo": {
+              "channel": 1816577,
+              "apikeys": [
+                "XLLSH06ZI0TXTCBY",
+                "BYZDTSDCZ6NZB5KE"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 10,
+          "patientName": "Elisa",
+          "patientSurname": "Aime",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-05-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "on",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-08-18",
+            "telegramID": "786029508",
+            "thingspeakInfo": {
+              "channel": 1829048,
+              "apikeys": [
+                "86RYU4E3ONQ4M3P1",
+                "23YUH6SD63SC335X"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "rpi98",
+          "patientID": 1,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-04"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 9,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-07-30"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 10,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-08-10"
+        }
+      ]
+    }
+  ]
+}

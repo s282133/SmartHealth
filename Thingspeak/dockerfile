@@ -1,0 +1,18 @@
+FROM python:latest
+
+# Switch to app directory
+WORKDIR /Thingspeak
+
+# Copy the requirements in to the app
+COPY requirements.txt ./
+
+# Install dependencies
+RUN pip install -r requirements.txt
+
+# Copy everything else
+COPY . .
+
+#Run the python script
+ENTRYPOINT [ "python", "-u", "Thingspeak.py" ]
+
+# EXPOSE 8091
