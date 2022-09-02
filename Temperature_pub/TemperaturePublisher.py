@@ -1,12 +1,13 @@
 # Il pubblicatore di temperature pubblica sul topic /temp_raspberry 
 # delle temperature casuali fornite da un generatore 
 
+import json          
 import time
 
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
+from MyMQTT import *
+from functionsOnCatalogue import *
 
-from DeviceConnectorAndSensors.temperatureSensor import temperatureSensorClass
+from temperatureSensor import temperatureSensorClass
 
 POLLING_PERIOD_TEMPERATURE = 10
 

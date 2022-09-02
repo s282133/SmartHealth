@@ -6,8 +6,8 @@
 import time
 import json
 
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
+from MyMQTT import *
+from functionsOnCatalogue import *
 
 from gettext import Catalog
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton

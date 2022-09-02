@@ -8,13 +8,13 @@ import json
 from threading import Thread
 from datetime import datetime
 
-from CatalogueAndSettings import *
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
 
-from DeviceConnectorAndSensors.heartrateSensor import heartrateSensorClass
-from DeviceConnectorAndSensors.pressureSensor import pressureSensorClass
-from DeviceConnectorAndSensors.glycemiaSensor import glycemiaSensorClass
+from MyMQTT import *
+from functionsOnCatalogue import *
+
+from heartrateSensor import heartrateSensorClass
+from pressureSensor import pressureSensorClass
+from glycemiaSensor import glycemiaSensorClass
 
 TOPIC_TEMP_RASPBERRY = "temp_raspberry"
 
@@ -337,8 +337,8 @@ class rpiPub():
 if __name__ == "__main__":
 
     # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 9 per far pubblicare su di lui
-    setOnlineSinceFromClientID(10)
-    setOnlineSinceFromClientID(1)
+    #setOnlineSinceFromClientID(10)
+    #setOnlineSinceFromClientID(1)
 
 
     cicli=0

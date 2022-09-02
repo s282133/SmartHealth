@@ -2,11 +2,11 @@ import json
 import time
 from datetime import datetime
 import sys,os
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
-from commons.customExceptions import *
+from MyMQTT import *
+from functionsOnCatalogue import *
+from customExceptions import *
 import string
-from Thingspeak import DOWNLOAD_TIME
+
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -176,7 +176,7 @@ class statistics():
 
 if __name__ == "__main__" :
 
-    mqtt_service = http_getServiceByName("Weekly_statistics")
+    mqtt_service = http_getServiceByName("Weekly_Statistics")
     try:
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]

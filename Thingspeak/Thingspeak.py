@@ -4,10 +4,10 @@ import requests
 import re
 import sys, os
 
-from commons.customExceptions import ServiceUnavailableException
+from customExceptions import ServiceUnavailableException
 sys.path.insert(0, os.path.abspath('..'))
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
+from MyMQTT import *
+from functionsOnCatalogue import *
 
 DOWNLOAD_TIME = 0
 

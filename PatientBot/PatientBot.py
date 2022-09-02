@@ -5,9 +5,9 @@ import json
 import telepot
 from gettext import Catalog
 
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
-from commons.customExceptions import *
+from MyMQTT import *
+from functionsOnCatalogue import *
+from customExceptions import *
 
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton

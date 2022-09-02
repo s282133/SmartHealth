@@ -6,9 +6,9 @@ import json
 import telepot
 from gettext import Catalog
 
-from commons.MyMQTT import *
-from commons.functionsOnCatalogue import *
-from commons.customExceptions import *
+from MyMQTT import *
+from functionsOnCatalogue import *
+from customExceptions import *
 
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
@@ -16,6 +16,7 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 class DoctorBot:
     def __init__(self):
 
+        self.localhost=get_localhost()   # definire la funzione                         
         # Gestione servizi MQTT
         mqtt_service = http_getServiceByName("MQTT_analysis")
         try:
@@ -95,7 +96,7 @@ class DoctorBot:
 
         if message == "/start": 
             
-            registration_service = http_getServiceByName("ResourceService")
+            registration_service = http_getServiceByName("FrontEnd")
             try:
                 registration_ipAddress  = registration_service["host"]
                 registration_port       = registration_service["port"]
@@ -111,12 +112,13 @@ class DoctorBot:
 
             registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
 
-            uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
+            #uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
+            uri = f"http://127.0.0.1:{registration_port}/{registration_uri}"                                                                      
             self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
 
         elif message == "/registrazione_paziente": 
 
-            registration_service = http_getServiceByName("ResourceService")
+            registration_service = http_getServiceByName("FrontEnd")
             try:
                 patient_registration_ipAddress = registration_service["host"]
                 patient_registration_port = registration_service["port"]
@@ -132,7 +134,8 @@ class DoctorBot:
 
             patient_registration_uri = str(patient_registration_uri).replace("{{chat_ID}}", str(chat_ID))
 
-            uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
+            #uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
+            uri = f"http://127.0.0.1:{patient_registration_port}/{patient_registration_uri}"
             self.client_bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
         elif message == "/accesso_dati": 
@@ -151,7 +154,8 @@ class DoctorBot:
             except:
                 print("Accesso dati - error [ERR 11].")
 
-            uri = f"http://{accesso_dati_ipAddress}:{accesso_dati_port}/{accesso_dati_uri}"
+            #uri = f"http://{accesso_dati_ipAddress}:{accesso_dati_port}/{accesso_dati_uri}"
+            uri=f"http://127.0.0.1:{accesso_dati_service['port']}/{accesso_dati_uri}"                                                                        
             self.client_bot.sendMessage(chat_ID, text=f'Access to data at this link: {uri}')
         
 
