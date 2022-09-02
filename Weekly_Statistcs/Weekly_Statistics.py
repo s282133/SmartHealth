@@ -6,7 +6,7 @@ from MyMQTT import *
 from functionsOnCatalogue import *
 from customExceptions import *
 import string
-
+DOWNLOAD_TIME = 30
 
 sys.path.insert(0, os.path.abspath('..'))
 
