@@ -15,6 +15,8 @@ class Thingspeak():
 
     def __init__(self,broker,port):
 
+        print("sono qui -2")
+
         mqtt_service = http_getServiceByName("Thingspeak")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
@@ -40,6 +42,8 @@ class Thingspeak():
         self.mqttClient=MyMQTT(None, mqtt_broker, mqtt_port, self) 
         self.cont=0
 
+        print("sono qui -1")
+
         # PROVA di microservizio
         receive_peso_api = get_api_from_service_and_name(mqtt_service,"receive_peso") 
         receive_peso_topic = receive_peso_api["topic"]
@@ -58,7 +62,9 @@ class Thingspeak():
         # TOPIC da inserire nel catalogo ma come ? (Antuan)
         #self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
         #self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
+        print("sono qui 0")
         self.initializeSlim()
+        print("sono qui 1")
         while True:
             if self.counter == DOWNLOAD_TIME:
                 self.counter = 0
@@ -70,6 +76,8 @@ class Thingspeak():
     def initializeSlim(self):
         self.start()
         self.subscribe()
+        time.sleep(5)
+        print("sono qui 2")
         self.counter = 0
         self.lastHeartrate=0
         self.lastGlycemia=0
@@ -79,6 +87,7 @@ class Thingspeak():
         self.lastTemperature=0
         try:
             with open("settings_weeklyStats.json", "r") as rp:
+                print("sono qui 3")
                 settings_dict = json.load(rp)
                 self.list_parameters = settings_dict["parameters"]
                 self.ts_fields = []
@@ -86,11 +95,13 @@ class Thingspeak():
                 for parameter in self.list_parameters:
                     self.ts_fields.append(parameter["ts_field"])
                     self.local_files.append(parameter["local_file"])
+                print("sono qui 4")
         except:
             sys.exit("Errore nella lettura del file settings_weeklyStats.json")
 
 
     def downloadData(self):
+        print("sono qui 5")
         for i in range(len(self.list_parameters)):
             field = self.ts_fields[i]
             fieldnumber = int(str(field).strip("field"))
@@ -101,13 +112,24 @@ class Thingspeak():
             download_uri = download_data_uri.replace("{{fieldnumber}}", str(fieldnumber))
             downloaded_catalogue = requests.get(f'{download_uri}')
 
+            print(f"status: {downloaded_catalogue.status_code}")
+
             if downloaded_catalogue.status_code == 200:
+                print(f"local file {i} : {self.local_files[i]}")
                 with open(self.local_files[i], "w") as wp:
                     json.dump(downloaded_catalogue.json(), wp, indent=4)
+                    # publish qui
+                    channelID = str((downloaded_catalogue.json())["channel"]["name"])
+                    print(f"channel ID : {channelID}")
+                    parameter_name = self.list_parameters[i]["name"]
+                    topic = f"P4IoT/statistics_file/+/{parameter_name}"
+                    print(f"topic pubblicazione da thingspeask: {topic}")
+                    pubTopic = str(topic.replace("+",channelID))
+                    self.myPublish(pubTopic, downloaded_catalogue.json())
+                    # print(f"UAU : {downloaded_catalogue.json()}")
             else:
                 print("Error. Status code: " + str(downloaded_catalogue.status_code))
                 sys.exit()
-
 
     def notify(self,topic,payload): 
         message = json.loads(payload) 
@@ -227,9 +249,14 @@ class Thingspeak():
         self.mqttClient.mySubscribe(self.local_topic_glycemia)
         self.mqttClient.mySubscribe(self.local_topic_peso)
 
+    def myPublish(self, topic, message):
+        # print(f"Thingspeak publishing {message} to topic: {topic}\n\n\n")
+        self.mqttClient.myPublish(topic, message)
 
 if __name__=="__main__":
     
+    print("sono nel main")
+
     mqtt_service = http_getServiceByName("Thingspeak")
     try:
         mqtt_broker = mqtt_service["broker"]

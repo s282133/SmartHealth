@@ -89,6 +89,8 @@ services:
     restart : on-failure
     depends_on:
       - Catalog
+    volumes:
+      - ./Thingspeak:/Thingspeak
 
   Weekly_Statistics:
     container_name: Weekly_Statistics
@@ -99,18 +101,17 @@ services:
     restart : on-failure
     depends_on:
       - Catalog
-
-  NodeRed:
-    container_name: NodeRed
-    image: nodered/node-red
-    #build: ./NodeRed
-    restart : on-failure
-    ports:
-      - "1880:1880"
-    expose:
-      - 1880
     volumes:
-      - /data
+      - ./Weekly_Statistics:/Weekly_Statistics
 
-
-  
+  # NodeRed:
+  #   container_name: NodeRed
+  #   image: nodered/node-red
+  #   #build: ./NodeRed
+  #   restart : on-failure
+  #   ports:
+  #     - "1880:1880"
+  #   expose:
+  #     - 1880
+  #   volumes:
+  #     - /data

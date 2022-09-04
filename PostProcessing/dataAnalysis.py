@@ -47,7 +47,7 @@ class dataAnalysisClass():
             self.topic_send_alert  = mqtt_topic_send_alert["topic"]
 
             self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
-            timeshift_fn = 'PostProcessing\\timeshift.json'
+            timeshift_fn = 'timeshift.json'
         except:
             print("dataAnalysis - error [ERR 3]")
             exit(3)

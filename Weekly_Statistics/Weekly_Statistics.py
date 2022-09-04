@@ -5,7 +5,6 @@ import sys,os
 from MyMQTT import *
 from functionsOnCatalogue import *
 from customExceptions import *
-import string
 DOWNLOAD_TIME = 30
 
 sys.path.insert(0, os.path.abspath('..'))
@@ -20,33 +19,9 @@ class statistics():
         self.clientID = clientID
         #self.pub_topic = str(mqtt_topic).replace("+", clientID)
         self.start()        # MQTT functions start
-        self.initialize()   # settings read by script
-        while True:
-            self.counter += 1       
-            if self.counter == SAMPLING_RESOLUTION:
-                self.counter = 0
-                self.events = []
-                for parameter_index in range(len(self.list_parameters)):
-                    parameter_name = self.names[parameter_index]
-                    parameter_ts_field = self.ts_fields[parameter_index]
-                    parameter_local_file = self.local_files[parameter_index]
-                    parameter_unit = self.units[parameter_index]
-                    [min, avg, max] = self.compute_statistics(parameter_ts_field, parameter_local_file)
-                    event = self.create_event(parameter_name, parameter_unit, min, avg, max)
-                    self.events.append(event)
-                message = self.create_message(self.events)
-                self.pub_topic = str(mqtt_topic).replace("+", self.patientID)
-                self.myPublish(self.pub_topic, message)
-                
-
-
-                # PROVA PER INVIO DATI PERSONALI a nodered
-                personal_parameters_json = self.get_personal_parameters(self.patientID)
-                mqtt_info_topic = "P4IoT/SmartHealth/+/info"
-                self.pub_info_topic = str(mqtt_info_topic).replace("+", self.patientID)
-                self.myPublish(self.pub_info_topic, personal_parameters_json)
-
-            time.sleep(COUNTER_RESOLUTION)
+        self.subscribe()
+        self.events = []
+        self.parameters_list = []
 
 
 # PROVA PER INVIO DATI PERSONALI a nodered
@@ -78,25 +53,33 @@ class statistics():
 
     def create_message(self, events):
         message = self.message_structure.copy()
-        message["bn"] =str(message["bn"]).replace("{{clientID}}", self.patientID)
+        message["bn"] =str(message["bn"]).replace("{{clientID}}", self.clientID)
+        # prima c'era patientID, non so perché
         message["e"] = events
         return message
 
 
-    def compute_statistics(self, parameter_ts_field, parameter_local_file):
-        try:
-            with open(parameter_local_file,"r") as f:
+    def notify(self,topic, payload): 
+            measure_type = str(str(topic).split("/")[3])
+            # print(f"measure type : {measure_type}")
+            content = (payload.decode("utf-8")) 
+            # print(f"{measure_type} : \n\n{content}")
+            with open(f"stat_weekly_{measure_type}.json", 'w') as wp:
+                wp.write(content)
+            wp.close()
+            with open(f"stat_weekly_{measure_type}.json","r") as f:
                 sum = 0
                 min = 999
                 max = 0
                 avg = 0
                 invalid = 0
                 dict = json.load(f)
-                self.patientID = dict["channel"]["name"]
-                print(f"{self.clientID} patientID: {self.patientID}")
+                patientID = dict["channel"]["name"]
+                #print(f"{self.clientID} patientID: {self.patientID}")
                 feeds = dict["feeds"]
                 for feed in feeds:
-                    measure = feed[parameter_ts_field]
+                    [field, unit] = self.retrieve_field_and_unit(measure_type)
+                    measure = feed[field]
                     try:
                         measure = float(measure)
                         sum += measure
@@ -112,37 +95,66 @@ class statistics():
                 else:
                     min = None
                     avg = None
-                    max = None
-                return [min, avg, max]
-        except:
-            print("Error reading local file of weekly measures.")
-            return [None, None, None]
+                    max = None 
+            event = self.create_event(measure_type, unit, min, avg, max)
+            self.events.append(event)   
+            # for event in self.events:
+            #     print(f"{event}\n\n")
+            # missing_events = len(self.parameters_list)
+
+    def retrieve_field_and_unit(self, measure_type):
+        with open("settings_weeklyStats.json", 'r') as sf:
+            dict = json.load(sf)
+            parameters = dict["parameters"]
+            self.parameters_list = []
+            for parameter in parameters:
+                self.parameters_list.append(parameter["name"])
+            self.message_structure = dict["message_structure"]
+            self.event_structure = dict["event_structure"]
+            try:
+                for parameter in parameters:
+                    if(parameter["name"] == measure_type):
+                        return [parameter["ts_field"],parameter["unit"]]
+                raise genericException
+            except:
+                print("Field not found.")
+                sys.exit(-5)
 
 
-    def initialize(self):
-        self.counter = 0
-        print("Initializing WeeklyStatistics...")
-        time.sleep(DOWNLOAD_TIME * 2)
-        print("... done")
-        try:
-            with open("settings_weeklyStats.json", "r") as rp:
-                settings_dict = json.load(rp)
-                self.message_structure = settings_dict["message_structure"]
-                self.event_structure = settings_dict["event_structure"]
-                self.list_parameters = settings_dict["parameters"]
-                self.names = []
-                self.ts_fields = []
-                self.local_files = []
-                self.units = []
-                for parameter in self.list_parameters:
-                    self.names.append(parameter["name"])
-                    self.ts_fields.append(parameter["ts_field"])
-                    self.local_files.append(parameter["local_file"])
-                    self.units.append(parameter["unit"])
-        except:
-            print("Error reading settings file.")
-            sys.exit(1)
-
+    # def compute_statistics(self, parameter_ts_field, parameter_local_file):
+    #     try:
+    #         with open(parameter_local_file,"r") as f:
+    #             sum = 0
+    #             min = 999
+    #             max = 0
+    #             avg = 0
+    #             invalid = 0
+    #             dict = json.load(f)
+    #             patientID = dict["channel"]["name"]
+    #             #print(f"{self.clientID} patientID: {self.patientID}")
+    #             feeds = dict["feeds"]
+    #             for feed in feeds:
+    #                 measure = feed[parameter_ts_field]
+    #                 try:
+    #                     measure = float(measure)
+    #                     sum += measure
+    #                     if measure < min:
+    #                         min = measure
+    #                     if measure > max:
+    #                         max = measure
+    #                 except:
+    #                     invalid += 1
+    #             if(len(feeds) > 0 and len(feeds) > invalid):
+    #                 avg = sum / (len(feeds) - invalid)
+    #                 avg = float("{0:.2f}".format(avg))
+    #             else:
+    #                 min = None
+    #                 avg = None
+    #                 max = None
+    #             return [min, avg, max, patientID]
+    #     except:
+    #         print("Error reading local file of weekly measures.")
+    #         return [None, None, None]
 
     def start (self):
         self.client_MQTT.start()
@@ -156,6 +168,10 @@ class statistics():
         print(f"{self.clientID} publishing {message} to topic: {topic}\n\n\n")
         self.client_MQTT.myPublish(topic, message)
     
+
+    def subscribe(self): 
+        self.client_MQTT.mySubscribe("P4IoT/statistics_file/#")
+
 
     # Publication useful info of patient for doc in nodered
     # METTERE TOPIC IN ALTRA PARTE
@@ -173,6 +189,7 @@ class statistics():
             }
             topicPatient = str(topic).replace("+", patient["patientID"])
             self.myPublish(topicPatient, patientInfo)
+            self.events = []
 
 if __name__ == "__main__" :
 
@@ -185,6 +202,9 @@ if __name__ == "__main__" :
         mqtt_topic = mqtt_api["topic_statistic"]
         pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
         Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
+
+        while True:
+            time.sleep(1)
+
     except TypeError:
         print("Weekly_Statistics could not be initialized.")
-    # crea funzione wrapper per sto casino
