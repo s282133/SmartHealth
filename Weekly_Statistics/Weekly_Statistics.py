@@ -22,6 +22,7 @@ class statistics():
         self.subscribe()
         self.events = []
         self.parameters_list = []
+        self.current_event_parameters = []
 
 
 # PROVA PER INVIO DATI PERSONALI a nodered
@@ -100,7 +101,20 @@ class statistics():
             self.events.append(event)   
             # for event in self.events:
             #     print(f"{event}\n\n")
-            # missing_events = len(self.parameters_list)
+            at_least_one_not_present = 0
+            self.current_event_parameters.append( event["n"] )
+            for parameter_name in self.parameters_list:
+                if parameter_name not in self.current_event_parameters:
+                    at_least_one_not_present = 1
+            # qui ci sono tutti!
+            if at_least_one_not_present == 0:
+                print("publish!")
+                message = self.create_message(self.events)
+                print(message)
+                #METTI TOPIC GIUSTO !
+                self.myPublish("topic_che_non_ricordo", message)
+                self.current_event_parameters = []
+                self.events = []
 
     def retrieve_field_and_unit(self, measure_type):
         with open("settings_weeklyStats.json", 'r') as sf:
