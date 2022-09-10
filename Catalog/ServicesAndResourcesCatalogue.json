@@ -237,7 +237,7 @@
         {
           "functionality_name": "send_survey_link_to_patient",
           "description": "Invio del link del questionario dalla paziente",
-          "uri": "https://docs.google.com/forms/d/e/1FAIpQLSfLxw1y52kB5xNp6WcHAw0xQ1x2s3ViyXvWUGNDzlVtAdzWIA/viewform"
+          "uri": "https://docs.google.com/forms/d/e/1FAIpQLSd5jvwj-7lqleiPuh-T94rbk3xx5hGP5joc2phGfs6v3Suz3w/viewform?usp=sf_link"
         }
       ]
     },
