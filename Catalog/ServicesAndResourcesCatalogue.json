@@ -220,7 +220,6 @@
       ]
     },
     {
-	 
       "service_name": "TelegramDoctor",
       "doctorTelegramToken": "5373152293:AAFZLHVMbFTBEEgTapGii8LYVJ-SaLXfuwA",
       "APIs": []
@@ -308,8 +307,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 13,
-    "LastDoctorID": 7
+    "LastPatientID": 14,
+    "LastDoctorID": 8
   },
   "resources": [
     {
@@ -505,6 +504,62 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-08-10"
+        }
+      ]
+    },
+    {
+      "doctorID": 8,
+      "doctorName": "Mado",
+      "doctorSurname": "Gua",
+      "doctorMail": "senonfunziona@mibuttodali",
+      "lastUpdate": "2022-09-10",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [
+        {
+          "patientID": 14,
+          "patientName": "NV3T4",
+          "patientSurname": "VY3Y",
+          "personalData": {
+            "taxIDcode": "45",
+            "userEmail": "acheoratenevai@giuliamiodia.it",
+            "pregnancyDayOne": "2022-07-10"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "3",
+            "onlineSince": "2022-09-10",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1854655,
+              "apikeys": [
+                "1S5KZELUI5PKPXWQ",
+                "POL93QOGCVUN2FTC"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "3",
+          "patientID": 14,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-10"
         }
       ]
     }
