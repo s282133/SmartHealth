@@ -23,6 +23,12 @@ class statistics():
         self.events = []
         self.parameters_list = []
         self.current_event_parameters = []
+        self.patient_dayOne = http_retrievePregnancyDayOne(self.clientID)
+        print(f"self.patient_dayOne {self.patient_dayOne}")
+        self.patient_name = http_getNameFromClientID(self.clientID)
+        print(f"self.patient_name {self.patient_name}")
+        self.patient_state = http_getMonitoringStateFromClientID(self.clientID)
+        print(f"self.patient_state {self.patient_state}")
 
 
 # PROVA PER INVIO DATI PERSONALI a nodered
@@ -113,6 +119,7 @@ class statistics():
                 print(message)
                 # qua pubblica anche dati personali
                 self.myPublish(self.pub_topic, message)
+                self.publishPatientInfo()
                 self.current_event_parameters = []
                 self.events = []
 
@@ -134,42 +141,6 @@ class statistics():
                 print("Field not found.")
                 sys.exit(-5)
 
-
-    # def compute_statistics(self, parameter_ts_field, parameter_local_file):
-    #     try:
-    #         with open(parameter_local_file,"r") as f:
-    #             sum = 0
-    #             min = 999
-    #             max = 0
-    #             avg = 0
-    #             invalid = 0
-    #             dict = json.load(f)
-    #             patientID = dict["channel"]["name"]
-    #             #print(f"{self.clientID} patientID: {self.patientID}")
-    #             feeds = dict["feeds"]
-    #             for feed in feeds:
-    #                 measure = feed[parameter_ts_field]
-    #                 try:
-    #                     measure = float(measure)
-    #                     sum += measure
-    #                     if measure < min:
-    #                         min = measure
-    #                     if measure > max:
-    #                         max = measure
-    #                 except:
-    #                     invalid += 1
-    #             if(len(feeds) > 0 and len(feeds) > invalid):
-    #                 avg = sum / (len(feeds) - invalid)
-    #                 avg = float("{0:.2f}".format(avg))
-    #             else:
-    #                 min = None
-    #                 avg = None
-    #                 max = None
-    #             return [min, avg, max, patientID]
-    #     except:
-    #         print("Error reading local file of weekly measures.")
-    #         return [None, None, None]
-
     def start (self):
         self.client_MQTT.start()
 
@@ -186,18 +157,15 @@ class statistics():
     def subscribe(self): 
         self.client_MQTT.mySubscribe("P4IoT/statistics_file/#")
 
-    def publishPatientInfo(self, patientsList, topic):
-        for patient in patientsList:
-            patientInfo = {
-                "name": patient["patientName"],
-                "surname": patient["patientSurname"],
-                "taxID" : patient["personalData"]["taxID"],
-                "mail": patient["personalData"]["userEmail"],
-                "pregnancyDayOne": patient["pregnancyDayOne"],
-                "device": patient["connectedDevice"]["deviceName"],
-                "state": patient["state"]
-            }
-            self.events = []
+    def publishPatientInfo(self):
+        patientInfo = {
+                "full_name": self.patient_name,
+                "patientID": self.clientID,
+                "day_one": self.patient_dayOne,
+                "state": self.patient_state
+        }
+        info_pub_topic = self.pub_topic.replace("statistic", "info")
+        self.myPublish(info_pub_topic, patientInfo)
 
 if __name__ == "__main__" :
 

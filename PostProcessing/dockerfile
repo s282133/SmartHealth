@@ -13,6 +13,6 @@ RUN pip install -r requirements.txt
 COPY . .
 
 #Run the python script
-ENTRYPOINT [ "python", "-u", "dataAnalysis.py" ]
+ENTRYPOINT [ "python", "-u", "DataAnalysis.py" ]
 
 # EXPOSE 8089

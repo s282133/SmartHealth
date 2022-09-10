@@ -1018,17 +1018,7 @@
         }
     },
     {
-        "id": "17160602e3252260",
-        "type": "ui_spacer",
-        "z": "aa690620becf8e98",
-        "name": "spacer",
-        "group": "b760305b1d9cfd99",
-        "order": 1,
-        "width": 19,
-        "height": 1
-    },
-    {
-        "id": "d2ec3d2b31f04bcd",
+        "id": "f2da72079a879011",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1038,7 +1028,7 @@
         "height": 1
     },
     {
-        "id": "ea93c87eac6be4ca",
+        "id": "e32b9672f00da61c",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1048,7 +1038,7 @@
         "height": 1
     },
     {
-        "id": "2b0cca8278611fe2",
+        "id": "79bae482c216a684",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1058,7 +1048,7 @@
         "height": 1
     },
     {
-        "id": "fc037e0588f9fe23",
+        "id": "811818d68f06660e",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1068,7 +1058,17 @@
         "height": 1
     },
     {
-        "id": "8c0ec87f7c2cef0e",
+        "id": "9a4cfdb641021b43",
+        "type": "ui_spacer",
+        "z": "aa690620becf8e98",
+        "name": "spacer",
+        "group": "b760305b1d9cfd99",
+        "order": 29,
+        "width": 19,
+        "height": 1
+    },
+    {
+        "id": "513256f780e35720",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1078,7 +1078,7 @@
         "height": 1
     },
     {
-        "id": "72122abecabc5334",
+        "id": "b3c70a0a486689db",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1088,7 +1088,7 @@
         "height": 1
     },
     {
-        "id": "c594acb39af991f1",
+        "id": "7b8bb39c8ec7d99d",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1098,7 +1098,7 @@
         "height": 1
     },
     {
-        "id": "ebefa747911e2a4c",
+        "id": "4e27963f6c75fd53",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1108,7 +1108,7 @@
         "height": 1
     },
     {
-        "id": "adac7c737cbde1ad",
+        "id": "f1052bd4f89ae9f0",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1118,7 +1118,7 @@
         "height": 1
     },
     {
-        "id": "8594e9b88e61a4e9",
+        "id": "46dc30b9c2d6b522",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1128,7 +1128,7 @@
         "height": 1
     },
     {
-        "id": "6e11dd28b4564fd5",
+        "id": "fba8ee94afc89910",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1138,7 +1138,7 @@
         "height": 1
     },
     {
-        "id": "7fe5b1381f4123f3",
+        "id": "45181462253012d0",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1148,7 +1148,7 @@
         "height": 1
     },
     {
-        "id": "2fc129a86a412c59",
+        "id": "62fe3a493bfb83c2",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1158,7 +1158,7 @@
         "height": 1
     },
     {
-        "id": "6b4738d2f73452ab",
+        "id": "a70b8e9e72bd5ab3",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1168,7 +1168,7 @@
         "height": 1
     },
     {
-        "id": "7315ea141b0f3686",
+        "id": "908699f0429e64b2",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1178,7 +1178,7 @@
         "height": 1
     },
     {
-        "id": "60ac57875cf7c369",
+        "id": "b15a8e921a5fb664",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1188,7 +1188,7 @@
         "height": 1
     },
     {
-        "id": "14aaa90af238096e",
+        "id": "963395e33ba34c44",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1198,7 +1198,7 @@
         "height": 1
     },
     {
-        "id": "383050ea066fae97",
+        "id": "1aef6d4e217156db",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1208,7 +1208,7 @@
         "height": 1
     },
     {
-        "id": "a2da4edd47fd4680",
+        "id": "f2a5ab5a8ba949ce",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -1218,7 +1218,7 @@
         "height": 1
     },
     {
-        "id": "0e40c391b665bbd4",
+        "id": "15e246ae8cc34de0",
         "type": "ui_spacer",
         "z": "aa690620becf8e98",
         "name": "spacer",
@@ -3664,7 +3664,7 @@
         "order": 15,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&min=1&type=line&update=15\"></iframe>\n",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -3706,7 +3706,7 @@
         "order": 20,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/5?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/5?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&min=1&type=line&update=15\"></iframe>\n",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -3727,7 +3727,7 @@
         "order": 25,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/6?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/6?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&min=1&type=line&update=15\"></iframe>\n",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -3938,7 +3938,7 @@
         "height": 5,
         "name": "modulo_google_D1P1",
         "label": "<font color=\"red\"> <b>PATIENT'S SURVEY ANSWERS </b> </font>",
-        "format": "PHYSICAL STATUS : {{msg.payload[1]}} <br> PSYCHOLOGICAL STATUS : {{msg.payload[2]}} <br> COMMENTS : {{msg.payload[3]}}",
+        "format": "nausea : {{msg.payload[1]}} <br> constipation : {{msg.payload[2]}} <br> stomach acidity : {{msg.payload[3]}} <br> urine leakage : {{msg.payload[4]}} <br> further symptoms (optional) : {{msg.payload[5]}}",
         "layout": "col-center",
         "className": "",
         "x": 980,
@@ -4309,7 +4309,7 @@
         "z": "aa690620becf8e98",
         "group": "b760305b1d9cfd99",
         "name": "tavola",
-        "order": 29,
+        "order": 1,
         "width": 0,
         "height": 0,
         "columns": [
@@ -4365,7 +4365,7 @@
         "type": "function",
         "z": "aa690620becf8e98",
         "name": "function 6",
-        "func": "var ret1 = msg[\"payload\"]\nlet ret2 = (msg[\"payload\"][\"bn\"]).split(\"/\")[3]\nvar ret2b = Number(ret2)\n\nvar dizionario = {}\n\ndizionario[\"client\"] = ret2b; \n\ndizionario[\"measure\"] = msg[\"payload\"]\n\nreturn dizionario",
+        "func": "var ret1 = msg[\"payload\"]\nlet ret2 = (msg[\"payload\"][\"bn\"]).split(\"/\")[3]\nvar ret2b = Number(ret2)\n\nvar dizionario = {}\n\ndizionario[\"client\"] = ret2b; \n\ndizionario[\"client\"] = 1; \n\ndizionario[\"measure\"] = msg[\"payload\"]\n\nreturn dizionario",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
