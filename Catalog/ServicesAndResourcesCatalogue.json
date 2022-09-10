@@ -222,12 +222,12 @@
     {
 	 
       "service_name": "TelegramDoctor",
-      "doctorTelegramToken": "5373152293:AAESoB5LMU3JUunXegFryWk484twuniHinE",
+      "doctorTelegramToken": "5373152293:AAFZLHVMbFTBEEgTapGii8LYVJ-SaLXfuwA",
       "APIs": []
     },
     {
       "service_name": "TelegramClient",
-      "patientTelegramToken": "5156513440:AAEpBKPKf2curml2BNurrhGzQTE_kdHF45U",
+      "patientTelegramToken": "5156513440:AAHF2KgmzHrZJah1990ukAroqTNOCAlVK-U",
       "APIs": [
         {
           "functionality_name": "send_peso",
@@ -337,7 +337,7 @@
           "connectedDevice": {
             "deviceName": "rpi98",
             "onlineSince": "2022-07-14",
-            "telegramID": "786029508",
+            "telegramID": "298694124",
             "thingspeakInfo": {
               "channel": 1788970,
               "apikeys": [
@@ -443,7 +443,7 @@
           "connectedDevice": {
             "deviceName": "raspberry22",
             "onlineSince": "2022-08-18",
-            "telegramID": "786029508",
+            "telegramID": "298694124",
             "thingspeakInfo": {
               "channel": 1829048,
               "apikeys": [
