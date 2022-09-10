@@ -159,8 +159,12 @@ class DoctorBot:
             self.client_bot.sendMessage(chat_ID, text=f'Access to data at this link: {uri}')
         
 
-        else:
+        elif message == "/help": 
             self.client_bot.sendMessage(chat_ID, text="* Send /start to log in;\n* Send /registrazione_paziente to submit a new patient;\n* Send /accesso_dati to monitor patients' data.") 
+
+
+        else:
+            self.client_bot.sendMessage(chat_ID, text="Command not recognized/Message not supported.\nPush /help for a list of commands.") 
 
 
     def on_callback_query(self, messaggio):
