@@ -17,7 +17,7 @@ class statistics():
     def __init__(self, clientID, mqtt_broker, mqtt_port, mqtt_topic):
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = clientID
-        #self.pub_topic = str(mqtt_topic).replace("+", clientID)
+        self.pub_topic = str(mqtt_topic).replace("+", clientID)
         self.start()        # MQTT functions start
         self.subscribe()
         self.events = []
@@ -111,8 +111,8 @@ class statistics():
                 print("publish!")
                 message = self.create_message(self.events)
                 print(message)
-                #METTI TOPIC GIUSTO !
-                self.myPublish("topic_che_non_ricordo", message)
+                # qua pubblica anche dati personali
+                self.myPublish(self.pub_topic, message)
                 self.current_event_parameters = []
                 self.events = []
 
@@ -186,10 +186,6 @@ class statistics():
     def subscribe(self): 
         self.client_MQTT.mySubscribe("P4IoT/statistics_file/#")
 
-
-    # Publication useful info of patient for doc in nodered
-    # METTERE TOPIC IN ALTRA PARTE
-    # topic : "P4IoT/patientinfo/+" dove + è il patientID
     def publishPatientInfo(self, patientsList, topic):
         for patient in patientsList:
             patientInfo = {
@@ -201,8 +197,6 @@ class statistics():
                 "device": patient["connectedDevice"]["deviceName"],
                 "state": patient["state"]
             }
-            topicPatient = str(topic).replace("+", patient["patientID"])
-            self.myPublish(topicPatient, patientInfo)
             self.events = []
 
 if __name__ == "__main__" :
@@ -215,8 +209,8 @@ if __name__ == "__main__" :
         mqtt_api = get_api_from_service_and_name(mqtt_service,"send_statistics") 
         mqtt_topic = mqtt_api["topic_statistic"]
         pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
-        Statistics=statistics("WeeklyStat", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
-
+        Statistics=statistics("1", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
+        print(f"topic pub hehe: {pub_mqtt_topic}")
         while True:
             time.sleep(1)
 
