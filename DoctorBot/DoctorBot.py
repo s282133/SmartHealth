@@ -113,7 +113,7 @@ class DoctorBot:
             registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
 
             #uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
-            uri = f"http://127.0.0.1:{registration_port}/{registration_uri}"                                                                      
+            uri = f"http://{self.localhost}:{registration_port}/{registration_uri}"                                                                      
             self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
 
         elif message == "/registrazione_paziente": 
@@ -135,7 +135,7 @@ class DoctorBot:
             patient_registration_uri = str(patient_registration_uri).replace("{{chat_ID}}", str(chat_ID))
 
             #uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
-            uri = f"http://127.0.0.1:{patient_registration_port}/{patient_registration_uri}"
+            uri = f"http://{self.localhost}:{patient_registration_port}/{patient_registration_uri}"
             self.client_bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
         elif message == "/accesso_dati": 
@@ -155,7 +155,7 @@ class DoctorBot:
                 print("Accesso dati - error [ERR 11].")
 
             #uri = f"http://{accesso_dati_ipAddress}:{accesso_dati_port}/{accesso_dati_uri}"
-            uri=f"http://127.0.0.1:{accesso_dati_service['port']}/{accesso_dati_uri}"                                                                        
+            uri=f"http://{self.localhost}:{accesso_dati_service['port']}/{accesso_dati_uri}"                                                                        
             self.client_bot.sendMessage(chat_ID, text=f'Access to data at this link: {uri}')
         
 
