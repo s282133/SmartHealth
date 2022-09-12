@@ -337,8 +337,8 @@ class rpiPub():
 if __name__ == "__main__":
 
     # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 9 per far pubblicare su di lui
-    # setOnlineSinceFromClientID(10)
-    # setOnlineSinceFromClientID(1)
+    #setOnlineSinceFromClientID(10)
+    #setOnlineSinceFromClientID(1)
 
 
     cicli=0
@@ -348,24 +348,21 @@ if __name__ == "__main__":
         if cicli % SECONDI_CONTROLLO_NUOVI_PAZIENTI == 0:
 
             try:
-                # print("primo try")
+                print("primo try")
                 json_lista = http_get_lista_pazienti_da_monitorare()
-                # print(f"{json_lista}")
                 lista_pazienti_da_monitorare = json_lista["lista_pazienti_da_monitorare"]
-                # print(f"{lista_pazienti_da_monitorare}")
-              
             except:
                 print("RPI Publisher - error [ERR 20]")
                 exit()
 
             for patientID in lista_pazienti_da_monitorare:
-                # print("sono entrato nel for")
+                print("sono entrato nel for")
                 try:
                     http_set_patient_in_monitoring(patientID)  
-                    # print("secondo try")
+                    print("secondo try")
                     thread = Thread(target=rpiPub, args=(str(patientID),))
                     thread.start()
-                    # print(f"{patientID} is online")
+                    print(f"{patientID} is online")
                 except:
                     print("RPI Publisher - error [ERR 21]")
                     exit()

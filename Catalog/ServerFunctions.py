@@ -229,6 +229,7 @@ def get_lista_pazienti_da_monitorare():
 
             connectedDevice = currentPatient["connectedDevice"]
             if connectedDevice["onlineSince"] == -1 :
+                print("aggiungerò...")
                 patientID = currentPatient["patientID"]
                 json_lista["lista_pazienti_da_monitorare"].append(patientID)
     return json.dumps(json_lista)

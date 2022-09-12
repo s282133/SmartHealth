@@ -1,5 +1,5 @@
 {
     "ipAddress": "Catalog",
     "port": 8085,
-    "localhost": "0.0.0.0"
+    "localhost": "127.0.0.1"
 }

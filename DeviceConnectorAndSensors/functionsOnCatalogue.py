@@ -237,18 +237,24 @@ def http_contolla_scadenza_week():
 def http_get_lista_pazienti_da_monitorare():
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
+    # print(f"ResourceService, ipAddress, port {ResourceService, ipAddress, port}")
     api = get_api_from_service_and_name( ResourceService, "lista_pazienti_da_monitorare" )
+    # print(f"api {api}")
 
     local_uri = api["uri"]
-
+    # print(f"local_uri {local_uri}")
+    
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
     # ipAddress, port = get_host_and_port()
     # r = requests.get(f'http://{ipAddress}:{port}/lista_pazienti_da_monitorare') 
     
     if r.status_code == 200:
+        # print("sono 200 :D")
+        # print("return json: {r.json}")
         return r.json()
     else:
+        # print("sono none :c")
         return None
 
 
