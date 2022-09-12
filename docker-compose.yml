@@ -13,7 +13,7 @@ services:
     expose:
       - 8085
     volumes:
-      - ./Catalog:/Catalog # da vedere meglio
+      - ./Catalog:/Catalog 
 
   FrontEnd:
     container_name: FrontEnd

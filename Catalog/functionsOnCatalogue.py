@@ -316,7 +316,7 @@ def getWeek(dayOne):
     dayoneD = str(dayOne).split("-")[2]
     #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
+    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")h
 
     elapsedDays = currDays - dayoneDays
     week = int(elapsedDays / 7)
