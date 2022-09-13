@@ -73,7 +73,12 @@ if __name__ == "__main__":
     Ciclo=0
     while not done:
 
+        #prova
+        #if lista_pazienti_simulati == 0:
+        #    lista_pazienti_simulati = 1
+            
         k = N % len(lista_pazienti_simulati)
+        
         if k == 0:
             Ciclo+=1
 
