@@ -307,8 +307,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 17,
-    "LastDoctorID": 10
+    "LastPatientID": 18,
+    "LastDoctorID": 11
   },
   "resources": [
     {
@@ -370,6 +370,31 @@
               ]
             }
           }
+        },
+        {
+          "patientID": 18,
+          "patientName": "Francesca",
+          "patientSurname": "Sacchi",
+          "personalData": {
+            "taxIDcode": "TSFCMV34CMVN",
+            "userEmail": "fra.sacchi@gmail.com",
+            "pregnancyDayOne": "2022-04-02"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "1",
+            "onlineSince": "2022-09-13",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1857057,
+              "apikeys": [
+                "R4KHSZJUJE4ST7HQ",
+                "9Y6QG04I6LBW27X6"
+              ]
+            }
+          }
         }
       ],
       "devicesList": [
@@ -406,8 +431,37 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-09-12"
+        },
+        {
+          "deviceName": "1",
+          "patientID": 18,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-13"
         }
       ]
+    },
+    {
+      "doctorID": 11,
+      "doctorName": "Laura",
+      "doctorSurname": "Cubeddu",
+      "doctorMail": "lau.cube@yu.it",
+      "lastUpdate": "2022-09-13",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
     }
   ]
 }
