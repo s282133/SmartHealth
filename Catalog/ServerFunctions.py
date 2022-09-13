@@ -157,8 +157,15 @@ def get_lista_pazienti_simulati():
         for currentPatient in patientList:
             patientID = currentPatient["patientID"]
             idRegistratoSuRaspberry = currentPatient["idRegistratoSuRaspberry"]
+            
+            # #prova
+            # connectedDevice=currentPatient["connectedDevice"]
+            # onlineSince = connectedDevice["onlineSince"]
+            #aggiunto and
             if idRegistratoSuRaspberry == "no":
+                
                 json_lista["lista_pazienti_simulati"].append(patientID)
+    
     return json.dumps(json_lista)
 
 

@@ -66,43 +66,44 @@ if __name__ == "__main__":
     done=False
 
     tempSensor = []
-    for patient in lista_pazienti_simulati:
-        tempSensor.append( temperatureSensorClass() )
+    if len(lista_pazienti_simulati)!=0:
+        for patient in lista_pazienti_simulati:
+            tempSensor.append( temperatureSensorClass() )
 
-    N=0
-    Ciclo=0
-    while not done:
+        N=0
+        Ciclo=0
+        while not done:
 
-        #prova
-        #if lista_pazienti_simulati == 0:
-        #    lista_pazienti_simulati = 1
+            #prova
+            #if lista_pazienti_simulati == 0:
+            #    lista_pazienti_simulati = 1
+                
+            k = N % len(lista_pazienti_simulati)
             
-        k = N % len(lista_pazienti_simulati)
-        
-        if k == 0:
-            Ciclo+=1
+            if k == 0:
+                Ciclo+=1
 
-        time.sleep(POLLING_PERIOD_TEMPERATURE)
-        time_stamp = str(time.ctime(time.time()))        
+            time.sleep(POLLING_PERIOD_TEMPERATURE)
+            time_stamp = str(time.ctime(time.time()))        
 
-        temperature = tempSensor[k].getTemperature(Ciclo)
-        
-        message = { "bn": "http://example.org/sensor1/", 
-                    "e": [
-                        { "n": "temperature", "u": "Cel", "t": time_stamp, "v":temperature  }
-                        ]
-                }
-        
-        patientID = lista_pazienti_simulati[k]
-        
-        try:
-            local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
-            myPublisher.publish(local_topic,message)
-            print(f"{patientID} published {temperature} with topic: {local_topic}")
-            N=N+1
-        except:
-            print("temperaturePublisher - error [ERR 7]")
-            exit(1)
+            temperature = tempSensor[k].getTemperature(Ciclo)
+            
+            message = { "bn": "http://example.org/sensor1/", 
+                        "e": [
+                            { "n": "temperature", "u": "Cel", "t": time_stamp, "v":temperature  }
+                            ]
+                    }
+            
+            patientID = lista_pazienti_simulati[k]
+          
+            try:
+                local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
+                myPublisher.publish(local_topic,message)
+                print(f"{patientID} published {temperature} with topic: {local_topic}")
+                N=N+1
+            except:
+                print("temperaturePublisher - error [ERR 7]")
+                exit(1)
 
-    myPublisher.stop()   
+        myPublisher.stop()   
 

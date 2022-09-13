@@ -2,6 +2,9 @@ from ipaddress import ip_address
 import json
 import requests
 import time
+import socket
+import subprocess
+
 
 def get_host_and_port():
     # config.json mi dice qual è il server da interrogare

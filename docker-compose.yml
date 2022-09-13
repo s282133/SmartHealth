@@ -76,7 +76,7 @@ services:
     build: 
       context: ./Temperature_pub
       dockerfile: dockerfile
-    restart : on-failure
+    restart : always
     depends_on:
       - Catalog
 

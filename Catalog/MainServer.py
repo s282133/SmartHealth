@@ -275,8 +275,12 @@ class Registrazione(object):
 
             body = cherrypy.request.body.read() 
             self.record = json.loads(body)
-            self.telegramID = int(params["chat_ID"]) #lo leggo dal FrontEND                                                           
-            nameChannel = self.record["patientName"] + " " + self.record["patientSurname"]
+            self.telegramID = int(params["chat_ID"]) #lo leggo dal FrontEND   
+            #prova
+            self.dictionary = json.load(open('ServicesAndResourcesCatalogue.json'))
+            self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]                                                        
+            # nameChannel = self.record["patientName"] + " " + self.record["patientSurname"]
+            nameChannel=self.LastPatientID+1
 
             ## ATTENZIONE: mettere api key in settings!
             channel={
@@ -301,6 +305,7 @@ class Registrazione(object):
 
             self.dictionary = json.load(open('ServicesAndResourcesCatalogue.json'))
             self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]
+    
             self.NewPatientID = self.LastPatientID + 1
             self.dictionary["resourceState"]["LastPatientID"] = self.NewPatientID
 
