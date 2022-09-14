@@ -24,22 +24,24 @@ class dataAnalysisClass():
             self.mqtt_base_topic = mqtt_service["base_topic"]
             mqtt_api = get_api_from_service_and_name( mqtt_service, "send_measure" )
 
-            mqtt_topic_temperature  = mqtt_api["topic_temperature"]
-            mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
-            mqtt_topic_pressure     = mqtt_api["topic_pressure"]
-            mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+            mqtt_topic_sub_generic = mqtt_api["topic_sub_generic"]
+            self.mqtt_topic_sub_generic = mqtt_topic_sub_generic.replace("{{base_topic}}", self.mqtt_base_topic)
+            # self.mqtt_topic_temperature  = mqtt_api["topic_temperature"]
+            # self.mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
+            # self.mqtt_topic_pressure     = mqtt_api["topic_pressure"]
+            # self.mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
         except:
             print("dataAnalysis - error [ERR 1]")
             exit(1)
 
-        try:
-            self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
-            self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
-            self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
-            self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
-        except:
-            print("dataAnalysis - error [ERR 2]")
-            exit(2)
+        # try:
+         #    self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
+        #     self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
+        #     self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
+        #     self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
+        # except:
+        #     print("dataAnalysis - error [ERR 2]")
+        #     exit(2)
 
         try:
             mqtt_topic_send_alert = get_api_from_service_and_name(mqtt_service,"send_alert") 
@@ -68,10 +70,16 @@ class dataAnalysisClass():
             exit(5)
         
         try:
-            self.mqtt_client.mySubscribe(self.local_topic_temperature)
-            self.mqtt_client.mySubscribe(self.local_topic_heartrate)
-            self.mqtt_client.mySubscribe(self.local_topic_pressure)
-            self.mqtt_client.mySubscribe(self.local_topic_glycemia)
+            # self.local_topic_heartrate="P4IoT/SmartHealth/+/sensor/heartrate"
+            # self.local_topic_temperature="P4IoT/SmartHealth/+/sensor/temperature"
+            # self.local_topic_pressure="P4IoT/SmartHealth/+/sensor/pressure"
+            # self.local_topic_glycemia="P4IoT/SmartHealth/+/sensor/glycemia"
+            
+            # self.mqtt_client.mySubscribe(self.mqtt_topic_temperature)
+            # self.mqtt_client.mySubscribe(self.mqtt_topic_heartrate)
+            # self.mqtt_client.mySubscribe(self.mqtt_topic_glycemia)
+            # self.mqtt_client.mySubscribe(self.mqtt_topic_pressure)
+            self.mqtt_client.mySubscribe(self.mqtt_topic_sub_generic)
         except:
             print("dataAnalysis - error [ERR 6]")
             exit(6)
@@ -135,6 +143,7 @@ class dataAnalysisClass():
             exit(8)
         
         try:
+            print(f"sono dataAnalysis, clientID {local_clientID}")
             patientName = http_getNameFromClientID(local_clientID)
         except:
             print("DataAnalysisBlock - error [ERR 9]")

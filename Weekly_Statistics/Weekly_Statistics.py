@@ -177,7 +177,7 @@ if __name__ == "__main__" :
         mqtt_api = get_api_from_service_and_name(mqtt_service,"send_statistics") 
         mqtt_topic = mqtt_api["topic_statistic"]
         pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
-        Statistics=statistics("1", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
+        Statistics=statistics("20", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
         print(f"topic pub hehe: {pub_mqtt_topic}")
         while True:
             time.sleep(1)

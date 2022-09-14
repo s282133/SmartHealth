@@ -1,4 +1,4 @@
-# Il pubblicatore di temperature pubblica sul topic /temp_raspberry 
+# Il pubblicatore di temperature pubblica sul topic /temp_simulate 
 # delle temperature casuali fornite da un generatore 
 
 import json          
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     except:
         print("Temperature_Publisher could not be initialized [ERR 3].")
     try:
-        mqtt_api = get_api_from_service_and_name(mqtt_service,"temp_raspberry") 
+        mqtt_api = get_api_from_service_and_name(mqtt_service,"temp_simulate") 
         mqtt_topic = mqtt_api["topic"]
     except TypeError:
         print("Temperature_Publisher could not be initialized [ERR 4].")
@@ -99,7 +99,7 @@ if __name__ == "__main__":
             try:
                 local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
                 myPublisher.publish(local_topic,message)
-                print(f"{patientID} published {temperature} with topic: {local_topic}")
+                #print(f"{patientID} published {temperature} with topic: {local_topic}")
                 N=N+1
             except:
                 print("temperaturePublisher - error [ERR 7]")

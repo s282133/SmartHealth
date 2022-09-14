@@ -17,6 +17,7 @@ from pressureSensor import pressureSensorClass
 from glycemiaSensor import glycemiaSensorClass
 
 TOPIC_TEMP_RASPBERRY = "temp_raspberry"
+TOPIC_TEMP_SIMULATE = "temp_simulate"
 
 # periodo di polling in minuti
 POLLING_PERIOD_HR       = 60     
@@ -51,12 +52,17 @@ class rpiPub():
             exit()
 
         try:
+            #topic sub
             mqtt_api = get_api_from_service_and_name(mqtt_service,"temp_raspberry") 
             self.mqtt_topic_temp_raspberry = mqtt_api["topic"]
 
             mqtt_api_monitoring = get_api_from_service_and_name(mqtt_service,"monitoring_on") 
             self.mqtt_topic_monitoring_on  = mqtt_api_monitoring["topic"]
-
+            
+            mqtt_api_temp_simulate = get_api_from_service_and_name(mqtt_service,"temp_simulate") 
+            self.mqtt_topic_temp_simulate  = mqtt_api_temp_simulate["topic"]
+            ##
+            
             mqtt_api_heartrate = get_api_from_service_and_name(mqtt_service,"heartrate") 
             self.mqtt_topic_heartrate  = mqtt_api_heartrate["topic"]
             mqtt_api_pressure = get_api_from_service_and_name(mqtt_service,"pressure") 
@@ -104,6 +110,10 @@ class rpiPub():
             #{{base_topic}}/{{patientID}}/monitoring
             topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring_on, self.mqtt_base_topic, self.clientID)
             self.client_MQTT.mySubscribe(topic_monitoring)
+            
+            #{{base_topic}}/{{patientID}}/temp_simulate
+            topic_temp_simulate = getTopicByParameters(self.mqtt_topic_temp_simulate, self.mqtt_base_topic, self.clientID)
+            self.client_MQTT.mySubscribe(topic_temp_simulate)
         except:
             print("RPI Publisher - error [ERR 4]")
             exit()
@@ -140,6 +150,12 @@ class rpiPub():
             newMeasureTempRaspberry = msg["e"][0]["v"]
             #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
             self.publishTemperature(newMeasureTempRaspberry)
+            
+        elif subtopic == TOPIC_TEMP_SIMULATE:      
+            newMeasureTempSimulate = msg["e"][0]["v"]
+            #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
+            self.publishTemperature(newMeasureTempSimulate)
+            
         else: 
             pass
 

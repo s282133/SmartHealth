@@ -50,6 +50,7 @@ def retrieveTSReadAPIfromClientID(patient_ID):
 
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
+    print(f"patient_ID: {patient_ID}")
     currentPatient = get_patient_from_patient_id(patient_ID) 
     #data= currentPatient["connectedDevice"]["thingspeakInfo"]["apikeys"][0]
     connectedDevice = currentPatient["connectedDevice"]

@@ -150,17 +150,24 @@
       "base_topic": "P4IoT/SmartHealth",
       "APIs": [
         {
-          "functionality_name": "temp_raspberry",
+          "functionality_name": "temp_simulate",
           "description": "Invio delle temperature simulate e non dei pazienti",
+          "topic": "{{base_topic}}/{{patientID}}/temp_simulate"
+        },
+        {
+          "functionality_name": "temp_raspberry",
+          "description": "Pubblicazione della temp del raspberry",
           "topic": "{{base_topic}}/{{patientID}}/temp_raspberry"
         },
         {
           "functionality_name": "send_measure",
-          "description": "Invio dei dati misurati sul paziente",
-          "topic_temperature": "{{base_topic}}/{{patientID}}/temperature",
-          "topic_heartrate": "{{base_topic}}/{{patientID}}/heartrate",
-          "topic_pressure": "{{base_topic}}/{{patientID}}/pressure",
-          "topic_glycemia": "{{base_topic}}/{{patientID}}/glycemia"
+          "description": "Invio dei dati da rpiPub",
+          "topic_sub_generic": "{{base_topic}}/+/sensor/#",
+          "topic_temperature": "{{base_topic}}/+/sensor/temperature",
+          "topic_heartrate": "{{base_topic}}/+/sensor/heartrate",
+          "topic_pressure": "{{base_topic}}/+/sensor/pressure",
+          "topic_glycemia": "{{base_topic}}/+/sensor/glycemia",
+          "topic_peso": "{{base_topic}}/+/peso"
         },
         {
           "functionality_name": "monitoring_on",
@@ -180,22 +187,22 @@
         {
           "functionality_name": "heartrate",
           "description": "Posta heartrate",
-          "topic": "{{base_topic}}/{{patientID}}/heartrate"
+          "topic": "{{base_topic}}/{{patientID}}/sensor/heartrate"
         },
         {
           "functionality_name": "temperature",
           "description": "Posta temperature",
-          "topic": "{{base_topic}}/{{patientID}}/temperature"
+          "topic": "{{base_topic}}/{{patientID}}/sensor/temperature"
         },
         {
           "functionality_name": "glycemia",
           "description": "Posta glycemia",
-          "topic": "{{base_topic}}/{{patientID}}/glycemia"
+          "topic": "{{base_topic}}/{{patientID}}/sensor/glycemia"
         },
         {
           "functionality_name": "pressure",
           "description": "Posta pressure",
-          "topic": "{{base_topic}}/{{patientID}}/pressure"
+          "topic": "{{base_topic}}/{{patientID}}/sensor/pressure"
         }
       ]
     },
@@ -262,10 +269,11 @@
         {
           "functionality_name": "thingspeak_subscriptions",
           "description": "Invio dei dati su thingspeak",
-          "topic_temperature": "{{base_topic}}/+/temperature",
-          "topic_heartrate": "{{base_topic}}/+/heartrate",
-          "topic_pressure": "{{base_topic}}/+/pressure",
-          "topic_glycemia": "{{base_topic}}/+/glycemia",
+          "topic_sub_generic": "{{base_topic}}/+/sensor/#",
+          "topic_temperature": "{{base_topic}}/+/sensor/temperature",
+          "topic_heartrate": "{{base_topic}}/+/sensor/heartrate",
+          "topic_pressure": "{{base_topic}}/+/sensor/pressure",
+          "topic_glycemia": "{{base_topic}}/+/sensor/glycemia",
           "topic_peso": "{{base_topic}}/+/peso",
           "topic_monitoring": "{{base_topic}}/+/monitoring"
         },
@@ -307,7 +315,7 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 23,
+    "LastPatientID": 24,
     "LastDoctorID": 27
   },
   "resources": [
@@ -335,13 +343,13 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-13",
+            "onlineSince": "2022-09-14",
             "telegramID": 0,
             "thingspeakInfo": {
-              "channel": 1857425,
+              "channel": 1721151,
               "apikeys": [
-                "MSLBYR1EM7R1B9S2",
-                "FBLZLJZU6AQ1ISZR"
+                "FRN2A7XGJHIUSN24",
+                "ZDNDUY17T8SJSXRM"
               ]
             }
           }
@@ -360,7 +368,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-13",
+            "onlineSince": "2022-09-14",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1857429,
@@ -385,7 +393,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-13",
+            "onlineSince": "2022-09-14",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1857432,
@@ -410,13 +418,38 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-13",
+            "onlineSince": "2022-09-14",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1857434,
               "apikeys": [
                 "JCZ1S9WO0Y7LC9FF",
                 "A59WDCFC0YZEFB0A"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 24,
+          "patientName": "Selena",
+          "patientSurname": "Gomez",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "vasco.brondi@gmail.com",
+            "pregnancyDayOne": "2022-05-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "on",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-09-14",
+            "telegramID": "786029508",
+            "thingspeakInfo": {
+              "channel": 1858750,
+              "apikeys": [
+                "7Y9N4QPXRGDULLZ2",
+                "R3LYE19PXAN1DKEL"
               ]
             }
           }
@@ -490,6 +523,23 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-09-13"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 24,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-14"
         }
       ]
     }

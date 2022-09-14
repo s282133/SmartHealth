@@ -173,7 +173,9 @@ class Registrazione(object):
 # get_ts_from_id: restituisce l'API di scrittura di thingspeak del paziente dal suo ID 
         elif uri[0] == "get_ts_from_id":
             patient_ID = params["patient_id"]
+            print(f"patient_ID: {patient_ID}")
             api_keys = retrieveTSWriteAPIfromClientID(patient_ID)
+            
             if patient_ID != None:
                 return api_keys
             else:

@@ -176,6 +176,7 @@ class DoctorBot:
         patientID = query_data.split(" ")[2]
         monitoring_state = query_data.split(" ")[1]
 
+        print(f"sono DocBot, patientID {patientID}")
         patient_name = http_getNameFromClientID(patientID)
         
         local_topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring, self.mqtt_base_topic, str(patientID))

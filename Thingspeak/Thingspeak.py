@@ -25,19 +25,22 @@ class Thingspeak():
         self.mqtt_base_topic = mqtt_service["base_topic"]
         mqtt_api = get_api_from_service_and_name(mqtt_service,"thingspeak_subscriptions") 
 
-        mqtt_topic_temperature  = mqtt_api["topic_temperature"]
-        mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
-        mqtt_topic_pressure     = mqtt_api["topic_pressure"]
-        mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
+        mqtt_topic_sub_generic = mqtt_api["topic_sub_generic"]
+        self.mqtt_topic_sub_generic = mqtt_topic_sub_generic.replace("{{base_topic}}",  self.mqtt_base_topic)
+        # mqtt_topic_temperature  = mqtt_api["topic_temperature"]
+        # mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
+        # mqtt_topic_pressure     = mqtt_api["topic_pressure"]
+        # mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
         mqtt_topic_peso         = mqtt_api["topic_peso"]
-        mqtt_topic_monitoring   = mqtt_api["topic_monitoring"]
+        self.mqtt_topic_peso = mqtt_topic_peso.replace("{{base_topic}}",  self.mqtt_base_topic)
+        # mqtt_topic_monitoring   = mqtt_api["topic_monitoring"]
 
-        self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
-        self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
-        self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
-        self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
-        self.local_topic_peso        = getTopicByParameters(mqtt_topic_peso, self.mqtt_base_topic, "+")
-        self.local_topic_monitoring  = getTopicByParameters(mqtt_topic_monitoring, self.mqtt_base_topic, "+")
+        # self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
+        # self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
+        # self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
+        # self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
+        # self.local_topic_peso        = getTopicByParameters(mqtt_topic_peso, self.mqtt_base_topic, "+")
+        # self.local_topic_monitoring  = getTopicByParameters(mqtt_topic_monitoring, self.mqtt_base_topic, "+")
         
         self.mqttClient=MyMQTT(None, mqtt_broker, mqtt_port, self) 
         self.cont=0
@@ -135,6 +138,7 @@ class Thingspeak():
         message = json.loads(payload) 
         if bool(self.patternWeight.match(str(topic))): 
             self.clientID = int(str(topic).split("/")[2]) 
+            print(f"sono nella notify di TS, sto chiedendo il client {self.clientID}")
             api_key = http_retrieveTSWriteAPIfromClientID(self.clientID) 
             peso=message["status"] 
             print(f"topic del peso: {topic}") 
@@ -240,14 +244,16 @@ class Thingspeak():
             
     def start(self): 
         self.mqttClient.start() 
+        time.sleep(60)
 
 
     def subscribe(self): 
-        self.mqttClient.mySubscribe(self.local_topic_heartrate)
-        self.mqttClient.mySubscribe(self.local_topic_temperature)
-        self.mqttClient.mySubscribe(self.local_topic_pressure)
-        self.mqttClient.mySubscribe(self.local_topic_glycemia)
-        self.mqttClient.mySubscribe(self.local_topic_peso)
+        # self.mqttClient.mySubscribe(self.local_topic_heartrate)
+        # self.mqttClient.mySubscribe(self.local_topic_temperature)
+        # self.mqttClient.mySubscribe(self.local_topic_pressure)
+        # self.mqttClient.mySubscribe(self.local_topic_glycemia)
+        self.mqttClient.mySubscribe(self.mqtt_topic_sub_generic)
+        self.mqttClient.mySubscribe(self.mqtt_topic_peso)
 
     def myPublish(self, topic, message):
         # print(f"Thingspeak publishing {message} to topic: {topic}\n\n\n")
