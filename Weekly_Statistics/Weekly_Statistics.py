@@ -14,31 +14,35 @@ SAMPLING_RESOLUTION = 5
 
 class statistics():
 
-    def __init__(self, clientID, mqtt_broker, mqtt_port, mqtt_topic):
+    def __init__(self, clientID, mqtt_broker, mqtt_port, mqtt_base_topic, mqtt_topic_sub, mqtt_topic_pub_info, mqtt_topic_pub_stats):
         self.client_MQTT = MyMQTT(clientID, mqtt_broker, mqtt_port, self)
         self.clientID = clientID
-        self.pub_topic = str(mqtt_topic).replace("+", clientID)
+
+        self.base_topic = mqtt_base_topic
+        self.mqtt_topic_sub = mqtt_topic_sub
+        self.mqtt_topic_pub_info = mqtt_topic_pub_info
+        self.mqtt_topic_pub_stats = mqtt_topic_pub_stats
+
         self.start()        # MQTT functions start
         self.subscribe()
         self.events = []
         self.parameters_list = []
         self.current_event_parameters = []
-        self.patient_dayOne = http_retrievePregnancyDayOne(self.clientID)
-        print(f"self.patient_dayOne {self.patient_dayOne}")
-        self.patient_name = http_getNameFromClientID(self.clientID)
-        print(f"self.patient_name {self.patient_name}")
-        self.patient_state = http_getMonitoringStateFromClientID(self.clientID)
-        print(f"self.patient_state {self.patient_state}")
+        # self.patient_dayOne = http_retrievePregnancyDayOne(self.clientID)
+        # print(f"self.patient_dayOne {self.patient_dayOne}")
+        # self.patient_name = http_getNameFromClientID(self.clientID)
+        # print(f"self.patient_name {self.patient_name}")
+        # self.patient_state = http_getMonitoringStateFromClientID(self.clientID)
+        # print(f"self.patient_state {self.patient_state}")
 
 
 # PROVA PER INVIO DATI PERSONALI a nodered
 
     def get_personal_parameters(self, patientID):
         #ricerca dati dal patient ID
-        patientNumber = str(patientID).strip("channel")
-        full_name = http_getNameFromClientID(patientNumber)
-        state = http_getMonitoringStateFromClientID(patientNumber)
-        pregnancy_day_one = http_retrievePregnancyDayOne(patientNumber)
+        full_name = http_getNameFromClientID(patientID)
+        state = http_getMonitoringStateFromClientID(patientID)
+        pregnancy_day_one = http_retrievePregnancyDayOne(patientID)
         personal_parameters_json = {
             "patientID": patientID,
             "full_name": full_name,
@@ -58,30 +62,30 @@ class statistics():
         return event
 
 
-    def create_message(self, events):
+    def create_message(self, events, patientID):
         message = self.message_structure.copy()
-        message["bn"] =str(message["bn"]).replace("{{clientID}}", self.clientID)
-        # prima c'era patientID, non so perché
+        message["bn"] =str(message["bn"]).replace("{{clientID}}", patientID)
         message["e"] = events
         return message
 
 
     def notify(self,topic, payload): 
-            measure_type = str(str(topic).split("/")[3])
+            measure_type = str(str(topic).split("/")[4])
+            patientID = str(str(topic).split("/")[3])
             # print(f"measure type : {measure_type}")
             content = (payload.decode("utf-8")) 
-            # print(f"{measure_type} : \n\n{content}")
-            with open(f"stat_weekly_{measure_type}.json", 'w') as wp:
+            # print(f"{patientID} 's {measure_type} : \n\n{content}")
+            with open(f"{patientID}_stat_weekly_{measure_type}.json", 'w') as wp:
                 wp.write(content)
             wp.close()
-            with open(f"stat_weekly_{measure_type}.json","r") as f:
+            with open(f"{patientID}_stat_weekly_{measure_type}.json","r") as f:
                 sum = 0
                 min = 999
                 max = 0
                 avg = 0
                 invalid = 0
                 dict = json.load(f)
-                patientID = dict["channel"]["name"]
+                self.patientID = dict["channel"]["name"]
                 #print(f"{self.clientID} patientID: {self.patientID}")
                 feeds = dict["feeds"]
                 for feed in feeds:
@@ -114,12 +118,15 @@ class statistics():
                     at_least_one_not_present = 1
             # qui ci sono tutti!
             if at_least_one_not_present == 0:
-                print("publish!")
-                message = self.create_message(self.events)
-                print(message)
+                message = self.create_message(self.events, self.patientID)
+                # print(message)
                 # qua pubblica anche dati personali
-                self.myPublish(self.pub_topic, message)
-                self.publishPatientInfo()
+                pub_topic_stats1 = str(self.mqtt_topic_pub_stats).replace("{{base_topic}}", self.base_topic)
+                pub_topic_stats2 = str(pub_topic_stats1).replace("{{patientID}}", self.patientID)
+                pub_topic_stats3 = str(pub_topic_stats2).strip("/{{{{measure}}}}")
+                
+                self.myPublish(pub_topic_stats3, message)
+                # self.publishPatientInfo()
                 self.current_event_parameters = []
                 self.events = []
 
@@ -155,7 +162,10 @@ class statistics():
     
 
     def subscribe(self): 
-        self.client_MQTT.mySubscribe("P4IoT/statistics_file/#")
+        sub_topic1 = str(self.mqtt_topic_sub).replace("{{base_topic}}", self.base_topic)
+        sub_topic2 = str(sub_topic1).replace("{{patientID}}", "#")
+        sub_topic = str(sub_topic2).strip("/{{measure}}")
+        self.client_MQTT.mySubscribe(sub_topic)
 
     def publishPatientInfo(self):
         patientInfo = {
@@ -169,16 +179,25 @@ class statistics():
 
 if __name__ == "__main__" :
 
-    mqtt_service = http_getServiceByName("Weekly_Statistics")
+    mqtt_service = http_getServiceByName("MQTT_analysis")
     try:
         mqtt_broker = mqtt_service["broker"]
         mqtt_port = mqtt_service["port"]
         mqtt_base_topic = mqtt_service["base_topic"]
-        mqtt_api = get_api_from_service_and_name(mqtt_service,"send_statistics") 
-        mqtt_topic = mqtt_api["topic_statistic"]
-        pub_mqtt_topic = str(mqtt_topic).replace("{{base_topic}}", mqtt_base_topic)
-        Statistics=statistics("20", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, mqtt_topic= pub_mqtt_topic)
-        print(f"topic pub hehe: {pub_mqtt_topic}")
+        
+        mqtt_api_sub = get_api_from_service_and_name(mqtt_service,"weeklystats_sub") 
+        mqtt_topic_sub = mqtt_api_sub["topic"]
+
+        mqtt_api_pub_info = get_api_from_service_and_name(mqtt_service, "weeklystats_pub_info" )
+        mqtt_topic_pub_info = mqtt_api_pub_info["topic"]
+        
+        mqtt_api_pub_stats = get_api_from_service_and_name(mqtt_service, "weeklystats_pub_stats" )
+        mqtt_topic_pub_stats = mqtt_api_pub_stats["topic"]
+
+        Statistics=statistics("WeeklyStatistics", mqtt_broker=mqtt_broker, mqtt_port=mqtt_port, 
+        mqtt_base_topic=mqtt_base_topic, mqtt_topic_sub=mqtt_topic_sub, 
+        mqtt_topic_pub_info = mqtt_topic_pub_info, mqtt_topic_pub_stats=mqtt_topic_pub_stats)
+
         while True:
             time.sleep(1)
 

@@ -181,6 +181,10 @@ class Registrazione(object):
             else:
                 raise cherrypy.HTTPError(500, "Patient not found")
 
+        elif uri[0] == "get_ts_patientIDs_channelIDs":
+            dict = getListsOfTSinfo()
+            return dict
+
 
 # get_lista_pazienti_simulati: restituisce lista dei pazienti con raspberry simulati per l'invio delle temperature
         elif uri[0] == "get_lista_pazienti_simulati":

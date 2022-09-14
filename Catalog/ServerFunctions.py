@@ -17,6 +17,23 @@ def openCatalogue():
     #time.sleep(1)
     return catalog
 
+def getListsOfTSinfo():
+    catalog = openCatalogue()
+    lista = catalog["resources"]
+    patientIDs_channels = {}
+    for currentDoctor in lista:
+        patientList = currentDoctor["patientList"]
+        for currentPatient in patientList:
+            patientID = currentPatient["patientID"]
+            connectedDevice = currentPatient["connectedDevice"]
+            ts_info = connectedDevice["thingspeakInfo"]
+            channelID = ts_info["channel"]
+            print(f"{patientID},{channelID}")
+            key_patientID = int(patientID)
+            patientIDs_channels[f"{key_patientID}"] = channelID
+    print(patientIDs_channels)
+    return_dict = dict(patientIDs_channels)
+    return json.dumps(patientIDs_channels)
 
 def get_patient_from_patient_id(patientID):
     catalog = openCatalogue()
