@@ -172,7 +172,7 @@ def main_getApiByName(parServiceName,parApiName):
         return first_or_default 
     else: 
         return None
-
+    
 
 def get_lista_pazienti_simulati():
     json_lista = {

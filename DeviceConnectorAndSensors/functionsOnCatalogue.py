@@ -30,12 +30,11 @@ def get_host_and_port():
     port = dictionaryCatalog["port"]
     return ipAddress, port
 
-def get_localhost():
-    # config.json mi dice qual è il server da interrogare
-    filename = 'config.json'
-    dictionaryCatalog = json.load(open(filename))
-    localhost = dictionaryCatalog["localhost"]
-    return localhost
+# prende il localhost dal catalogo
+def http_get_localhost():                       
+    TelegramDoctor, ipAddress, port = get_service_host_and_port("TelegramDoctor")
+    
+    return ipAddress
 
 #anche questo potrebbe dover essere modificato
 def http_get_host_and_port(parServiceName): 

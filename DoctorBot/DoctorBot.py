@@ -16,7 +16,7 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 class DoctorBot:
     def __init__(self):
 
-        self.localhost=get_localhost()   # definire la funzione                         
+        self.localhost=http_get_localhost()   # definire la funzione                         
         # Gestione servizi MQTT
         mqtt_service = http_getServiceByName("MQTT_analysis")
         try:

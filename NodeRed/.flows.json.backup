@@ -5038,11 +5038,13 @@
         "rules": [
             {
                 "t": "eq",
-                "v": "24",
-                "vt": "num"
+                "v": "1",
+                "vt": "str"
             },
             {
-                "t": "else"
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
             }
         ],
         "checkall": "true",

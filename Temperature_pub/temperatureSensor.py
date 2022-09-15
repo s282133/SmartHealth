@@ -14,6 +14,8 @@ class temperatureSensorClass():
 
         if self.temperature > 39:
             self.temperature = 39
+            
+        self.temperature = float("{0:.2f}".format(self.temperature))
 
         return self.temperature
 

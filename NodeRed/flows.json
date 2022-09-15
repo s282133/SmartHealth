@@ -4360,7 +4360,7 @@
         "rules": [
             {
                 "t": "eq",
-                "v": "24",
+                "v": "1",
                 "vt": "num"
             },
             {
@@ -4565,7 +4565,7 @@
         "order": 1,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/1?hours=1&min=1&bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1860793/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -4586,7 +4586,7 @@
         "order": 26,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\"  src=\"https://thingspeak.com/channels/1860793/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -4607,7 +4607,7 @@
         "order": 12,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/apps/matlab_visualizations/461315\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/apps/matlab_visualizations/477166\"></iframe>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -4628,7 +4628,7 @@
         "order": 37,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/5?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\"   src=\"https://thingspeak.com/channels/1860793/charts/5?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -4649,7 +4649,7 @@
         "order": 48,
         "width": 10,
         "height": 6,
-        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\" src=\"https://thingspeak.com/channels/1721151/charts/6?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>\n",
+        "format": "<iframe width=\"450\" height=\"260\" style=\"border: 1px solid #cccccc;\"   src=\"https://thingspeak.com/channels/1860793/charts/6?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15\"></iframe>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
@@ -5038,11 +5038,13 @@
         "rules": [
             {
                 "t": "eq",
-                "v": "24",
-                "vt": "num"
+                "v": "1",
+                "vt": "str"
             },
             {
-                "t": "else"
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
             }
         ],
         "checkall": "true",

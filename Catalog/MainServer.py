@@ -247,7 +247,8 @@ class Registrazione(object):
                             json.dump(self.catalog, f,indent=2)
                         return "OK"
             return "Paziente non trovato"
-
+        
+        
 
     def POST(self,*uri,**params):
         
