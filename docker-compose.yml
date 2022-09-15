@@ -1,19 +1,19 @@
 version: '3.8'
 services:
 
-  Catalog:
-    container_name: Catalog
-    image: catalog_1
-    build: 
-      context: ./Catalog
-      dockerfile: dockerfile
-    restart : on-failure
-    ports:
-      - "8085:8085"
-    expose:
-      - 8085
-    volumes:
-      - ./Catalog:/Catalog 
+  # Catalog:
+  #   container_name: Catalog
+  #   image: catalog_1
+  #   build: 
+  #     context: ./Catalog
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   ports:
+  #     - "8085:8085"
+  #   expose:
+  #     - 8085
+  #   volumes:
+  #     - ./Catalog:/Catalog 
 
   FrontEnd:
     container_name: FrontEnd
