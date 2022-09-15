@@ -107,6 +107,7 @@ class DoctorBot:
                 api_registrazione_dottore = get_api_from_service_and_name( registration_service, "registrazione_dottore" )
                
                 registration_uri = api_registrazione_dottore["uri"]
+                
             except:
                 print("Registration - error [ERR 9].")
 
@@ -115,6 +116,7 @@ class DoctorBot:
             #uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
             uri = f"http://{self.localhost}:{registration_port}/{registration_uri}"                                                                      
             self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
+            
 
         elif message == "/registrazione_paziente": 
 

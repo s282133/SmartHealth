@@ -17,6 +17,23 @@ def openCatalogue():
     #time.sleep(1)
     return catalog
 
+def getListsOfTSinfo():
+    catalog = openCatalogue()
+    lista = catalog["resources"]
+    patientIDs_channels = {}
+    for currentDoctor in lista:
+        patientList = currentDoctor["patientList"]
+        for currentPatient in patientList:
+            patientID = currentPatient["patientID"]
+            connectedDevice = currentPatient["connectedDevice"]
+            ts_info = connectedDevice["thingspeakInfo"]
+            channelID = ts_info["channel"]
+            print(f"{patientID},{channelID}")
+            key_patientID = int(patientID)
+            patientIDs_channels[f"{key_patientID}"] = channelID
+    print(patientIDs_channels)
+    return_dict = dict(patientIDs_channels)
+    return json.dumps(patientIDs_channels)
 
 def get_patient_from_patient_id(patientID):
     catalog = openCatalogue()
@@ -28,7 +45,17 @@ def get_patient_from_patient_id(patientID):
             return currentPatient   
     return None
 
-
+# # prova
+# def get_registrazion_confirm_from_chat_ID(chat_ID):
+#     catalog = openCatalogue()
+#     lista = catalog["resources"]
+#     for currentDoctor in lista:
+#         telegramID = currentDoctor["connectedDevice"]["telegramID"]  
+#         if telegramID == int(chat_ID):
+#             return 1
+#     return 0
+        
+    
 def retrievePregnancyDayOne(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     personalData = currentPatient["personalData"] 
@@ -153,21 +180,23 @@ def get_lista_pazienti_simulati():
     }
     catalog = openCatalogue()
     lista = catalog["resources"]
-    for currentDoctor in lista:
-        patientList = currentDoctor["patientList"]
-        for currentPatient in patientList:
-            patientID = currentPatient["patientID"]
-            idRegistratoSuRaspberry = currentPatient["idRegistratoSuRaspberry"]
-            
-            # #prova
-            # connectedDevice=currentPatient["connectedDevice"]
-            # onlineSince = connectedDevice["onlineSince"]
-            #aggiunto and
-            if idRegistratoSuRaspberry == "no":
-                
-                json_lista["lista_pazienti_simulati"].append(patientID)
-    
-    return json.dumps(json_lista)
+    if len(lista)!=0:
+        for currentDoctor in lista:
+            patientList = currentDoctor["patientList"]
+            if len(patientList)!=0:
+                for currentPatient in patientList:
+                    patientID = currentPatient["patientID"]
+                    idRegistratoSuRaspberry = currentPatient["idRegistratoSuRaspberry"]
+                    
+                    # #prova
+                    # connectedDevice=currentPatient["connectedDevice"]
+                    # onlineSince = connectedDevice["onlineSince"]
+                    #aggiunto and
+                    if idRegistratoSuRaspberry == "no":
+                        
+                        json_lista["lista_pazienti_simulati"].append(patientID)
+ 
+        return json.dumps(json_lista)
 
 
 # esiste una copia identica in functionsOnCatalogue

@@ -25,7 +25,6 @@ class sensor_publisher:
         self.clientMQTT.myPublish(topic,message)
 
 if __name__ == "__main__":
-
     try:
         json_lista = http_get_lista_pazienti_simulati()
         lista_pazienti_simulati = json_lista["lista_pazienti_simulati"]
@@ -64,7 +63,6 @@ if __name__ == "__main__":
     myPublisher.start()
 
     done=False
-
     tempSensor = []
     if len(lista_pazienti_simulati)!=0:
         for patient in lista_pazienti_simulati:

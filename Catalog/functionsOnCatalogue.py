@@ -3,6 +3,25 @@ import json
 import requests
 import time
 
+def http_retrieveTSpatientIDsAndChannelIDs():
+    
+    ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
+    api = get_api_from_service_and_name( ResourceService, "retrieve_TS_patientIDs_channelIDs" )
+
+    local_uri = api["uri"]
+
+    print(f"request : http://{ipAddress}:{port}/{local_uri}")
+
+    r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
+
+    print(f"status code : {r.status_code}")
+
+    if r.status_code == 200:
+        return r.text
+    else:
+        print("http_retrieveTSpatientIDsAndChannelIDs returned status code different from 200")
+        return None
+
 def get_host_and_port():
     # config.json mi dice qual è il server da interrogare
     filename = 'config.json'
@@ -316,7 +335,7 @@ def getWeek(dayOne):
     dayoneD = str(dayOne).split("-")[2]
     #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")h
+    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
 
     elapsedDays = currDays - dayoneDays
     week = int(elapsedDays / 7)

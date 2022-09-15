@@ -1,0 +1,180 @@
+{
+    "channel": {
+        "id": 1721151,
+        "name": "channel1",
+        "description": "prova1",
+        "latitude": "41.0",
+        "longitude": "30.0",
+        "field1": "heart_rate",
+        "field2": "pressure_high",
+        "field3": "glycemia",
+        "field4": "pressure_low",
+        "field5": "peso",
+        "field6": "temperature",
+        "created_at": "2022-05-01T15:50:41Z",
+        "updated_at": "2022-07-19T08:24:39Z",
+        "last_entry_id": 224
+    },
+    "feeds": [
+        {
+            "created_at": "2022-07-30T15:59:53Z",
+            "entry_id": 127,
+            "field5": "67"
+        },
+        {
+            "created_at": "2022-08-17T09:36:28Z",
+            "entry_id": 172,
+            "field5": "75"
+        },
+        {
+            "created_at": "2022-08-17T09:37:08Z",
+            "entry_id": 173,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:37:29Z",
+            "entry_id": 174,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:38:30Z",
+            "entry_id": 175,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:39:30Z",
+            "entry_id": 177,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:40:01Z",
+            "entry_id": 178,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:40:31Z",
+            "entry_id": 179,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:41:07Z",
+            "entry_id": 180,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:41:27Z",
+            "entry_id": 181,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:42:32Z",
+            "entry_id": 182,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:42:53Z",
+            "entry_id": 183,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:43:33Z",
+            "entry_id": 184,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:44:18Z",
+            "entry_id": 185,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:44:34Z",
+            "entry_id": 186,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:44:59Z",
+            "entry_id": 187,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:45:34Z",
+            "entry_id": 188,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:46:35Z",
+            "entry_id": 189,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:46:56Z",
+            "entry_id": 190,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:47:35Z",
+            "entry_id": 191,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:48:51Z",
+            "entry_id": 193,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:49:37Z",
+            "entry_id": 194,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:50:02Z",
+            "entry_id": 195,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:50:37Z",
+            "entry_id": 196,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:51:28Z",
+            "entry_id": 197,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:52:39Z",
+            "entry_id": 198,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T09:52:54Z",
+            "entry_id": 199,
+            "field5": "68"
+        },
+        {
+            "created_at": "2022-08-17T10:12:25Z",
+            "entry_id": 203,
+            "field5": "80"
+        },
+        {
+            "created_at": "2022-08-17T10:12:42Z",
+            "entry_id": 204,
+            "field5": "80"
+        },
+        {
+            "created_at": "2022-08-17T10:13:32Z",
+            "entry_id": 205,
+            "field5": "80"
+        },
+        {
+            "created_at": "2022-08-17T10:14:33Z",
+            "entry_id": 206,
+            "field5": "80"
+        },
+        {
+            "created_at": "2022-08-17T10:14:58Z",
+            "entry_id": 207,
+            "field5": "80"
+        }
+    ]
+}
