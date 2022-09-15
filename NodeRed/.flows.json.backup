@@ -4832,12 +4832,12 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "payload",
+        "complete": "payload[0].patientID",
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1000,
-        "y": 2120,
+        "x": 740,
+        "y": 2020,
         "wires": []
     },
     {
@@ -5033,7 +5033,7 @@
         "type": "switch",
         "z": "aa690620becf8e98",
         "name": "",
-        "property": "payload.patientID",
+        "property": "payload[0].patientID",
         "propertyType": "msg",
         "rules": [
             {
@@ -5042,7 +5042,7 @@
                 "vt": "num"
             },
             {
-                "t": "neq",
+                "t": "eq",
                 "v": "2",
                 "vt": "num"
             }
