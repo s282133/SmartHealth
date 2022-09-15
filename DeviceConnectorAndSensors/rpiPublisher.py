@@ -20,8 +20,8 @@ TOPIC_TEMP_RASPBERRY = "temp_raspberry"
 TOPIC_TEMP_SIMULATE = "temp_simulate"
 
 # periodo di polling in minuti
-POLLING_PERIOD_HR       = 100     
-POLLING_PERIOD_PRESSURE = 130        
+POLLING_PERIOD_HR       = 60    
+POLLING_PERIOD_PRESSURE = 85        
 POLLING_PERIOD_GLYCEMIA = 115       
 
 POLLING_MONITORING_HR       = 25        
