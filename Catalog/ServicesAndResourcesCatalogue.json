@@ -370,7 +370,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-14",
+            "onlineSince": "2022-09-15",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1721151,
@@ -395,7 +395,7 @@
           "monitoring": "on",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-14",
+            "onlineSince": "2022-09-15",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1858750,
@@ -517,14 +517,14 @@
           "personalData": {
             "taxIDcode": "2828273",
             "userEmail": "Giuiagiuia@giuia.com",
-            "pregnancyDayOne": "20220122"
+            "pregnancyDayOne": "2022-03-02"
           },
           "idRegistratoSuRaspberry": "no",
           "state": "attivo",
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "Aaaaa",
-            "onlineSince": "2022-09-14",
+            "onlineSince": "2022-09-15",
             "telegramID": 0,
             "thingspeakInfo": {
               "channel": 1859286,

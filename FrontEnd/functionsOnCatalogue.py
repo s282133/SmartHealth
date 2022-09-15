@@ -3,6 +3,25 @@ import json
 import requests
 import time
 
+def http_retrieveTSpatientIDsAndChannelIDs():
+    
+    ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
+    api = get_api_from_service_and_name( ResourceService, "retrieve_TS_patientIDs_channelIDs" )
+
+    local_uri = api["uri"]
+
+    print(f"request : http://{ipAddress}:{port}/{local_uri}")
+
+    r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
+
+    print(f"status code : {r.status_code}")
+
+    if r.status_code == 200:
+        return r.text
+    else:
+        print("http_retrieveTSpatientIDsAndChannelIDs returned status code different from 200")
+        return None
+
 def get_host_and_port():
     # config.json mi dice qual è il server da interrogare
     filename = 'config.json'
@@ -323,38 +342,20 @@ def getWeek(dayOne):
     return week
 
 
-# def get_registrazion_from_telegramID(telegram_ID):
-#     FrontEnd, ipAddress, port = get_service_host_and_port("FrontEnd")
-#     api = get_api_from_service_and_name( FrontEnd, "get_registrazion_confirm" )
-
-#     local_uri = api["uri"]
-#     local_uri_final = local_uri.replace("{{chat_ID}}", str(telegram_ID)) 
-
-#     r = requests.get(f'http://{ipAddress}:{port}/{local_uri_final}') 
-
-#     # ipAddress, port = get_host_and_port()
-#     # r = requests.get(f'http://{ipAddress}:{port}/lista_pazienti_da_monitorare') 
-    
-#     if r.status_code == 200:
-#         return  r.text
-#     else:
-#         return None
-    
-
-# # da cancellare alla fine, serve solo per inserire il -1 in automatico (quando si debugga è utile)    
-# def setOnlineSinceFromClientID(patient_ID):
-#     filename = 'ServicesAndResourcesCatalogue.json'
-#     filepointer = open(filename)
-#     dictionaryCatalog = json.load(filepointer)
-#     docList=dictionaryCatalog["resources"]
-#     for _doctors in docList:
-#         patientList=_doctors["patientList"] 
-#         for _patients in patientList: 
-#             if patient_ID == _patients["patientID"]:
-#                 _patients["connectedDevice"]["onlineSince"] = -1
-#                 filepointer.close()
-#                 with open('ServicesAndResourcesCatalogue.json', "w") as f:
-#                     json.dump(dictionaryCatalog, f, indent=2)
+# da cancellare alla fine, serve solo per inserire il -1 in automatico (quando si debugga è utile)    
+def setOnlineSinceFromClientID(patient_ID):
+    filename = 'ServicesAndResourcesCatalogue.json'
+    filepointer = open(filename)
+    dictionaryCatalog = json.load(filepointer)
+    docList=dictionaryCatalog["resources"]
+    for _doctors in docList:
+        patientList=_doctors["patientList"] 
+        for _patients in patientList: 
+            if patient_ID == _patients["patientID"]:
+                _patients["connectedDevice"]["onlineSince"] = -1
+                filepointer.close()
+                with open('ServicesAndResourcesCatalogue.json', "w") as f:
+                    json.dump(dictionaryCatalog, f, indent=2)
 
 
 

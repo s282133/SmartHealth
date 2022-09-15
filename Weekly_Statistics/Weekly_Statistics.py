@@ -71,6 +71,7 @@ class statistics():
 
     def notify(self,topic, payload): 
             measure_type = str(str(topic).split("/")[4])
+            [field, unit] = self.retrieve_field_and_unit(measure_type)
             patientID = str(str(topic).split("/")[3])
             # print(f"measure type : {measure_type}")
             content = (payload.decode("utf-8")) 
@@ -88,25 +89,31 @@ class statistics():
                 self.patientID = dict["channel"]["name"]
                 #print(f"{self.clientID} patientID: {self.patientID}")
                 feeds = dict["feeds"]
-                for feed in feeds:
-                    [field, unit] = self.retrieve_field_and_unit(measure_type)
-                    measure = feed[field]
-                    try:
-                        measure = float(measure)
-                        sum += measure
-                        if measure < min:
-                            min = measure
-                        if measure > max:
-                            max = measure
-                    except:
-                        invalid += 1
-                if(len(feeds) > 0 and len(feeds) > invalid):
-                    avg = sum / (len(feeds) - invalid)
-                    avg = float("{0:.2f}".format(avg))
+                if len(feeds) > 0:
+                    for feed in feeds:
+                        [field, unit] = self.retrieve_field_and_unit(measure_type)
+                        # print(f"unit : {unit}, measure_type {measure_type}, patient {patientID}")
+                        measure = feed[field]
+                        try:
+                            measure = float(measure)
+                            sum += measure
+                            if measure < min:
+                                min = measure
+                            if measure > max:
+                                max = measure
+                        except:
+                            invalid += 1
+                    if(len(feeds) > 0 and len(feeds) > invalid):
+                        avg = sum / (len(feeds) - invalid)
+                        avg = float("{0:.2f}".format(avg))
+                    else:
+                        min = None
+                        avg = None
+                        max = None 
                 else:
                     min = None
                     avg = None
-                    max = None 
+                    max = None
             event = self.create_event(measure_type, unit, min, avg, max)
             self.events.append(event)   
             # for event in self.events:
@@ -116,6 +123,7 @@ class statistics():
             for parameter_name in self.parameters_list:
                 if parameter_name not in self.current_event_parameters:
                     at_least_one_not_present = 1
+                    # print("non ancora")
             # qui ci sono tutti!
             if at_least_one_not_present == 0:
                 message = self.create_message(self.events, self.patientID)
@@ -124,9 +132,13 @@ class statistics():
                 pub_topic_stats1 = str(self.mqtt_topic_pub_stats).replace("{{base_topic}}", self.base_topic)
                 pub_topic_stats2 = str(pub_topic_stats1).replace("{{patientID}}", self.patientID)
                 pub_topic_stats3 = str(pub_topic_stats2).strip("/{{{{measure}}}}")
-                
+           
+                full_name = http_getNameFromClientID(patientID)
+                state = http_getMonitoringStateFromClientID(patientID)
+                pregnancy_day_one = http_retrievePregnancyDayOne(patientID)                
+
                 self.myPublish(pub_topic_stats3, message)
-                # self.publishPatientInfo()
+                self.publishPatientInfo(param_patientID=patientID, param_dayOne= pregnancy_day_one, param_patientName= full_name, param_state= state)
                 self.current_event_parameters = []
                 self.events = []
 
@@ -167,15 +179,19 @@ class statistics():
         sub_topic = str(sub_topic2).strip("/{{measure}}")
         self.client_MQTT.mySubscribe(sub_topic)
 
-    def publishPatientInfo(self):
+    def publishPatientInfo(self, param_patientID, param_patientName, param_dayOne, param_state):
+        # {{base_topic}}/info/{{patientID}}/{{measure}}
         patientInfo = {
-                "full_name": self.patient_name,
-                "patientID": self.clientID,
-                "day_one": self.patient_dayOne,
-                "state": self.patient_state
+                "full_name": param_patientName,
+                "patientID": param_patientID,
+                "day_one": param_dayOne,
+                "state": param_state
         }
-        info_pub_topic = self.pub_topic.replace("statistic", "info")
-        self.myPublish(info_pub_topic, patientInfo)
+
+        info_pub_topic1 = str(self.mqtt_topic_pub_info).replace("{{base_topic}}", self.base_topic)
+        info_pub_topic2 = str(info_pub_topic1).replace("{{patientID}}/{{measure}}", param_patientID)
+
+        self.myPublish(info_pub_topic2, patientInfo)
 
 if __name__ == "__main__" :
 

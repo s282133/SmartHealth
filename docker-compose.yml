@@ -104,14 +104,14 @@ services:
     volumes:
       - ./Weekly_Statistics:/Weekly_Statistics
 
-  NodeRed:
-    container_name: NodeRed
-    image: nodered/node-red
-    #build: ./NodeRed
-    restart : on-failure
-    ports:
-      - "1880:1880"
-    expose:
-      - 1880
-    volumes: 
-      - ./NodeRed:/data
+  # NodeRed:
+  #   container_name: NodeRed
+  #   image: nodered/node-red
+  #   #build: ./NodeRed
+  #   restart : on-failure
+  #   ports:
+  #     - "1880:1880"
+  #   expose:
+  #     - 1880
+  #   volumes: 
+  #     - ./NodeRed:/data
