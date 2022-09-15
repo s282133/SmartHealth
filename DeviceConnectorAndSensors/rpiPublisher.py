@@ -19,7 +19,7 @@ from glycemiaSensor import glycemiaSensorClass
 TOPIC_TEMP_RASPBERRY = "temp_raspberry"
 TOPIC_TEMP_SIMULATE = "temp_simulate"
 
-# periodo di polling in minuti ! ciao, sono Laura's pc
+# periodo di polling in minuti ! ciao, sono Laura's pc modifica del cazzo
 POLLING_PERIOD_HR       = 60    
 POLLING_PERIOD_PRESSURE = 85        
 POLLING_PERIOD_GLYCEMIA = 115       
