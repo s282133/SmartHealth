@@ -323,20 +323,38 @@ def getWeek(dayOne):
     return week
 
 
-# da cancellare alla fine, serve solo per inserire il -1 in automatico (quando si debugga è utile)    
-def setOnlineSinceFromClientID(patient_ID):
-    filename = 'ServicesAndResourcesCatalogue.json'
-    filepointer = open(filename)
-    dictionaryCatalog = json.load(filepointer)
-    docList=dictionaryCatalog["resources"]
-    for _doctors in docList:
-        patientList=_doctors["patientList"] 
-        for _patients in patientList: 
-            if patient_ID == _patients["patientID"]:
-                _patients["connectedDevice"]["onlineSince"] = -1
-                filepointer.close()
-                with open('ServicesAndResourcesCatalogue.json', "w") as f:
-                    json.dump(dictionaryCatalog, f, indent=2)
+# def get_registrazion_from_telegramID(telegram_ID):
+#     FrontEnd, ipAddress, port = get_service_host_and_port("FrontEnd")
+#     api = get_api_from_service_and_name( FrontEnd, "get_registrazion_confirm" )
+
+#     local_uri = api["uri"]
+#     local_uri_final = local_uri.replace("{{chat_ID}}", str(telegram_ID)) 
+
+#     r = requests.get(f'http://{ipAddress}:{port}/{local_uri_final}') 
+
+#     # ipAddress, port = get_host_and_port()
+#     # r = requests.get(f'http://{ipAddress}:{port}/lista_pazienti_da_monitorare') 
+    
+#     if r.status_code == 200:
+#         return  r.text
+#     else:
+#         return None
+    
+
+# # da cancellare alla fine, serve solo per inserire il -1 in automatico (quando si debugga è utile)    
+# def setOnlineSinceFromClientID(patient_ID):
+#     filename = 'ServicesAndResourcesCatalogue.json'
+#     filepointer = open(filename)
+#     dictionaryCatalog = json.load(filepointer)
+#     docList=dictionaryCatalog["resources"]
+#     for _doctors in docList:
+#         patientList=_doctors["patientList"] 
+#         for _patients in patientList: 
+#             if patient_ID == _patients["patientID"]:
+#                 _patients["connectedDevice"]["onlineSince"] = -1
+#                 filepointer.close()
+#                 with open('ServicesAndResourcesCatalogue.json', "w") as f:
+#                     json.dump(dictionaryCatalog, f, indent=2)
 
 
 

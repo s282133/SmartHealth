@@ -159,17 +159,17 @@
           "functionality_name": "weeklystats_sub",
           "description": "Invio dei file di statistiche da TS a WeeklyStats",
           "topic": "{{base_topic}}/statistics_info/{{patientID}}/{{measure}}"
-        },       
+        },
         {
           "functionality_name": "weeklystats_pub_info",
           "description": "Invio delle info basi delle pazienti da WS a NR",
           "topic": "{{base_topic}}/info/{{patientID}}/{{measure}}"
-        },      
+        },
         {
           "functionality_name": "weeklystats_pub_stats",
           "description": "Invio delle stats [min, avg, max] delle pazienti da WS a NR",
           "topic": "{{base_topic}}/statistics/{{patientID}}/{{measure}}"
-        },             
+        },
         {
           "functionality_name": "temp_simulate",
           "description": "Invio delle temperature simulate e non dei pazienti",
@@ -238,6 +238,12 @@
           "description": "Form per la registrazione del dottore",
           "access_mode": "GET",
           "uri": "registrazione_dottore?chat_ID={{chat_ID}}"
+        },
+        {
+          "functionality_name": "get_registrazion_confirm",
+          "description": "Ricerca medico dopo la registrazione",
+          "access_mode": "GET",
+          "uri": "get_registrazion_confirm?chat_ID={{chat_ID}}"
         },
         {
           "functionality_name": "registrazione_paziente",
@@ -336,8 +342,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 25,
-    "LastDoctorID": 28
+    "LastPatientID": 26,
+    "LastDoctorID": 32
   },
   "resources": [
     {
@@ -493,6 +499,98 @@
           "lastUpdate": "2022-09-14"
         }
       ]
+    },
+    {
+      "doctorID": 29,
+      "doctorName": "Andrea",
+      "doctorSurname": "Bellisshimo",
+      "doctorMail": "andrea.bellisshimo@brindisi.it",
+      "lastUpdate": "2022-09-14",
+      "connectedDevice": {
+        "telegramID": 175270730
+      },
+      "patientList": [
+        {
+          "patientID": 26,
+          "patientName": "Giuia",
+          "patientSurname": "Giuia",
+          "personalData": {
+            "taxIDcode": "2828273",
+            "userEmail": "Giuiagiuia@giuia.com",
+            "pregnancyDayOne": "20220122"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "Aaaaa",
+            "onlineSince": "2022-09-14",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1859286,
+              "apikeys": [
+                "71O2SU08KQKPGIEK",
+                "8DJKSLQ0Q34D6AUT"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "Aaaaa",
+          "patientID": 26,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-14"
+        }
+      ]
+    },
+    {
+      "doctorID": 30,
+      "doctorName": "Andrea",
+      "doctorSurname": "Bellisshimo",
+      "doctorMail": "andrea.bellisshimo@brindisi.it",
+      "lastUpdate": "2022-09-14",
+      "connectedDevice": {
+        "telegramID": 175270730
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 31,
+      "doctorName": "m",
+      "doctorSurname": "m",
+      "doctorMail": "m",
+      "lastUpdate": "2022-09-14",
+      "connectedDevice": {
+        "telegramID": 786029508
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 32,
+      "doctorName": "Mario",
+      "doctorSurname": "Giorgianni",
+      "doctorMail": "mario.rossi@gmail.com",
+      "lastUpdate": "2022-09-15",
+      "connectedDevice": {
+        "telegramID": 786029508
+      },
+      "patientList": [],
+      "devicesList": []
     }
   ]
 }

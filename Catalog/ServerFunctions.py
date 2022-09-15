@@ -45,7 +45,17 @@ def get_patient_from_patient_id(patientID):
             return currentPatient   
     return None
 
-
+# # prova
+# def get_registrazion_confirm_from_chat_ID(chat_ID):
+#     catalog = openCatalogue()
+#     lista = catalog["resources"]
+#     for currentDoctor in lista:
+#         telegramID = currentDoctor["connectedDevice"]["telegramID"]  
+#         if telegramID == int(chat_ID):
+#             return 1
+#     return 0
+        
+    
 def retrievePregnancyDayOne(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     personalData = currentPatient["personalData"] 

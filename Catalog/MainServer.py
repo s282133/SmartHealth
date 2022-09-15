@@ -120,6 +120,14 @@ class Registrazione(object):
                 return dayOne
             else:
                 raise cherrypy.HTTPError(500, "Pregnancy State not found")
+            
+            
+# # get_registrazion_confirm: restituisce se il dottore è presente o meno
+#         elif uri[0] == "get_registrazion_confirm":
+#             chat_ID = params["chat_ID"]
+#             trovato = get_registrazion_confirm_from_chat_ID(chat_ID)
+#             print(f"trovato: {trovato}")
+#             return int(trovato)
 
 
 # get_name_from_id: restituisce il nome del paziente dal suo ID 
