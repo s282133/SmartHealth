@@ -15,94 +15,94 @@ services:
   #   volumes:
   #     - ./Catalog:/Catalog 
 
-  FrontEnd:
-    container_name: FrontEnd
-    image: frontend_1
-    build: 
-      context: ./FrontEnd
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
-    ports:
-      - "8093:8093"
-    expose:
-      - 8093
+  # FrontEnd:
+  #   container_name: FrontEnd
+  #   image: frontend_1
+  #   build: 
+  #     context: ./FrontEnd
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
+  #   ports:
+  #     - "8093:8093"
+  #   expose:
+  #     - 8093
 
-  DeviceConnectorAndSensors:
-    container_name: DeviceConnectorAndSensors
-    image: device_connector_1
-    build: 
-      context: ./DeviceConnectorAndSensors
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
+  # DeviceConnectorAndSensors:
+  #   container_name: DeviceConnectorAndSensors
+  #   image: device_connector_1
+  #   build: 
+  #     context: ./DeviceConnectorAndSensors
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
  
-  DoctorBot:
-    container_name: DoctorBot
-    image: doctor_bot_1
-    build: 
-      context: ./DoctorBot
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
+  # DoctorBot:
+  #   container_name: DoctorBot
+  #   image: doctor_bot_1
+  #   build: 
+  #     context: ./DoctorBot
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
     
 
-  PatientBot:
-    container_name: PatientBot
-    image: patient_bot_1
-    build: 
-      context: ./PatientBot
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
+  # PatientBot:
+  #   container_name: PatientBot
+  #   image: patient_bot_1
+  #   build: 
+  #     context: ./PatientBot
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
 
-  dataAnalysis:
-    container_name: dataAnalysis
-    image: data_analysis_1
-    build: 
-      context: ./PostProcessing
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
+  # dataAnalysis:
+  #   container_name: dataAnalysis
+  #   image: data_analysis_1
+  #   build: 
+  #     context: ./PostProcessing
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
 
-  Temperature_pub:
-    container_name: Temperature_pub
-    image: temperature_pub_1
-    build: 
-      context: ./Temperature_pub
-      dockerfile: dockerfile
-    restart : always
-    depends_on:
-      - Catalog
+  # Temperature_pub:
+  #   container_name: Temperature_pub
+  #   image: temperature_pub_1
+  #   build: 
+  #     context: ./Temperature_pub
+  #     dockerfile: dockerfile
+  #   restart : always
+  #   depends_on:
+  #     - Catalog
 
-  Thingspeak:
-    container_name: Thingspeak
-    image: thingspeak_1
-    build: 
-      context: ./Thingspeak
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
-    volumes:
-      - ./Thingspeak:/Thingspeak
+  # Thingspeak:
+  #   container_name: Thingspeak
+  #   image: thingspeak_1
+  #   build: 
+  #     context: ./Thingspeak
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
+  #   volumes:
+  #     - ./Thingspeak:/Thingspeak
 
-  Weekly_Statistics:
-    container_name: Weekly_Statistics
-    image: weekly_statistics_1
-    build: 
-      context: ./Weekly_Statistics
-      dockerfile: dockerfile
-    restart : on-failure
-    depends_on:
-      - Catalog
-    volumes:
-      - ./Weekly_Statistics:/Weekly_Statistics
+  # Weekly_Statistics:
+  #   container_name: Weekly_Statistics
+  #   image: weekly_statistics_1
+  #   build: 
+  #     context: ./Weekly_Statistics
+  #     dockerfile: dockerfile
+  #   restart : on-failure
+  #   depends_on:
+  #     - Catalog
+  #   volumes:
+  #     - ./Weekly_Statistics:/Weekly_Statistics
 
   NodeRed:
     container_name: NodeRed

@@ -4414,5 +4414,37 @@
         "x": 1160,
         "y": 2020,
         "wires": []
+    },
+    {
+        "id": "5c9750cb144a4905",
+        "type": "ui_switch",
+        "z": "aa690620becf8e98",
+        "name": "",
+        "label": "switch",
+        "tooltip": "hehe",
+        "group": "b91583f93c09d6d7",
+        "order": 35,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 510,
+        "y": 2300,
+        "wires": [
+            []
+        ]
     }
 ]
