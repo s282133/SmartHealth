@@ -135,7 +135,7 @@ class statistics():
            
                 full_name = http_getNameFromClientID(patientID)
                 state = http_getMonitoringStateFromClientID(patientID)
-                pregnancy_day_one = http_retrievePregnancyDayOne(patientID) #               
+                pregnancy_day_one = http_retrievePregnancyDayOne(patientID) # 1 2 3           
 
                 self.myPublish(pub_topic_stats3, message)
                 self.publishPatientInfo(param_patientID=patientID, param_dayOne= pregnancy_day_one, param_patientName= full_name, param_state= state)
