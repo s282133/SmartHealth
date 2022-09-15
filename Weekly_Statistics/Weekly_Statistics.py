@@ -183,7 +183,7 @@ class statistics():
         # {{base_topic}}/info/{{patientID}}/{{measure}}
         patientInfo = {
                 "full_name": param_patientName,
-                "patientID": param_patientID,
+                "patientID": int(param_patientID),
                 "day_one": param_dayOne,
                 "state": param_state
         }
