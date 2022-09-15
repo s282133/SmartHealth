@@ -342,8 +342,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 26,
-    "LastDoctorID": 32
+    "LastPatientID": 32,
+    "LastDoctorID": 34
   },
   "resources": [
     {
@@ -405,6 +405,31 @@
               ]
             }
           }
+        },
+        {
+          "patientID": 27,
+          "patientName": "Giulia",
+          "patientSurname": "Codagnone",
+          "personalData": {
+            "taxIDcode": "ABCDEFGH",
+            "userEmail": "mario.rossi@gmail.com",
+            "pregnancyDayOne": "2022-05-03"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "raspberry22",
+            "onlineSince": "2022-09-15",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1860769,
+              "apikeys": [
+                "WI36EQXYJ0XV4I4O",
+                "NI0KA4K5H0ZYFCF6"
+              ]
+            }
+          }
         }
       ],
       "devicesList": [
@@ -441,6 +466,23 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-09-14"
+        },
+        {
+          "deviceName": "raspberry22",
+          "patientID": 27,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-15"
         }
       ]
     },
@@ -591,6 +633,104 @@
       },
       "patientList": [],
       "devicesList": []
+    },
+    {
+      "doctorID": 34,
+      "doctorName": "f",
+      "doctorSurname": "f",
+      "doctorMail": "f",
+      "lastUpdate": "2022-09-15",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [
+        {
+          "patientID": 31,
+          "patientName": "r",
+          "patientSurname": "r",
+          "personalData": {
+            "taxIDcode": "r",
+            "userEmail": "r",
+            "pregnancyDayOne": "2022-09-08"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "4",
+            "onlineSince": "2022-09-15",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1860793,
+              "apikeys": [
+                "FFLWFZUAAG25VOLZ",
+                "D4ZQX1MKHSDSU89J"
+              ]
+            }
+          }
+        },
+        {
+          "patientID": 32,
+          "patientName": "e",
+          "patientSurname": "e",
+          "personalData": {
+            "taxIDcode": "e",
+            "userEmail": "e",
+            "pregnancyDayOne": "2022-09-02"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "3",
+            "onlineSince": "2022-09-15",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1860794,
+              "apikeys": [
+                "TUUFLHYOOR85HMUE",
+                "RKS19UG5QT6JQW84"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "4",
+          "patientID": 31,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-15"
+        },
+        {
+          "deviceName": "3",
+          "patientID": 32,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-15"
+        }
+      ]
     }
   ]
 }

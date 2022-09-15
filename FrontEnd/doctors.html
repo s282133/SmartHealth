@@ -102,52 +102,10 @@
                     // jinja
                     // location.reload()
                     // console.log("Updated")
-                    prova(response);
                    
                 },
             });
         }
-
-
-        function updateTable(data) {
-            var updatedTableBody = "";
-            for (var i = 0; i < data.patientList.length; i++) {
-                updatedTableBody += "<tr>";
-                patient = data.patientList[i];
-                updatedTableBody +=
-                    "<td>" +
-                    patient.patientID +
-                    "</td>" +
-                    "<td>" +
-                    patient.patientName +
-                    "</td>" +
-                    "<td>" +
-                    patient.patientSurname +
-                    "</td>" +
-                    "<td>" +
-                    patient.personalData.taxIDcode +
-                    "</td>" +
-                    "<td>" +
-                    patient.personalData.userEmail +
-                    "</td>" +
-					"<td>" +
-					patient.personalData.pregnancyDayOne +
-					"</td>" +
-					"<td>" +
-					patient.connectedDevice.deviceName +
-					"</td>"+
-                    "<td>" +
-                    patient.idRegistratoSuRaspberry +
-                    "</td>";
-                updatedTableBody += "</tr>";
-            }
-
-            
-
-            $("#tableBody").html(updatedTableBody);
-        }
-
-
-        
+ 
     </script>
 </body>

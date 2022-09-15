@@ -180,21 +180,23 @@ def get_lista_pazienti_simulati():
     }
     catalog = openCatalogue()
     lista = catalog["resources"]
-    for currentDoctor in lista:
-        patientList = currentDoctor["patientList"]
-        for currentPatient in patientList:
-            patientID = currentPatient["patientID"]
-            idRegistratoSuRaspberry = currentPatient["idRegistratoSuRaspberry"]
-            
-            # #prova
-            # connectedDevice=currentPatient["connectedDevice"]
-            # onlineSince = connectedDevice["onlineSince"]
-            #aggiunto and
-            if idRegistratoSuRaspberry == "no":
-                
-                json_lista["lista_pazienti_simulati"].append(patientID)
-    
-    return json.dumps(json_lista)
+    if len(lista)!=0:
+        for currentDoctor in lista:
+            patientList = currentDoctor["patientList"]
+            if len(patientList)!=0:
+                for currentPatient in patientList:
+                    patientID = currentPatient["patientID"]
+                    idRegistratoSuRaspberry = currentPatient["idRegistratoSuRaspberry"]
+                    
+                    # #prova
+                    # connectedDevice=currentPatient["connectedDevice"]
+                    # onlineSince = connectedDevice["onlineSince"]
+                    #aggiunto and
+                    if idRegistratoSuRaspberry == "no":
+                        
+                        json_lista["lista_pazienti_simulati"].append(patientID)
+ 
+        return json.dumps(json_lista)
 
 
 # esiste una copia identica in functionsOnCatalogue
