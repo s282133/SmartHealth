@@ -199,7 +199,7 @@ class Registrazione(object):
             lista_pazienti = get_lista_pazienti_simulati()
             return lista_pazienti
 
-
+# da cancellare se facciamo il delete
 # contolla_scadenza_week: controllo sulla week
         elif uri[0] == "contolla_scadenza_week":
             contolla_scadenza_week()            
@@ -404,6 +404,10 @@ class Registrazione(object):
             self.lista = self.dictionary["resources"][doctor_number]  
             return json.dumps(self.lista) 
 
+    def DELETE(self,*uri,**params):
+        
+        if uri[0] == "delete_ex_patients":
+            delete_ex_patients()   
 
     def RegistraPatientIdSuRaspberry( self, NewPatientID ):
         json_post = rasp_json.replace("{{NewPatientID}}",str(NewPatientID),1)
@@ -415,6 +419,8 @@ class Registrazione(object):
             else:    
                 return 0
         except: return -1
+        
+    
 
 
 

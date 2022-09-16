@@ -249,7 +249,18 @@ def http_contolla_scadenza_week():
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
     # ipAddress, port = get_host_and_port()
-    # requests.get(f'http://{ipAddress}:{port}/contolla_scadenza_week') 
+    # requests.get(f'http://{ipAddress}:{port}/contolla_scadenza_week')
+
+# prova_delete   
+def http_delete_ex_patients():
+
+    ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
+    api = get_api_from_service_and_name( ResourceService, "delete_ex_patients" )
+
+    local_uri = api["uri"]
+
+    r = requests.delete(f'http://{ipAddress}:{port}/{local_uri}') 
+     # requests.get(f'http://{ipAddress}:{port}/delete_ex_patients')  
 
 
 def http_get_lista_pazienti_da_monitorare():

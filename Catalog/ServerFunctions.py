@@ -223,7 +223,7 @@ def getWeek(dayOne):
     week = int(elapsedDays / 7)
     return week
 
-
+# da cancellare se mettiamo la delete
 def contolla_scadenza_week():
     catalog = openCatalogue()
     Modificato = False
@@ -249,6 +249,42 @@ def contolla_scadenza_week():
             json.dump(catalog, f, indent=2)
             f.close()
 
+# quella con delete
+def delete_ex_patients():
+    catalog = openCatalogue()
+    Modificato = False
+    doctorList = catalog["resources"]
+    for currentDoctor in doctorList:
+        patientList = currentDoctor["patientList"]
+        devicesList = currentDoctor["devicesList"]
+        for currentPatient in patientList:
+           #patientID_to_delete = int(currentPatient["patientID"])
+            dayOne = currentPatient["personalData"]["pregnancyDayOne"] 
+            week = getWeek(dayOne)
+            # print(f'Patient {currentPatient["patientID"]} is in week {week}')
+            if int(week) >= 36:
+                # print(f"Patient {patientID_to_delete} is being deleted from the database.")
+                # print(f"patients before : {patientList}")
+                patientID_to_delete = int(currentPatient["patientID"])
+                for currentDevice in devicesList:
+                    if int(currentDevice["patientID"]) == patientID_to_delete and len(devicesList)>1:
+                        devicesList = list(devicesList).remove(currentDevice)
+                    elif int(currentPatient["patientID"]) == patientID_to_delete and len(devicesList)==1:    
+                        devicesList=[]
+                    currentDoctor["devicesList"]=devicesList
+                if  len(patientList)>1:    
+                    patientList = list(patientList).remove(currentPatient)
+                elif len(patientList)==1:
+                        patientList=[]
+            currentDoctor["patientList"]=patientList
+                #currentDoctor["devicesList"]=devicesList
+        catalog["resources"] = doctorList
+        Modificato = True
+
+    if Modificato:
+        with open('ServicesAndResourcesCatalogue.json', "w") as f:
+            json.dump(catalog, f, indent=2)
+            f.close()
 
 def get_lista_pazienti_da_monitorare():
     json_lista = {

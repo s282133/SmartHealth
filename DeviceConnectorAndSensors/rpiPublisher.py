@@ -30,7 +30,7 @@ POLLING_MONITORING_GLYCEMIA = 115
 
 SECONDI_SCADENZA_MONITORING = 300      
 SECONDI_CONTROLLO_NUOVI_PAZIENTI = 30
-SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA = 3600*24
+SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA = 20
 
 ONE_MINUTE_IN_SEC = 0                
                                    
@@ -389,7 +389,9 @@ if __name__ == "__main__":
         # Eseguito all'avvio e ogni 24 ore
         if cicli % SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA == 0:
             try:
-                http_contolla_scadenza_week()
+                # prova_delete
+                http_delete_ex_patients()
+                #http_contolla_scadenza_week()
             except:
                 print("RPI Publisher - error [ERR 22]")
                 exit()
