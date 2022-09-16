@@ -345,7 +345,7 @@
   ],
   "resourceState": {
     "LastPatientID": 3,
-    "LastDoctorID": 2
+    "LastDoctorID": 17
   },
   "resources": [
     {
@@ -445,6 +445,186 @@
           "lastUpdate": "2022-09-14"
         }
       ]
+    },
+    {
+      "doctorID": 3,
+      "doctorName": "45g4364",
+      "doctorSurname": "c43v536h4",
+      "doctorMail": "v5b4wn",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 4,
+      "doctorName": "45g4364",
+      "doctorSurname": "c43v536h4",
+      "doctorMail": "v5b4wn",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 5,
+      "doctorName": "cv5y65",
+      "doctorSurname": "cv54657",
+      "doctorMail": "c43v54b657",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 6,
+      "doctorName": "prova",
+      "doctorSurname": "pagina",
+      "doctorMail": ".com",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 7,
+      "doctorName": "prova",
+      "doctorSurname": "pagina",
+      "doctorMail": ".com",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 8,
+      "doctorName": "prova",
+      "doctorSurname": "pagina",
+      "doctorMail": ".com",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 9,
+      "doctorName": "prova",
+      "doctorSurname": "pagina",
+      "doctorMail": ".com",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 10,
+      "doctorName": "prova",
+      "doctorSurname": "pagina",
+      "doctorMail": ".com",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 11,
+      "doctorName": "prova2",
+      "doctorSurname": "dottore",
+      "doctorMail": "1",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 12,
+      "doctorName": "prova2",
+      "doctorSurname": "dottore",
+      "doctorMail": "1",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 13,
+      "doctorName": "ecr4",
+      "doctorSurname": "4v354",
+      "doctorMail": "v3t5b4y6",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 14,
+      "doctorName": "cv354b65",
+      "doctorSurname": "c23",
+      "doctorMail": "454v56",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 15,
+      "doctorName": "45v6b7",
+      "doctorSurname": "465n 574",
+      "doctorMail": " 67",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 16,
+      "doctorName": "e w",
+      "doctorSurname": " r",
+      "doctorMail": "e ",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 17,
+      "doctorName": "e w",
+      "doctorSurname": " r",
+      "doctorMail": "e ",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
     }
   ]
 }

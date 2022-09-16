@@ -31,22 +31,8 @@ class FrontEnd:
             f1 = open(filename)
             fileContent = f1.read()      
             f1.close() 
-            # self.trovato=get_registrazion_from_telegramID(self.telegramID)
-            # if self.trovato==1:
-            #     filename1 = 'login_dottore.html'
-            #     f2 = open(filename1)
-            #     fileContent2 = f2.read()      
-            #     f2.close() 
-            #     return fileContent2
             return fileContent
-        
-        # elif uri[0] == "login_doctor": 
-        #     self.telegramID= int(params["chat_ID"]) 
-        #     filename1 = 'login_dottore.html'
-        #     f2 = open(filename1)
-        #     fileContent2 = f2.read()      
-        #     f2.close()    
-        #     return fileContent2
+    
 
 
 # registrazione_paziente : apertura pagina html per registrazione paziente
@@ -68,7 +54,7 @@ class FrontEnd:
         #print(self.telegramID)  DEBUG
         body = json.loads(cherrypy.request.body.read())
         resp = requests.post(f"{self.catalog_address}/{uri[0]}?chat_ID={self.telegramID}", json=body)
-        #qualsiasi sia l'uri lo manda direttamente al MainServer, così non bisogna modificarlo 
+        # qualsiasi sia l'uri lo manda direttamente al MainServer, così non bisogna modificarlo
         return resp
         
         
