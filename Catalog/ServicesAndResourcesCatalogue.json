@@ -345,7 +345,7 @@
   ],
   "resourceState": {
     "LastPatientID": 3,
-    "LastDoctorID": 17
+    "LastDoctorID": 58
   },
   "resources": [
     {
@@ -619,6 +619,498 @@
       "doctorName": "e w",
       "doctorSurname": " r",
       "doctorMail": "e ",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 18,
+      "doctorName": "ZQWXECTR",
+      "doctorSurname": "NIMO,P",
+      "doctorMail": "\u00e8+\u00f97",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 19,
+      "doctorName": "ZQWXECTR",
+      "doctorSurname": "NIMO,P",
+      "doctorMail": "\u00e8+\u00f97",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 20,
+      "doctorName": "ZQWXECTR",
+      "doctorSurname": "NIMO,P",
+      "doctorMail": "\u00e8+\u00f97",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 21,
+      "doctorName": "ZQWXECTR",
+      "doctorSurname": "NIMO,P",
+      "doctorMail": "\u00e8+\u00f97",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 22,
+      "doctorName": "",
+      "doctorSurname": "",
+      "doctorMail": "",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 23,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 24,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 25,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 26,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 27,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 28,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 29,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 30,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 31,
+      "doctorName": "1e2",
+      "doctorSurname": "3rc4v55b678",
+      "doctorMail": "c5",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 32,
+      "doctorName": "4",
+      "doctorSurname": "4",
+      "doctorMail": "4",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 33,
+      "doctorName": "4",
+      "doctorSurname": "4",
+      "doctorMail": "4",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 34,
+      "doctorName": "4",
+      "doctorSurname": "4",
+      "doctorMail": "4",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 35,
+      "doctorName": "s",
+      "doctorSurname": "d",
+      "doctorMail": "d",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 36,
+      "doctorName": "w",
+      "doctorSurname": "w",
+      "doctorMail": "w",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 37,
+      "doctorName": "w",
+      "doctorSurname": "w",
+      "doctorMail": "w",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 38,
+      "doctorName": "w",
+      "doctorSurname": "w",
+      "doctorMail": "w",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 39,
+      "doctorName": "gg",
+      "doctorSurname": "hh",
+      "doctorMail": "h",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 40,
+      "doctorName": "",
+      "doctorSurname": "",
+      "doctorMail": "s",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 41,
+      "doctorName": "7",
+      "doctorSurname": "7",
+      "doctorMail": "7",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 42,
+      "doctorName": "e",
+      "doctorSurname": "e",
+      "doctorMail": "e",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 43,
+      "doctorName": "f",
+      "doctorSurname": "f",
+      "doctorMail": "f",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 44,
+      "doctorName": "y",
+      "doctorSurname": "y",
+      "doctorMail": "y",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 45,
+      "doctorName": "d",
+      "doctorSurname": "d",
+      "doctorMail": "d",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 46,
+      "doctorName": "r",
+      "doctorSurname": "r",
+      "doctorMail": "r",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 47,
+      "doctorName": "4",
+      "doctorSurname": "4",
+      "doctorMail": "4",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 48,
+      "doctorName": "f",
+      "doctorSurname": "",
+      "doctorMail": "",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 49,
+      "doctorName": "s",
+      "doctorSurname": "s",
+      "doctorMail": "s",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 50,
+      "doctorName": "f",
+      "doctorSurname": "f",
+      "doctorMail": "f",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 51,
+      "doctorName": "x",
+      "doctorSurname": "x",
+      "doctorMail": "x",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 52,
+      "doctorName": "c",
+      "doctorSurname": "c",
+      "doctorMail": "c",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 53,
+      "doctorName": "f",
+      "doctorSurname": "f",
+      "doctorMail": "f",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 54,
+      "doctorName": "a",
+      "doctorSurname": "a",
+      "doctorMail": "a",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 55,
+      "doctorName": "a",
+      "doctorSurname": "a",
+      "doctorMail": "a",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 56,
+      "doctorName": "f",
+      "doctorSurname": "f",
+      "doctorMail": "f",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 57,
+      "doctorName": "e",
+      "doctorSurname": "E",
+      "doctorMail": "E",
+      "lastUpdate": "2022-09-16",
+      "connectedDevice": {
+        "telegramID": 491287865
+      },
+      "patientList": [],
+      "devicesList": []
+    },
+    {
+      "doctorID": 58,
+      "doctorName": "e",
+      "doctorSurname": "e",
+      "doctorMail": "e",
       "lastUpdate": "2022-09-16",
       "connectedDevice": {
         "telegramID": 491287865
