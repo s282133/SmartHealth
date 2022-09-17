@@ -12,7 +12,18 @@
         "field6": "temperature",
         "created_at": "2022-09-15T14:05:22Z",
         "updated_at": "2022-09-15T15:13:42Z",
-        "last_entry_id": 205
+        "last_entry_id": 233
     },
-    "feeds": []
+    "feeds": [
+        {
+            "created_at": "2022-09-17T07:45:06Z",
+            "entry_id": 232,
+            "field5": "70"
+        },
+        {
+            "created_at": "2022-09-17T08:45:05Z",
+            "entry_id": 233,
+            "field5": "90"
+        }
+    ]
 }
