@@ -36,6 +36,24 @@ def http_get_localhost():
     
     return ipAddress
 
+def http_get_user_localhost():
+
+    TelegramDocBotService, ipAddress, port = get_service_host_and_port("ResourceService")
+    monitoring_state_api = get_api_from_service_and_name( TelegramDocBotService, "get_user_localhost" )
+
+    local_uri = monitoring_state_api["uri"]
+
+    print(f"sto prendendo user localhost: GET http://{ipAddress}:{port}/{local_uri}")
+
+    r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
+
+    print(f"r.statuscode : {r.status_code}, r.text : {r.text}")
+
+    if r.status_code == 200:
+        return r.text
+    else:
+        return None
+
 #anche questo potrebbe dover essere modificato
 def http_get_host_and_port(parServiceName): 
     # config.json mi dice qual è il server da interrogare

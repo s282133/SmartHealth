@@ -359,3 +359,14 @@ def file_in_use(fpath):
         except OSError as e:
             return True
 
+def resetCatalog():
+    catalog = openCatalogue()
+    docList=catalog["resources"]
+    if len(docList) > 0:
+        for _doctors in docList:
+            patientList=_doctors["patientList"] 
+            if len(patientList) > 0:
+                for _patients in patientList: 
+                    _patients["connectedDevice"]["onlineSince"] = -1
+                    with open('ServicesAndResourcesCatalogue.json', "w") as f:
+                        json.dump(catalog, f, indent=2)

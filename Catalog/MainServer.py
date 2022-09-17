@@ -66,6 +66,10 @@ class Registrazione(object):
                 print("MainServer - error [ERR 6]")
                 exit(6)
       
+        elif uri[0] == "get_user_localhost":
+            catalog = openCatalogue()
+            localhost = catalog["user_localhost"]
+            return localhost
 
 # service_by_name: restituisce il servizio dal nome del servizio
         elif uri[0] == "service_by_name":
@@ -309,8 +313,13 @@ class Registrazione(object):
                 "field6": "temperature",
                 "public_flag":True
                 }   
-            r=requests.post("https://api.thingspeak.com/channels.json",channel)
-            
+            # r=requests.post("https://api.thingspeak.com/channels.json",channel)
+            api=main_getApiByName("Thingspeak","create_channel_thingspeak")
+            local_uri=api["uri"]
+            print(f"localuri:{local_uri}")
+            #r=requests.post("https://api.thingspeak.com/channels.json",channel)
+            r=requests.post(local_uri,channel)
+
             print(f"Questo è il channel: {r.json()}")
             self.dicty=r.json()
             self.api_key_w=self.dicty["api_keys"][0]
@@ -427,7 +436,7 @@ class Registrazione(object):
 if __name__=="__main__":
 
     ## ATTENZIONE: qui ci vuole un try except per il servizio non trovato (ServiceUnavailableException)
-
+    
     # attivazione microservizio per la registrazione dei parametri per il raspberry 
     PatientRegistrationOnRaspberry = main_getServiceByName("PatientRegistrationOnRaspberry")
     if PatientRegistrationOnRaspberry == None:
@@ -448,6 +457,8 @@ if __name__=="__main__":
             catalog = openCatalogue()
             server_host = catalog["server_host"]
             server_port = catalog["server_port"]
+               
+            resetCatalog() #mette -1 a tutto
 
             cherrypy.tree.mount(Registrazione(),'/')
             conf={
