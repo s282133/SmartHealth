@@ -303,7 +303,7 @@ class Registrazione(object):
 
             ## ATTENZIONE: mettere api key in settings!
             channel={
-                "api_key":"OEUWTU8AH5MOIMKZ",
+                "api_key":"EC8YM4NVYD5QXNNK",
                 "name": nameChannel,
                 "field1": "heart rate",
                 "field2": "pressure_high",

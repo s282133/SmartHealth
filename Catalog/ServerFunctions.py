@@ -2,6 +2,7 @@ import json
 import sys, os
 import json
 import time
+import requests
 
 
 sys.path.insert(0, os.path.abspath('..'))
@@ -268,15 +269,28 @@ def delete_ex_patients():
                 patientID_to_delete = int(currentPatient["patientID"])
                 for currentDevice in devicesList:
                     if int(currentDevice["patientID"]) == patientID_to_delete and len(devicesList)>1:
-                        devicesList = list(devicesList).remove(currentDevice)
+                        devicesList.remove(currentDevice)
                     elif int(currentPatient["patientID"]) == patientID_to_delete and len(devicesList)==1:    
                         devicesList=[]
                     currentDoctor["devicesList"]=devicesList
                 if  len(patientList)>1:    
-                    patientList = list(patientList).remove(currentPatient)
+                    patientList.remove(currentPatient)
                 elif len(patientList)==1:
                         patientList=[]
-            currentDoctor["patientList"]=patientList
+                currentDoctor["patientList"]=patientList
+                api=main_getApiByName("Thingspeak","delete_channel_thingspeak")
+                local_uri=api["uri"]
+                body = api["api_key"]
+                map_patientID_channelID = getListsOfTSinfo()
+                map_dict = dict(json.loads(map_patientID_channelID))
+                for k in map_dict:
+                    if int(k) == int(patientID_to_delete):
+                        associated_channelID = map_dict[k]
+                final_local_uri = str(local_uri).replace("{{channelID}}", str(associated_channelID))
+                print(f"delete TS uri: {final_local_uri}")
+                r=requests.delete(final_local_uri, data=body)
+                print(f"request status code : {r.status_code}")
+                print(f"request response : {r.text}")
                 #currentDoctor["devicesList"]=devicesList
         catalog["resources"] = doctorList
         Modificato = True
