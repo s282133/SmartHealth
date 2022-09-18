@@ -62,3 +62,4 @@ Special thanks go to Gianfranco Giorgianni ("Gianni") for lending his voice to t
 
 \* The provided catalogue starts with patients 1 and 2. This is a choice of ours due to the fact that NodeRed, an external service that is very little dynamic, takes into account data of at least two patients. The reset function for the catalogue doesn't empty it up because it would delete them, but on the other hand the user can feel free to customize the starting catalogue as they wish, even leaving it empty for a fresh start.
 In the latter case, the only needed action is just go to the Catalog/ServicesAndResourcesCatalogue.json and set the list called "Resources = []" (row 374).
+Also, whenever you read "deviceID", regarding an unique ID for the raspberry device, you can put whichever string or integer, no checks are performed on it.
