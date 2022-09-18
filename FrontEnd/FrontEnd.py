@@ -45,7 +45,7 @@ class FrontEnd:
             return resp
         
 
-# salva i pazienti appena registrati nel catalogo    
+# salva nel catalogo i medici e i pazienti appena registrati
     def POST(self,*uri,**params):
          
         body = json.loads(cherrypy.request.body.read())
@@ -55,7 +55,7 @@ class FrontEnd:
         
 if __name__=="__main__":
     
-   # attivazione microservizio per ottenere l'host del server
+   # attivazione microservizio per ottenere l'host del servizio FrontEnd
     frontend_service = http_getServiceByName("FrontEnd")
     server_host = frontend_service["host"]
     server_port =frontend_service["port"]    

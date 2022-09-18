@@ -83,7 +83,7 @@
         },
         {
           "functionality_name": "retrieve_TS_patientIDs_channelIDs",
-          "description": "Restituisce l'API di per il dizionario {patientID, channelID} ",
+          "description": "Restituisce l'API per il dizionario {patientID, channelID} ",
           "access_mode": "GET",
           "uri": "get_ts_patientIDs_channelIDs"
         },

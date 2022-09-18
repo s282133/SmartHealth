@@ -1,4 +1,5 @@
-# Il MainServer contiene tutte le funzioni GET, PUT, POST, DELETE che servono per la gestione del catalogo in remoto
+# Il MainServer contiene tutte le funzioni GET, PUT, POST, DELETE 
+# che servono per la gestione del catalogo in remoto
 
 from gettext import Catalog                          
 import json                     
@@ -11,7 +12,6 @@ from MyMQTT import *
 from ServerFunctions import *
 from customExceptions import *
 
-#from jinja2 import Template
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class Registrazione(object):
@@ -22,7 +22,7 @@ class Registrazione(object):
     
     def GET(self,*uri,**params):
     
-# get_raspberry_parameters: invia al raspberry il servizio MQTT da utilizzare per inviare le temperature
+# get_raspberry_parameters: invia al raspberry i parametri da utilizzare per inviare le temperature via MQTT
         if uri[0] == "get_raspberry_parameters":
         
             try:
@@ -178,12 +178,12 @@ class Registrazione(object):
             return dict
 
 
-# get_lista_pazienti_simulati: restituisce lista dei pazienti con raspberry simulati per l'invio delle temperature
+# get_lista_pazienti_simulati: restituisce lista dei pazienti senza raspberry associato
         elif uri[0] == "get_lista_pazienti_simulati":
             lista_pazienti = get_lista_pazienti_simulati()
             return lista_pazienti       
 
-# lista_pazienti_da_monitorare: restituisce lista dei pazienti
+# lista_pazienti_da_monitorare: restituisce lista dei pazienti online
         elif uri[0] == "lista_pazienti_da_monitorare":
             try:
                 lista_pazienti_da_monitorare = get_lista_pazienti_da_monitorare()
@@ -191,17 +191,16 @@ class Registrazione(object):
             except:
                 raise cherrypy.HTTPError(500, "List of patients unavailable")
 
-# paziente della tabella a partire dal telegramID del medico (per la pagina di registrazione)
+# restituisce il paziente da inserire nella tabella della pagina html a partire dal telegramID del medico
         elif uri[0] == "tabella_pazienti":
             self.doctortelegramID=int(params['chat_ID'])
             tab_pazienti=get_patient_from_doctortelegram_id(self.doctortelegramID)
             return tab_pazienti
     
-
-    
+  
     def PUT(self,*uri,**params):
 
-# aggiorna i pazienti a stato di monitoraggio (da -1 a monitorato)       
+# aggiorna i pazienti a stato di monitoraggio (da -1 a online)       
         if uri[0] == "set_patient_in_monitoring": 
             patient_ID = params["patient_id"]
             set_lista_pazienti_in_monitoring(patient_ID)
@@ -232,7 +231,7 @@ class Registrazione(object):
 
     def POST(self,*uri,**params):
         
-# doctors: aggiungere un dottore alla lista di dottori 
+# doctors: aggiunge un dottore appena registrato alla lista di dottori 
         if uri[0] == "doctors": 
             
             body = cherrypy.request.body.read() 
@@ -264,7 +263,7 @@ class Registrazione(object):
             return json.dumps(self.dictionary)
 
 
-# patients: aggiungere un paziente alla lista dei pazienti al SUBMIT
+# patients: aggiunge un paziente appena registrato alla lista dei pazienti al SUBMIT
         if uri[0] == "patients": 
 
             body = cherrypy.request.body.read() 
@@ -389,7 +388,7 @@ class Registrazione(object):
             delete_ex_patients()   
 
     
-#  se il raspberry è libero lo collego con il nuovo paziente
+#  associa il raspberry libero ad un nuovo paziente 
     def RegistraPatientIdSuRaspberry( self, NewPatientID ):
         json_post = rasp_json.replace("{{NewPatientID}}",str(NewPatientID),1)
         try:
@@ -402,8 +401,6 @@ class Registrazione(object):
         except: return -1
         
     
-
-
 
 if __name__=="__main__":  
     

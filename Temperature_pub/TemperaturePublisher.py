@@ -1,5 +1,5 @@
 # Il pubblicatore di temperature pubblica sul topic /temp_simulate 
-# delle temperature casuali fornite da un generatore 
+# delle temperature casuali fornite da un generatore, per i pazienti che non sono connessi al raspberry
 
 import json          
 import time

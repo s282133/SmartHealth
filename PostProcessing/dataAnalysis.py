@@ -101,7 +101,7 @@ class dataAnalysisClass():
             print("DataAnalysisBlock - error [ERR 10]")
             exit(10)
             
-        # ricezione parametri
+        # ricezione misure
         if (self.measureType == "heartrate"):
             print(f"DataAnalysisBlock received HEARTRATE measure of: {self.value} at time {self.timestamp}, by {local_clientID}, week of pregnancy {week}")
             self.manageHeartRate(week,local_clientID,patientName)

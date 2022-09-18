@@ -1,4 +1,4 @@
-# TelegramBot gestisce il client_bot del dottore
+# DoctorBot gestisce il bot del dottore
 # abilitando i comandi disponibili e mandando messaggi di allerta
 
 import time

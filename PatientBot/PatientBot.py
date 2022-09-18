@@ -1,4 +1,4 @@
-# TelegramBot gestisce il bot del paziente
+# PatientBot gestisce il bot del paziente
 
 import json
 import telepot
@@ -65,7 +65,7 @@ class PatientBot:
                 if(int_message < 0):
                     raise InvalidPatientID
 
-                # aggiurna il telegramID del paziente
+                # aggiorna il telegramID del paziente
                 if http_Update_PatientTelegramID(chat_ID, message):
                     self.bot.sendMessage(chat_ID, text=f"Login procedure successful.\nConfirmed PatientID: {message}")
                 else:    
@@ -109,6 +109,7 @@ class PatientBot:
                 topic = self.api_send_peso["topic"]
                 topic_send_peso = getTopicByParameters(topic, self.mqttTopic, self.patientID)
                 peso =  {"status": message}
+                
                 # pubblicazione del peso
                 self.mqtt_client.myPublish(topic_send_peso, peso)
                 print("Weight submitted to the system.")               
