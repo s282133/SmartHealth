@@ -368,8 +368,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 2,
-    "LastDoctorID": 1
+    "LastPatientID": 3,
+    "LastDoctorID": 2
   },
   "resources": [
     {
@@ -469,6 +469,6 @@
           "lastUpdate": "2022-09-14"
         }
       ]
-    } 
+    }
   ]
 }

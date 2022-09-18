@@ -271,7 +271,8 @@ class Registrazione(object):
             self.record = json.loads(body)
             self.telegramID = int(params["chat_ID"])   
             self.dictionary = json.load(open('ServicesAndResourcesCatalogue.json'))
-            self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]                                                        
+            self.LastPatientID = self.dictionary["resourceState"]["LastPatientID"]
+                                                                    
             nameChannel=self.LastPatientID+1
 
             # creazione del canale su thingspeak
