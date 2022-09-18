@@ -15,9 +15,10 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 class DoctorBot:
     def __init__(self):
-
-        #self.localhost=http_get_localhost()   # definire la funzione                         
+         
+        # richiede il localhost dell'utente          
         self.localhost=http_get_user_localhost()
+        
         # Gestione servizi MQTT
         mqtt_service = http_getServiceByName("MQTT_analysis")
         try:
@@ -41,8 +42,9 @@ class DoctorBot:
 
         mqtt_topic_alert = mqtt_api_alert["topic"]
         self.local_topic_alert = mqtt_topic_alert.replace("{{base_topic}}", self.mqtt_base_topic)
-        # Oggetto mqtt
+
         self.mqtt_client = MyMQTT(None, mqtt_broker, mqtt_port, self)
+        
         # Gestione servizi telegram
         try:
             TelegramDoctor_service = http_getServiceByName("TelegramDoctor")
@@ -53,6 +55,7 @@ class DoctorBot:
             print("TelegramDoctor could not be initialized [ERR 6].")
         except:
             print("TelegramDoctor could not be initialized [ERR 7].")
+        
         # Creazione client_bot
         self.client_bot = telepot.Bot(doctorTelegramToken)
         self.client_mqtt = MyMQTT("telegramBot", mqtt_broker, mqtt_port, None)
@@ -75,7 +78,6 @@ class DoctorBot:
 
 
     def notify(self, topic, msg):
-        # print(f"Il topic è: {topic}")
         msg_json = json.loads(msg)
         telegramID = msg_json["telegramID"]
         messaggio = msg_json["Messaggio"]
@@ -95,6 +97,7 @@ class DoctorBot:
         content_type, chat_type, chat_ID = telepot.glance(msg)
         message = msg['text']
 
+        # link registrazione medico
         if message == "/start": 
             
             registration_service = http_getServiceByName("FrontEnd")
@@ -113,14 +116,12 @@ class DoctorBot:
                 print("Registration - error [ERR 9].")
 
             registration_uri = registration_uri.replace("{{chat_ID}}", str(chat_ID))
-
-            #uri = f"http://{registration_ipAddress}:{registration_port}/{registration_uri}"
             uri = f"http://{self.localhost}:{registration_port}/{registration_uri}"                                                                      
             self.client_bot.sendMessage(chat_ID, text=f"Create a personal doctor account at this link: {uri}")
             
-
+        # link registrazione pazienti
         elif message == "/registrazione_paziente": 
-
+            
             registration_service = http_getServiceByName("FrontEnd")
             try:
                 patient_registration_ipAddress = registration_service["host"]
@@ -136,11 +137,10 @@ class DoctorBot:
                 print("Registration - error [ERR 11].")
 
             patient_registration_uri = str(patient_registration_uri).replace("{{chat_ID}}", str(chat_ID))
-
-            #uri = f"http://{patient_registration_ipAddress}:{patient_registration_port}/{patient_registration_uri}"
             uri = f"http://{self.localhost}:{patient_registration_port}/{patient_registration_uri}"
             self.client_bot.sendMessage(chat_ID, text=f"Sign in a new patient at this link: {uri}")
 
+        # link nodered
         elif message == "/accesso_dati": 
 
             accesso_dati_service = http_getServiceByName("NodeRed")
@@ -156,12 +156,10 @@ class DoctorBot:
                 accesso_dati_uri = api_accesso_dati["uri"]
             except:
                 print("Accesso dati - error [ERR 11].")
-
-            #uri = f"http://{accesso_dati_ipAddress}:{accesso_dati_port}/{accesso_dati_uri}"
             uri=f"http://{self.localhost}:{accesso_dati_service['port']}/{accesso_dati_uri}"                                                                        
             self.client_bot.sendMessage(chat_ID, text=f'Access to data at this link: {uri}')
         
-
+        # messaggio con i comandi disponibili
         elif message == "/help": 
             self.client_bot.sendMessage(chat_ID, text="* Send /start to log in;\n* Send /registrazione_paziente to submit a new patient;\n* Send /accesso_dati to monitor patients' data.") 
 
@@ -178,15 +176,11 @@ class DoctorBot:
                 
         patientID = query_data.split(" ")[2]
         monitoring_state = query_data.split(" ")[1]
-
-        # print(f"sono DocBot, patientID {patientID}")
         patient_name = http_getNameFromClientID(patientID)
         
         local_topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring, self.mqtt_base_topic, str(patientID))
         message =  {"status": monitoring_state}
         self.mqtt_client.myPublish(local_topic_monitoring, message)
-        # print(f"{message}")
-
         self.client_bot.sendMessage(chat_ID, text=f"Monitoring set to {monitoring_state} for patient {patient_name} ({patientID}).")
  
 
