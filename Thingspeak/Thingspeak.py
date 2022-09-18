@@ -28,27 +28,12 @@ class Thingspeak():
 
         mqtt_topic_sub_generic = mqtt_api["topic_sub_generic"]
         self.mqtt_topic_sub_generic = mqtt_topic_sub_generic.replace("{{base_topic}}",  self.mqtt_base_topic)
-        # mqtt_topic_temperature  = mqtt_api["topic_temperature"]
-        # mqtt_topic_heartrate    = mqtt_api["topic_heartrate"]
-        # mqtt_topic_pressure     = mqtt_api["topic_pressure"]
-        # mqtt_topic_glycemia     = mqtt_api["topic_glycemia"]
         mqtt_topic_peso         = mqtt_api["topic_peso"]
-        self.mqtt_topic_peso = mqtt_topic_peso.replace("{{base_topic}}",  self.mqtt_base_topic)
-        # mqtt_topic_monitoring   = mqtt_api["topic_monitoring"]
-
-        # self.local_topic_temperature = getTopicByParameters(mqtt_topic_temperature, self.mqtt_base_topic, "+")
-        # self.local_topic_heartrate   = getTopicByParameters(mqtt_topic_heartrate, self.mqtt_base_topic, "+")
-        # self.local_topic_pressure    = getTopicByParameters(mqtt_topic_pressure, self.mqtt_base_topic, "+")
-        # self.local_topic_glycemia    = getTopicByParameters(mqtt_topic_glycemia, self.mqtt_base_topic, "+")
-        # self.local_topic_peso        = getTopicByParameters(mqtt_topic_peso, self.mqtt_base_topic, "+")
-        # self.local_topic_monitoring  = getTopicByParameters(mqtt_topic_monitoring, self.mqtt_base_topic, "+")
-        
+        self.mqtt_topic_peso = mqtt_topic_peso.replace("{{base_topic}}",  self.mqtt_base_topic)        
         self.mqttClient=MyMQTT(None, mqtt_broker, mqtt_port, self) 
         self.cont=0
 
-       
-
-        # PROVA di microservizio
+    
         receive_peso_api = get_api_from_service_and_name(mqtt_service,"receive_peso") 
         receive_peso_topic = receive_peso_api["topic"]
 
@@ -60,12 +45,6 @@ class Thingspeak():
 
         self.patternWeight = re.compile(receive_peso_topic_final)
         self.patternMonitoring = re.compile(receive_monitoring_topic_final)
-        # FINE PROVA
-
-
-        # TOPIC da inserire nel catalogo ma come ? (Antuan)
-        #self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
-        #self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
        
         self.initializeSlim()
   
@@ -97,7 +76,7 @@ class Thingspeak():
         except:
             sys.exit("Errore nella lettura del file settings_weeklyStats.json")
 
-
+    # scarica i dati da thingspeak e li pubblica 
     def downloadData(self):
 
         for key in self.dictionary:
@@ -112,19 +91,14 @@ class Thingspeak():
                 download_data_uri  = download_data_api["uri"]
                 download_uri = download_data_uri.replace("{{fieldnumber}}", str(fieldnumber))
                 download_uri_final = download_uri.replace("{{channelID}}", str(channel))
-                # print(f"uri download TS data: {download_uri_final}")
                 downloaded_catalogue = requests.get(f'{download_uri_final}')
 
-                # print(f"status: {downloaded_catalogue.status_code}")
-
                 if downloaded_catalogue.status_code == 200:
-                    # print(f"local file {i} patient {key} : {self.local_files[i]}")   
                     filename = "patient_" + key + "_" + self.local_files[i]
                     with open(filename, "w") as wp:
                         json.dump(downloaded_catalogue.json(), wp, indent=4)
 
                         channelID = str((downloaded_catalogue.json())["channel"]["name"])
-                        # print(f"channel ID : {channelID}")
                         parameter_name = self.list_parameters[i]["name"]
                         pubTopic = mqtt_pub_topic.replace("{{patientID}}",key)
                         pubTopic_half_final = pubTopic.replace("{{measure}}",parameter_name)
@@ -134,9 +108,11 @@ class Thingspeak():
                 else:
                     print("Error. Status code: " + str(downloaded_catalogue.status_code))
                     sys.exit()
-
+    
+    # riceve i parametri monitorati e li invia a thingspeak
     def notify(self,topic,payload): 
-        message = json.loads(payload) 
+        message = json.loads(payload)
+        # invio del peso 
         if bool(self.patternWeight.match(str(topic))): 
             self.clientID = int(str(topic).split("/")[2]) 
 
@@ -145,7 +121,6 @@ class Thingspeak():
 
             self.lastPeso = peso 
 
-            # Microservizio
             send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
             send_data_uri  = send_data_api["uri"]
             uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
@@ -155,10 +130,9 @@ class Thingspeak():
             uri_field4 = uri_field3.replace("{{field4}}", str(self.lastPressureLow))
             uri_field6 = uri_field4.replace("{{field6}}", str(self.lastTemperature))
             uri = uri_field6.replace("{{field5}}", peso)
-
-            #rp = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={peso}') 
             rp = requests.get(f'{uri}') 
 
+        # invio del battito cardiaco
         elif not bool(self.patternMonitoring.match(str(topic))): 
 
             self.clientID = int(str(topic).split("/")[2])
@@ -169,7 +143,6 @@ class Thingspeak():
                 self.sensed_heartrate = message['e'][0]['v']
                 self.lastHeartrate = self.sensed_heartrate 
 
-                # Microservizio
                 send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
                 send_data_uri  = send_data_api["uri"]
                 uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
@@ -180,15 +153,14 @@ class Thingspeak():
                 uri_field6 = uri_field4.replace("{{field6}}", str(self.lastTemperature))
                 uri = uri_field6.replace("{{field5}}", str(self.lastPeso))
                 
-                #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.sensed_heartrate}&field2={self.lastPressureHigh}&field3={self.lastGlycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
                 r = requests.get(f'{uri}')
-
+                
+            # invio della glicemia
             elif(self.newMeasureType == "glycemia"): 
                 self.sensed_glycemia = message['e'][0]['v']
                 api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.lastGlycemia = self.sensed_glycemia 
 
-                # Microservizio
                 send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
                 send_data_uri  = send_data_api["uri"]
                 uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
@@ -199,9 +171,9 @@ class Thingspeak():
                 uri_field6 = uri_field4.replace("{{field6}}", str(self.lastTemperature))
                 uri = uri_field6.replace("{{field5}}", str(self.lastPeso))
                 
-                # r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.lastPressureHigh}&field3={self.sensed_glycemia}&field4={self.lastPressureLow}&field5={self.lastPeso}') 
                 r = requests.get(f'{uri}')
 
+            # invio della pressione
             elif(self.newMeasureType == "pressureHigh"):
                 api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.sensed_pressureHigh= message['e'][0]['v'] 
@@ -209,7 +181,6 @@ class Thingspeak():
                 self.lastPressureHigh = self.sensed_pressureHigh 
                 self.lastPressureLow = self.sensed_pressureLow 
 
-                # Microservizio
                 send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
                 send_data_uri  = send_data_api["uri"]
                 uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
@@ -220,15 +191,14 @@ class Thingspeak():
                 uri_field6 = uri_field4.replace("{{field6}}", str(self.lastTemperature))
                 uri= uri_field6.replace("{{field5}}", str(self.lastPeso))
 
-                #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
                 r = requests.get(f'{uri}')
-                
+            
+            # invio della temperatura    
             elif(self.newMeasureType == "temperature"):
                 api_key = http_retrieveTSWriteAPIfromClientID(self.clientID)
                 self.sensed_temperature= message['e'][0]['v'] 
                 self.lastTemperature= self.sensed_temperature
             
-                # Microservizio
                 send_data_api = get_api_from_service_and_name(mqtt_service,"send_data_to_thingspeak") 
                 send_data_uri  = send_data_api["uri"]
                 uri_api_key = send_data_uri.replace("{{api_key}}", str(api_key))
@@ -239,7 +209,6 @@ class Thingspeak():
                 uri_field6 = uri_field4.replace("{{field6}}", str(self.sensed_temperature))
                 uri = uri_field6.replace("{{field5}}", str(self.lastPeso))
 
-                #r = requests.get(f'http://api.thingspeak.com/update?api_key={api_key}&field1={self.lastHeartrate}&field2={self.sensed_pressureHigh}&field3={self.lastGlycemia}&field4={self.sensed_pressureLow}&field5={self.lastPeso}')
                 r = requests.get(f'{uri}')
 
             
@@ -256,21 +225,14 @@ class Thingspeak():
 
 
     def subscribe(self): 
-        # self.mqttClient.mySubscribe(self.local_topic_heartrate)
-        # self.mqttClient.mySubscribe(self.local_topic_temperature)
-        # self.mqttClient.mySubscribe(self.local_topic_pressure)
-        # self.mqttClient.mySubscribe(self.local_topic_glycemia)
         self.mqttClient.mySubscribe(self.mqtt_topic_sub_generic)
         self.mqttClient.mySubscribe(self.mqtt_topic_peso)
 
     def myPublish(self, topic, message):
-        # print(f"Thingspeak publishing {message} to topic: {topic}\n\n\n")
         self.mqttClient.myPublish(topic, message)
 
 if __name__=="__main__":
     
-
-
     mqtt_service = http_getServiceByName("Thingspeak")
     try:
         mqtt_broker = mqtt_service["broker"]

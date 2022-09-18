@@ -71,10 +71,6 @@ if __name__ == "__main__":
         N=0
         Ciclo=0
         while not done:
-
-            #prova
-            #if lista_pazienti_simulati == 0:
-            #    lista_pazienti_simulati = 1
                 
             k = N % len(lista_pazienti_simulati)
             
@@ -97,7 +93,6 @@ if __name__ == "__main__":
             try:
                 local_topic = getTopicByParameters(mqtt_topic, mqtt_base_topic, str(patientID))
                 myPublisher.publish(local_topic,message)
-                #print(f"{patientID} published {temperature} with topic: {local_topic}")
                 N=N+1
             except:
                 print("temperaturePublisher - error [ERR 7]")

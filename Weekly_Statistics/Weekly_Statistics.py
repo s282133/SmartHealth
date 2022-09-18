@@ -23,18 +23,15 @@ class statistics():
         self.mqtt_topic_pub_info = mqtt_topic_pub_info
         self.mqtt_topic_pub_stats = mqtt_topic_pub_stats
 
-        self.start()        # MQTT functions start
+        self.start()        
         self.subscribe()
         self.events = []
         self.parameters_list = []
         self.current_event_parameters = []
 
 
-
-# PROVA PER INVIO DATI PERSONALI a nodered
-
+    # ricerca info paziente da mandare a nodered
     def get_personal_parameters(self, patientID):
-        #ricerca dati dal patient ID
         full_name = http_getNameFromClientID(patientID)
         state = http_getMonitoringStateFromClientID(patientID)
         pregnancy_day_one = http_retrievePregnancyDayOne(patientID)
@@ -46,10 +43,9 @@ class statistics():
         }
         return personal_parameters_json
 
-#FINE PROVA INVIO DATI PERSONALI
 
     def create_event(self, parameter_name, parameter_unit, min, avg, max):
-        event = self.event_structure.copy()         # senza copy non funziona, bah
+        event = self.event_structure.copy()       
         event["n"] = parameter_name
         event["t"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         event["u"] = parameter_unit
@@ -63,7 +59,7 @@ class statistics():
         message["e"] = events
         return message
 
-
+    # calcolo statistiche 
     def notify(self,topic, payload): 
             measure_type = str(str(topic).split("/")[4])
             [field, unit] = self.retrieve_field_and_unit(measure_type)
@@ -127,6 +123,7 @@ class statistics():
                 self.current_event_parameters = []
                 self.events = []
 
+
     def retrieve_field_and_unit(self, measure_type):
         with open("settings_weeklyStats.json", 'r') as sf:
             dict = json.load(sf)
@@ -154,7 +151,6 @@ class statistics():
 
 
     def myPublish(self, topic, message):
-        #print(f"{self.clientID} publishing {message} to topic: {topic}\n\n\n")
         self.client_MQTT.myPublish(topic, message)
     
 
@@ -165,7 +161,6 @@ class statistics():
         self.client_MQTT.mySubscribe(sub_topic)
 
     def publishPatientInfo(self, param_patientID, param_patientName, param_dayOne, param_state):
-        # {{base_topic}}/info/{{patientID}}/{{measure}}
         patientInfo = {
                 "full_name": param_patientName,
                 "patientID": int(param_patientID),

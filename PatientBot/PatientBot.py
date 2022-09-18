@@ -1,5 +1,4 @@
 # TelegramBot gestisce il bot del paziente
-# abilitando i comandi disponibili 
 
 import json
 import telepot
@@ -66,12 +65,11 @@ class PatientBot:
                 if(int_message < 0):
                     raise InvalidPatientID
 
+                # aggiurna il telegramID del paziente
                 if http_Update_PatientTelegramID(chat_ID, message):
                     self.bot.sendMessage(chat_ID, text=f"Login procedure successful.\nConfirmed PatientID: {message}")
                 else:    
                     self.bot.sendMessage(chat_ID, text=f"Login procedure unsuccessful.\nChoose again /start to insert your PatientID")
-                    
-                    #ATTENZIONE: permettere di riscrivere il patient id se fa un errore di scrittura?
 
                 self.previous_message=""   
             except:
@@ -79,10 +77,12 @@ class PatientBot:
                 self.bot.sendMessage(chat_ID, text=f"PatientID not recognized.\nTry the login procedure again: /start") 
                 self.previous_message="" 
 
+        # spiegazione dei comandi disponibili
         elif message == "/help":
             self.bot.sendMessage(chat_ID, text="* Send /start to log in;\n* Send /peso to submit your weight;\n* Send /survey to complete a survey about your current health status.") 
             self.previous_message="/help"
 
+        # invio del link al questionario
         elif message == "/survey":
 
             survey_service = http_getServiceByName("TelegramClient")
@@ -91,6 +91,7 @@ class PatientBot:
             self.bot.sendMessage(chat_ID, text= f"You can complete the survey at this link: {survey_uri}")
             self.previous_message="/survey"
 
+        # inserimento del peso 
         elif message == "/peso": 
             self.bot.sendMessage(chat_ID, text="Please send your weight in kg")
             self.previous_message="/peso"
@@ -100,22 +101,15 @@ class PatientBot:
                 int_weight = int(message)
                 if(int_weight < 0 or int_weight > 100):
                     raise InvalidWeightException
-                #print (f"Chat ID: {chat_ID}")
                 self.patientID = http_findPatientFromChatID(chat_ID)             
                 if self.patientID == -1:
                     print("Paziente non trovato")
                     raise PatientNotFoundException 
 
                 topic = self.api_send_peso["topic"]
-                #{{base_topic}}/{{patientID}}/peso
-
                 topic_send_peso = getTopicByParameters(topic, self.mqttTopic, self.patientID)
-                #P4IoT/SmartHealth/1/peso
-
-                # DEBUG: lasciato per sicurezza, ma è da eliminare la prossima riga
-                #topic=f"{self.mqttTopic}/{self.patientID}/peso" 
-                
                 peso =  {"status": message}
+                # pubblicazione del peso
                 self.mqtt_client.myPublish(topic_send_peso, peso)
                 print("Weight submitted to the system.")               
                 self.previous_message=""
@@ -129,18 +123,6 @@ class PatientBot:
 
     def on_callback_query(self, messaggio):
         query_ID , chat_ID , query_data = telepot.glance(messaggio,flavor='callback_query')
-
-
-    # def Update_PatientTelegramID (self, chat_ID, message):
-
-    #     ipAddress, port = get_host_and_port()
-
-    #     r = requests.get(f'http://{ipAddress}:{port}/update_telegram_id?patient_id={message}&chat_id={chat_ID}') 
-
-    #     if r.text == "OK":
-    #         return True
-    #     else:
-    #         return False
 
 if __name__ == "__main__":
     
