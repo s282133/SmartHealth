@@ -4,7 +4,7 @@ import requests
 import time
 
 # Questa raccolta di funzioni http permette (con le chiamate request.get, post, put e delete 
-# di interrogare il MainServer che ha le funzionalità GET e l'accesso al catalogo 
+# di interrogare il MainServer che ha le funzionalità GET e l'accesso al catalogo.
 
 def http_retrieveTSpatientIDsAndChannelIDs():
     
