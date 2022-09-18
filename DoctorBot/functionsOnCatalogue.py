@@ -10,7 +10,7 @@ def http_retrieveTSpatientIDsAndChannelIDs():
 
     local_uri = api["uri"]
 
-    print(f"request : http://{ipAddress}:{port}/{local_uri}")
+    #print(f"request : http://{ipAddress}:{port}/{local_uri}")
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
@@ -336,7 +336,7 @@ def get_api_from_service_and_name( parService, parApiName ):
 
 # esiste una copia identica in ServerFunctions
 def getWeek(dayOne):
-    print(f"dayone = {dayOne}")
+    #print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
     currY = currTime.split("-")[0]
     currM = currTime.split("-")[1]

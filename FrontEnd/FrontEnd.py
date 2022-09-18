@@ -34,17 +34,8 @@ class FrontEnd:
             fileContent = f1.read()      
             f1.close() 
             return fileContent
-            
-        # elif uri[0] == "login_dottore":
-        #     filename = 'login_dottore.html'
-        #     f2= open(filename)
-        #     fileContent2 = f2.read()      
-        #     f2.close() 
-        #     return fileContent2
-            
-        
-           
-    
+
+                
 # registrazione_paziente : apertura pagina html per registrazione paziente
         elif uri[0] == "registrazione_paziente": 
             self.telegramID= int(params["chat_ID"]) 

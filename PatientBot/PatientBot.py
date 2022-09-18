@@ -100,7 +100,7 @@ class PatientBot:
                 int_weight = int(message)
                 if(int_weight < 0 or int_weight > 100):
                     raise InvalidWeightException
-                print (f"Chat ID: {chat_ID}")
+                #print (f"Chat ID: {chat_ID}")
                 self.patientID = http_findPatientFromChatID(chat_ID)             
                 if self.patientID == -1:
                     print("Paziente non trovato")

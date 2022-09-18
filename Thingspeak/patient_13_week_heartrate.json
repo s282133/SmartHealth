@@ -1,0 +1,159 @@
+{
+    "channel": {
+        "id": 1864126,
+        "name": "13",
+        "latitude": "0.0",
+        "longitude": "0.0",
+        "field1": "heart rate",
+        "field2": "pressure_high",
+        "field3": "glycemia",
+        "field4": "pressure_low",
+        "field5": "peso",
+        "field6": "temperature",
+        "created_at": "2022-09-18T11:11:36Z",
+        "updated_at": "2022-09-18T11:11:36Z",
+        "last_entry_id": 30
+    },
+    "feeds": [
+        {
+            "created_at": "2022-09-18T11:12:03Z",
+            "entry_id": 1,
+            "field1": "44"
+        },
+        {
+            "created_at": "2022-09-18T11:13:07Z",
+            "entry_id": 2,
+            "field1": "54"
+        },
+        {
+            "created_at": "2022-09-18T11:13:34Z",
+            "entry_id": 3,
+            "field1": "54"
+        },
+        {
+            "created_at": "2022-09-18T11:14:06Z",
+            "entry_id": 4,
+            "field1": "54"
+        },
+        {
+            "created_at": "2022-09-18T11:15:05Z",
+            "entry_id": 5,
+            "field1": "79"
+        },
+        {
+            "created_at": "2022-09-18T11:31:36Z",
+            "entry_id": 8,
+            "field1": "49"
+        },
+        {
+            "created_at": "2022-09-18T11:32:06Z",
+            "entry_id": 9,
+            "field1": "49"
+        },
+        {
+            "created_at": "2022-09-18T11:32:37Z",
+            "entry_id": 10,
+            "field1": "48"
+        },
+        {
+            "created_at": "2022-09-18T11:33:07Z",
+            "entry_id": 11,
+            "field1": "48"
+        },
+        {
+            "created_at": "2022-09-18T11:33:23Z",
+            "entry_id": 12,
+            "field1": "48"
+        },
+        {
+            "created_at": "2022-09-18T11:33:39Z",
+            "entry_id": 13,
+            "field1": "47"
+        },
+        {
+            "created_at": "2022-09-18T11:34:07Z",
+            "entry_id": 14,
+            "field1": "47"
+        },
+        {
+            "created_at": "2022-09-18T11:34:27Z",
+            "entry_id": 15,
+            "field1": "51"
+        },
+        {
+            "created_at": "2022-09-18T11:35:07Z",
+            "entry_id": 16,
+            "field1": "51"
+        },
+        {
+            "created_at": "2022-09-18T11:35:31Z",
+            "entry_id": 17,
+            "field1": "53"
+        },
+        {
+            "created_at": "2022-09-18T11:36:08Z",
+            "entry_id": 18,
+            "field1": "53"
+        },
+        {
+            "created_at": "2022-09-18T11:36:36Z",
+            "entry_id": 19,
+            "field1": "48"
+        },
+        {
+            "created_at": "2022-09-18T11:37:08Z",
+            "entry_id": 20,
+            "field1": "50"
+        },
+        {
+            "created_at": "2022-09-18T11:37:38Z",
+            "entry_id": 21,
+            "field1": "50"
+        },
+        {
+            "created_at": "2022-09-18T11:38:09Z",
+            "entry_id": 22,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-09-18T11:38:39Z",
+            "entry_id": 23,
+            "field1": "80"
+        },
+        {
+            "created_at": "2022-09-18T11:39:09Z",
+            "entry_id": 24,
+            "field1": "77"
+        },
+        {
+            "created_at": "2022-09-18T11:39:40Z",
+            "entry_id": 25,
+            "field1": "77"
+        },
+        {
+            "created_at": "2022-09-18T11:40:10Z",
+            "entry_id": 26,
+            "field1": "81"
+        },
+        {
+            "created_at": "2022-09-18T11:40:40Z",
+            "entry_id": 27,
+            "field1": "81"
+        },
+        {
+            "created_at": "2022-09-18T11:41:10Z",
+            "entry_id": 28,
+            "field1": "82"
+        },
+        {
+            "created_at": "2022-09-18T11:41:26Z",
+            "entry_id": 29,
+            "field1": "82"
+        },
+        {
+            "created_at": "2022-09-18T11:41:58Z",
+            "entry_id": 30,
+            "field1": "121"
+        }
+    ]
+}

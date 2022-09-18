@@ -28,12 +28,7 @@ class statistics():
         self.events = []
         self.parameters_list = []
         self.current_event_parameters = []
-        # self.patient_dayOne = http_retrievePregnancyDayOne(self.clientID)
-        # print(f"self.patient_dayOne {self.patient_dayOne}")
-        # self.patient_name = http_getNameFromClientID(self.clientID)
-        # print(f"self.patient_name {self.patient_name}")
-        # self.patient_state = http_getMonitoringStateFromClientID(self.clientID)
-        # print(f"self.patient_state {self.patient_state}")
+
 
 
 # PROVA PER INVIO DATI PERSONALI a nodered
@@ -73,9 +68,7 @@ class statistics():
             measure_type = str(str(topic).split("/")[4])
             [field, unit] = self.retrieve_field_and_unit(measure_type)
             patientID = str(str(topic).split("/")[3])
-            # print(f"measure type : {measure_type}")
             content = (payload.decode("utf-8")) 
-            # print(f"{patientID} 's {measure_type} : \n\n{content}")
             with open(f"{patientID}_stat_weekly_{measure_type}.json", 'w') as wp:
                 wp.write(content)
             wp.close()
@@ -87,12 +80,10 @@ class statistics():
                 invalid = 0
                 dict = json.load(f)
                 self.patientID = dict["channel"]["name"]
-                #print(f"{self.clientID} patientID: {self.patientID}")
                 feeds = dict["feeds"]
                 if len(feeds) > 0:
                     for feed in feeds:
                         [field, unit] = self.retrieve_field_and_unit(measure_type)
-                        # print(f"unit : {unit}, measure_type {measure_type}, patient {patientID}")
                         measure = feed[field]
                         try:
                             measure = float(measure)
@@ -116,19 +107,13 @@ class statistics():
                     max = None
             event = self.create_event(measure_type, unit, min, avg, max)
             self.events.append(event)   
-            # for event in self.events:
-            #     print(f"{event}\n\n")
             at_least_one_not_present = 0
             self.current_event_parameters.append( event["n"] )
             for parameter_name in self.parameters_list:
                 if parameter_name not in self.current_event_parameters:
                     at_least_one_not_present = 1
-                    # print("non ancora")
-            # qui ci sono tutti!
             if at_least_one_not_present == 0:
                 message = self.create_message(self.events, self.patientID)
-                # print(message)
-                # qua pubblica anche dati personali
                 pub_topic_stats1 = str(self.mqtt_topic_pub_stats).replace("{{base_topic}}", self.base_topic)
                 pub_topic_stats2 = str(pub_topic_stats1).replace("{{patientID}}", self.patientID)
                 pub_topic_stats3 = str(pub_topic_stats2).strip("/{{{{measure}}}}")
@@ -136,7 +121,7 @@ class statistics():
                 full_name = http_getNameFromClientID(patientID)
                 state = http_getMonitoringStateFromClientID(patientID)
                 pregnancy_day_one = http_retrievePregnancyDayOne(patientID) # 4          
-
+                print(f"\n++++++++++++++++++++++++++++++++++++++++++++++++\nOne week has elapsed since latest statistics have been computed, weekly statistics regarding sensed measures are being sent for patient {patientID} to NodeRed.\n++++++++++++++++++++++++++++++++++++++++++++++++\n")
                 self.myPublish(pub_topic_stats3, message)
                 self.publishPatientInfo(param_patientID=patientID, param_dayOne= pregnancy_day_one, param_patientName= full_name, param_state= state)
                 self.current_event_parameters = []
@@ -169,7 +154,7 @@ class statistics():
 
 
     def myPublish(self, topic, message):
-        print(f"{self.clientID} publishing {message} to topic: {topic}\n\n\n")
+        #print(f"{self.clientID} publishing {message} to topic: {topic}\n\n\n")
         self.client_MQTT.myPublish(topic, message)
     
 

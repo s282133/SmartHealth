@@ -29,10 +29,10 @@ def getListsOfTSinfo():
             connectedDevice = currentPatient["connectedDevice"]
             ts_info = connectedDevice["thingspeakInfo"]
             channelID = ts_info["channel"]
-            print(f"{patientID},{channelID}")
+            #print(f"{patientID},{channelID}")
             key_patientID = int(patientID)
             patientIDs_channels[f"{key_patientID}"] = channelID
-    print(patientIDs_channels)
+    #print(patientIDs_channels)
     return_dict = dict(patientIDs_channels)
     return json.dumps(patientIDs_channels)
 
@@ -78,7 +78,7 @@ def retrieveTSReadAPIfromClientID(patient_ID):
 
 
 def retrieveTSWriteAPIfromClientID(patient_ID):
-    print(f"patient_ID: {patient_ID}")
+    #print(f"patient_ID: {patient_ID}")
     currentPatient = get_patient_from_patient_id(patient_ID) 
     #data= currentPatient["connectedDevice"]["thingspeakInfo"]["apikeys"][0]
     connectedDevice = currentPatient["connectedDevice"]
@@ -202,7 +202,7 @@ def get_lista_pazienti_simulati():
 
 # esiste una copia identica in functionsOnCatalogue
 def getWeek(dayOne):
-    print(f"dayone = {dayOne}")
+    #print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
     currY = currTime.split("-")[0]
     currM = currTime.split("-")[1]
@@ -225,30 +225,30 @@ def getWeek(dayOne):
     return week
 
 # da cancellare se mettiamo la delete
-def contolla_scadenza_week():
-    catalog = openCatalogue()
-    Modificato = False
-    doctorList = catalog["resources"]
-    for currentDoctor in doctorList:
-        patientList = currentDoctor["patientList"]
-        for currentPatient in patientList:
+# def contolla_scadenza_week():
+#     catalog = openCatalogue()
+#     Modificato = False
+#     doctorList = catalog["resources"]
+#     for currentDoctor in doctorList:
+#         patientList = currentDoctor["patientList"]
+#         for currentPatient in patientList:
 
-            if currentPatient["state"] == "archiviato": 
-                continue
+#             if currentPatient["state"] == "archiviato": 
+#                 continue
 
-            # archive entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
-            dayOne = currentPatient["personalData"]["pregnancyDayOne"] 
-            week = getWeek(dayOne)
-            print(f'Patient {currentPatient["patientID"]} is in week {week}')
-            if int(week) >= 36:
-                currentPatient["state"] = "archiviato"
-                #patientList.remove(currentPatient)
-                Modificato = True
+#             # archive entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
+#             dayOne = currentPatient["personalData"]["pregnancyDayOne"] 
+#             week = getWeek(dayOne)
+#             print(f'Patient {currentPatient["patientID"]} is in week {week}')
+#             if int(week) >= 36:
+#                 currentPatient["state"] = "archiviato"
+#                 #patientList.remove(currentPatient)
+#                 Modificato = True
 
-    if Modificato:
-        with open('ServicesAndResourcesCatalogue.json', "w") as f:
-            json.dump(catalog, f, indent=2)
-            f.close()
+#     if Modificato:
+#         with open('ServicesAndResourcesCatalogue.json', "w") as f:
+#             json.dump(catalog, f, indent=2)
+#             f.close()
 
 # quella con delete
 def delete_ex_patients():
@@ -287,7 +287,7 @@ def delete_ex_patients():
                     if int(k) == int(patientID_to_delete):
                         associated_channelID = map_dict[k]
                 final_local_uri = str(local_uri).replace("{{channelID}}", str(associated_channelID))
-                print(f"delete TS uri: {final_local_uri}")
+                #print(f"delete TS uri: {final_local_uri}")
                 r=requests.delete(final_local_uri, data=body)
                 #print(f"request status code : {r.status_code}")
                 #print(f"request response : {r.text}")

@@ -17,17 +17,7 @@ class Thingspeak():
 
         self.mqtt_pub_topic = mqtt_pub_topic
 
-        # print("sono qui -2")
-
-        # dic = http_retrieveTSpatientIDsAndChannelIDs()
-
-        # dictionary = dict(json.loads(dic))
-        # for key in dictionary:
-        #     print(key, dictionary[key])
-        # MANIERA GIUSTA DI LEGGERLO!
-
-        # print("dopo -2")
-
+  
         mqtt_service = http_getServiceByName("Thingspeak")
         if mqtt_service == None:
             print("Servizio registrazione non trovato")
@@ -56,7 +46,7 @@ class Thingspeak():
         self.mqttClient=MyMQTT(None, mqtt_broker, mqtt_port, self) 
         self.cont=0
 
-        # print("sono qui -1")
+       
 
         # PROVA di microservizio
         receive_peso_api = get_api_from_service_and_name(mqtt_service,"receive_peso") 
@@ -76,9 +66,9 @@ class Thingspeak():
         # TOPIC da inserire nel catalogo ma come ? (Antuan)
         #self.patternWeight = re.compile(r'P4IoT/SmartHealth/.+/peso')
         #self.patternMonitoring = re.compile(r'P4IoT/SmartHealth/.+/monitoring')
-        # print("sono qui 0")
+       
         self.initializeSlim()
-        # print("sono qui 1")
+  
         while True:
             if self.counter == DOWNLOAD_TIME:
                 self.counter = 0
@@ -92,11 +82,10 @@ class Thingspeak():
     def initializeSlim(self):
         self.start()
         self.subscribe()
-        #time.sleep(5)
-        # print("sono qui 2")
+
         try:
             with open("settings_weeklyStats.json", "r") as rp:
-                # print("sono qui 3")
+
                 settings_dict = json.load(rp)
                 self.list_parameters = settings_dict["parameters"]
                 self.ts_fields = []
@@ -104,20 +93,20 @@ class Thingspeak():
                 for parameter in self.list_parameters:
                     self.ts_fields.append(parameter["ts_field"])
                     self.local_files.append(parameter["local_file"])
-                # print("sono qui 4")
+
         except:
             sys.exit("Errore nella lettura del file settings_weeklyStats.json")
 
 
     def downloadData(self):
-        # print("sono qui 5")
+
         for key in self.dictionary:
             channel = self.dictionary[key]
-            # print(channel)
+
             for i in range(len(self.list_parameters)):
                 field = self.ts_fields[i]
                 fieldnumber = int(str(field).strip("field"))
-                #print("Downloading data from field " + fieldnumber)
+
                 
                 download_data_api = get_api_from_service_and_name(mqtt_service,"download_data_from_thingspeak") 
                 download_data_uri  = download_data_api["uri"]
@@ -133,7 +122,7 @@ class Thingspeak():
                     filename = "patient_" + key + "_" + self.local_files[i]
                     with open(filename, "w") as wp:
                         json.dump(downloaded_catalogue.json(), wp, indent=4)
-                        # publish qui
+
                         channelID = str((downloaded_catalogue.json())["channel"]["name"])
                         # print(f"channel ID : {channelID}")
                         parameter_name = self.list_parameters[i]["name"]
@@ -141,7 +130,7 @@ class Thingspeak():
                         pubTopic_half_final = pubTopic.replace("{{measure}}",parameter_name)
                         pubTopic_final = pubTopic_half_final.replace("{{base_topic}}",self.mqtt_base_topic)
                         self.myPublish(pubTopic_final, downloaded_catalogue.json())
-                        # print(f"UAU : {downloaded_catalogue.json()}")
+
                 else:
                     print("Error. Status code: " + str(downloaded_catalogue.status_code))
                     sys.exit()
@@ -150,10 +139,10 @@ class Thingspeak():
         message = json.loads(payload) 
         if bool(self.patternWeight.match(str(topic))): 
             self.clientID = int(str(topic).split("/")[2]) 
-            # print(f"sono nella notify di TS, sto chiedendo il client {self.clientID}")
+
             api_key = http_retrieveTSWriteAPIfromClientID(self.clientID) 
             peso=message["status"] 
-            # print(f"topic del peso: {topic}") 
+
             self.lastPeso = peso 
 
             # Microservizio
@@ -171,7 +160,7 @@ class Thingspeak():
             rp = requests.get(f'{uri}') 
 
         elif not bool(self.patternMonitoring.match(str(topic))): 
-            # print(f"topic non del peso: {topic}")
+
             self.clientID = int(str(topic).split("/")[2])
             api_key = http_retrieveTSWriteAPIfromClientID(self.clientID) 
             self.newMeasureType = message['e'][0]['n'] 
@@ -280,7 +269,7 @@ class Thingspeak():
 
 if __name__=="__main__":
     
-    # print("sono nel main")
+
 
     mqtt_service = http_getServiceByName("Thingspeak")
     try:
@@ -289,7 +278,7 @@ if __name__=="__main__":
         mqtt_analysis_service = http_getServiceByName("MQTT_analysis")
         mqtt_api = get_api_from_service_and_name( mqtt_analysis_service, "weeklystats_sub" )
         mqtt_pub_topic = mqtt_api["topic"]
-        # print(f"retrieved topic : {mqtt_pub_topic}")
+
         mySubscriber=Thingspeak(mqtt_broker, mqtt_port, mqtt_pub_topic) 
     except TypeError:
         print("Thingspeak could not be initialized.")

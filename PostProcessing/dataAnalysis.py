@@ -90,12 +90,12 @@ class dataAnalysisClass():
 
     def myPublish(self, topic, message):
         self.mqtt_client.myPublish(topic, message) 
-        print(f"Published on {topic}")
+        #print(f"Published on {topic}")
 
 
     def notify(self, topic, msg):
 
-        print(f"Il topic è: {topic}")
+        #print(f"Il topic è: {topic}")
         d = json.loads(msg)
         self.bn = d["bn"]
         local_clientID = int(self.bn.split("/")[3])  
@@ -143,7 +143,7 @@ class dataAnalysisClass():
             exit(8)
         
         try:
-            print(f"sono dataAnalysis, clientID {local_clientID}")
+            #print(f"sono dataAnalysis, clientID {local_clientID}")
             patientName = http_getNameFromClientID(local_clientID)
         except:
             print("DataAnalysisBlock - error [ERR 9]")
@@ -196,9 +196,10 @@ class dataAnalysisClass():
                 exit(12)
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (int(self.value) >= int(rangeHR["min"]) and int(self.value) <= int(rangeHR["max"])):
-                    print(f"DataAnalysisBlock: heart rate is in range")
+                    #print(f"DataAnalysisBlock: heart rate is in range")
+                    pass
                 else:
-                    print(f"DataAnalysisBlock: heart rate is NOT in range") 
+                    #print(f"DataAnalysisBlock: heart rate is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     try:
                         self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
@@ -236,9 +237,10 @@ class dataAnalysisClass():
 
                 if (int(self.sensed_pressureHigh) >= int(highmax) and int(self.sensed_pressureHigh) <= int(highmin)) and  \
                     (int(self.sensed_pressureLow) >= int(lowmax) and int(self.sensed_pressureLow) <= int(lowmin)) :
-                    print(f"DataAnalysisBlock: pressure is in range")
+                    #print(f"DataAnalysisBlock: pressure is in range")
+                    pass
                 else:
-                    print(f"DataAnalysisBlock: pressure is NOT in range") 
+                    #print(f"DataAnalysisBlock: pressure is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?"
                     try:
                         self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
@@ -266,9 +268,10 @@ class dataAnalysisClass():
 
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (int(self.value) >= int(rangeGL["min"]) and int(self.value) <= int(rangeGL["max"])):
-                    print(f"DataAnalysisBlock: glycemia is in range")
+                    #print(f"DataAnalysisBlock: glycemia is in range")
+                    pass
                 else:
-                    print(f"DataAnalysisBlock: glycemia is NOT in range") 
+                    #print(f"DataAnalysisBlock: glycemia is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     try:
                         self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)
@@ -296,9 +299,10 @@ class dataAnalysisClass():
             
             if (int(week) >= int(weekmin) and int(week) <= int(weekmax)):
                 if (float(self.value) >= float(rangeTE["min"]) and float(self.value) <= float(rangeTE["max"])):
-                    print(f"DataAnalysisBlock: temperature is in range")
+                    #print(f"DataAnalysisBlock: temperature is in range")
+                    pass
                 else:
-                    print(f"DataAnalysisBlock: temperature is NOT in range") 
+                    #print(f"DataAnalysisBlock: temperature is NOT in range") 
                     messaggio = f"Attention, patient {parPatientName} (ID: {parClientID}) {self.measureType} is NOT in range, the value is: {self.value} {self.unit}. \n What do you want to do?" 
                     try:
                         self.telegramID = http_findDoctorTelegramIdFromPatientId(parClientID)

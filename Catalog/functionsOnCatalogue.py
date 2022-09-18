@@ -10,11 +10,9 @@ def http_retrieveTSpatientIDsAndChannelIDs():
 
     local_uri = api["uri"]
 
-    print(f"request : http://{ipAddress}:{port}/{local_uri}")
+    #print(f"request : http://{ipAddress}:{port}/{local_uri}")
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
-
-    # print(f"status code : {r.status_code}")
 
     if r.status_code == 200:
         return r.text
@@ -23,7 +21,6 @@ def http_retrieveTSpatientIDsAndChannelIDs():
         return None
 
 def get_host_and_port():
-    # config.json mi dice qual è il server da interrogare
     filename = 'config.json'
     dictionaryCatalog = json.load(open(filename))
     ipAddress = dictionaryCatalog["ipAddress"]
@@ -32,8 +29,7 @@ def get_host_and_port():
 
 # prende il localhost dal catalogo
 def http_get_localhost():                       
-    TelegramDoctor, ipAddress, port = get_service_host_and_port("TelegramDoctor")
-    
+    TelegramDoctor, ipAddress, port = get_service_host_and_port("TelegramDoctor")    
     return ipAddress
 
 #anche questo potrebbe dover essere modificato
@@ -54,7 +50,7 @@ def http_get_host_and_port(parServiceName):
 
 
 
-# Questa raccolta di funzioni http permette (con le chiamate request.get, post e put) 
+# Questa raccolta di funzioni http permette (con le chiamate request.get, post, put e delete) 
 # di interrogare il MainServer che ha le funzionalità GET e l'accesso al catalogo 
 
 def http_getServiceByName(parServiceName):
@@ -318,7 +314,7 @@ def get_api_from_service_and_name( parService, parApiName ):
 
 # esiste una copia identica in ServerFunctions
 def getWeek(dayOne):
-    print(f"dayone = {dayOne}")
+    #print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
     currY = currTime.split("-")[0]
     currM = currTime.split("-")[1]

@@ -36,7 +36,7 @@ class MyMQTT:
         # just to remember that it works also as a subscriber
         self._isSubscriber = True
         self._topic = topic
-        print ("subscribed to %s" % (topic))
+        # print ("subscribed to %s" % (topic))
  
     def start(self):
         #manage connection to broker

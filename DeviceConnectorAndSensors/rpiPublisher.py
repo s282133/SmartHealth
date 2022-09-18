@@ -19,7 +19,7 @@ from glycemiaSensor import glycemiaSensorClass
 TOPIC_TEMP_RASPBERRY = "temp_raspberry"
 TOPIC_TEMP_SIMULATE = "temp_simulate"
 
-# periodo di polling in minuti ! ciao, sono Laura's pc modifica del cazzo 2
+# periodo di polling in minuti 
 POLLING_PERIOD_HR       = 60    
 POLLING_PERIOD_PRESSURE = 85        
 POLLING_PERIOD_GLYCEMIA = 115       
@@ -79,6 +79,7 @@ class rpiPub():
         self.clientID = int(clientID)
 
         try:
+            # controlla se lo stato di monitoraggio del paziente è on oppure off
             self.monitoring_status = http_getMonitoringStateFromClientID(self.clientID)
             if self.monitoring_status == "on":
                 self.monitoring = True
@@ -93,7 +94,7 @@ class rpiPub():
         self.counter = 0
         self.monitoring_counter = 0
 
-        print(f"Patient with patient ID {self.clientID} is now online.")
+        print(f"\nPatient with patient ID {self.clientID} is now online.\n")
         self.start()
         self.initSensors()
         while True:
@@ -124,15 +125,14 @@ class rpiPub():
 
 
     def myPublish(self, topic, message):
-        #print(f"{self.clientID} publishing {message} to topic: {topic}")
         self.client_MQTT.myPublish(topic, message)
 
 
     def notify(self, topic, message):
         msg = json.loads(message)
         subtopic = topic.split("/")[3]
+        # riceve il messaggio di monitoraggio on/off 
         if subtopic == "monitoring":           
-            print(f"{self.clientID} received {msg} from topic: {topic}")
             self.monitoring_status = msg["status"]
             if self.monitoring_status == "on":
                 self.monitoring_counter = 0
@@ -145,15 +145,15 @@ class rpiPub():
             except:
                 print("RPI Publisher - error [ERR 5]")
                 exit()
-
+                
+        # riceve la temperatura dal raspberry
         elif subtopic == TOPIC_TEMP_RASPBERRY:      
             newMeasureTempRaspberry = msg["e"][0]["v"]
-            #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
             self.publishTemperature(newMeasureTempRaspberry)
             
+        # riceve la temperatura dal sensore simulato   
         elif subtopic == TOPIC_TEMP_SIMULATE:      
             newMeasureTempSimulate = msg["e"][0]["v"]
-            #print(f"{self.clientID} received {newMeasureTempRaspberry} from topic: {topic}")
             self.publishTemperature(newMeasureTempSimulate)
             
         else: 
@@ -182,9 +182,6 @@ class rpiPub():
             print("RPI Publisher - error [ERR 6]")
             exit()
         #topicHR = f"{self.mqtt_base_topic}/{self.clientID}/heartrate"
-
-        # Perchè le misure non sono nel vettore "e"? Per quale motivo è conveniente?
-        # Perchè non abbiamo specificayo mai il sensore ma solo il raspberry? E' sufficiente?
         try:
             ResourceService = http_getServiceByName("ResourceService")
             bn = get_api_from_service_and_name(ResourceService,"gestione_bn") 
@@ -192,14 +189,8 @@ class rpiPub():
             heartrateSensor = bn["heartrate_sensor"]
 
             messageHR = {"bn": f"{basic_uri}/{self.clientID}/{heartrateSensor}/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
-
-            #bn non nel settings
-            #messageHR = {"bn": f"http://SmartHealth.org/{self.clientID}/heartrateSensor/", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
-            
-            #Alternativa al bn che inizi per //http
-            #messageHR = {"bn": f"{self.clientID}", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
             self.myPublish(topicHR, messageHR)
-            print(f"Patient with patient ID {self.clientID} published {measure} with topic: {topicHR} ({self.monitoring_status})")
+            
         except:
             print("RPI Publisher - error [ERR 7]")
             exit()
@@ -217,7 +208,7 @@ class rpiPub():
 
         try:
             topicPR= getTopicByParameters(self.mqtt_topic_pressure, self.mqtt_base_topic, self.clientID)
-            #f"{self.mqtt_base_topic}/{self.clientID}/pressure"
+            #topicPRESSURE: f"{self.mqtt_base_topic}/{self.clientID}/pressure"
         except:
             print("RPI Publisher - error [ERR 8]")
             exit()
@@ -228,10 +219,9 @@ class rpiPub():
             basic_uri = bn["basic_uri"]
             pressureSensor = bn["pressure_sensor"]
             messagePR = {"bn": f"{basic_uri}/{self.clientID}/{pressureSensor}/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
-
-            #messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
+   
             self.myPublish(topicPR, messagePR)
-            print(f"Patient with patient ID {self.clientID} published {pressureHigh},{pressureLow} with topic: {topicPR} ({self.monitoring_status})")
+            
         except:
             print("RPI Publisher - error [ERR 9]")
             exit()
@@ -257,10 +247,8 @@ class rpiPub():
             basic_uri = bn["basic_uri"]
             glycemiaSensor = bn["glycemia_sensor"]
             messageGL = {"bn": f"{basic_uri}/{self.clientID}/{glycemiaSensor}/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
-
-            #messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
             self.myPublish(topicGL, messageGL)
-            print(f"Patient with patient ID {self.clientID} published {measure} with topic: {topicGL} ({self.monitoring_status})")
+          
         except:
             print("RPI Publisher - error [ERR 11]")
             exit()
@@ -289,6 +277,7 @@ class rpiPub():
             print("RPI Publisher - error [ERR 13]")
             exit()
 
+    
     # Lettura e pubblicazione dati 
 
     def routineFunction(self):
@@ -352,11 +341,6 @@ class rpiPub():
 
 if __name__ == "__main__":
 
-    # DEBUG: da eliminare alla fine: imposta in automatico il -1 sul paziente 9 per far pubblicare su di lui
-    # setOnlineSinceFromClientID(10)
-    # setOnlineSinceFromClientID(1)
-
-
     cicli=0
     while True:
 
@@ -364,24 +348,17 @@ if __name__ == "__main__":
         if cicli % SECONDI_CONTROLLO_NUOVI_PAZIENTI == 0:
 
             try:
-                # print("primo try")
                 json_lista = http_get_lista_pazienti_da_monitorare()
-                # print(f"{json_lista}")
-                lista_pazienti_da_monitorare = json_lista["lista_pazienti_da_monitorare"]
-                # print(f"{lista_pazienti_da_monitorare}")
-              
+                lista_pazienti_da_monitorare = json_lista["lista_pazienti_da_monitorare"]             
             except:
                 print("RPI Publisher - error [ERR 20]")
                 exit()
 
             for patientID in lista_pazienti_da_monitorare:
-                # print("sono entrato nel for")
                 try:
                     http_set_patient_in_monitoring(patientID)  
-                    # print("secondo try")
                     thread = Thread(target=rpiPub, args=(str(patientID),))
                     thread.start()
-                    # print(f"{patientID} is online")
                 except:
                     print("RPI Publisher - error [ERR 21]")
                     exit()
@@ -389,9 +366,7 @@ if __name__ == "__main__":
         # Eseguito all'avvio e ogni 24 ore
         if cicli % SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA == 0:
             try:
-                # prova_delete
                 http_delete_ex_patients()
-                #http_contolla_scadenza_week()
             except:
                 print("RPI Publisher - error [ERR 22]")
                 exit()
