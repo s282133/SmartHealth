@@ -460,6 +460,8 @@ if __name__=="__main__":
                
             resetCatalog() #mette -1 a tutto
 
+            
+
             cherrypy.tree.mount(Registrazione(),'/')
             conf={
                 '/':{

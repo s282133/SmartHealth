@@ -14,7 +14,7 @@ def http_retrieveTSpatientIDsAndChannelIDs():
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
-    print(f"status code : {r.status_code}")
+    # print(f"status code : {r.status_code}")
 
     if r.status_code == 200:
         return r.text
@@ -43,11 +43,11 @@ def http_get_user_localhost():
 
     local_uri = monitoring_state_api["uri"]
 
-    print(f"sto prendendo user localhost: GET http://{ipAddress}:{port}/{local_uri}")
+    # print(f"sto prendendo user localhost: GET http://{ipAddress}:{port}/{local_uri}")
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
-    print(f"r.statuscode : {r.status_code}, r.text : {r.text}")
+    #print(f"r.statuscode : {r.status_code}, r.text : {r.text}")
 
     if r.status_code == 200:
         return r.text

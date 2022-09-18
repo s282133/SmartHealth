@@ -14,7 +14,7 @@ def http_retrieveTSpatientIDsAndChannelIDs():
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
-    print(f"status code : {r.status_code}")
+    # print(f"status code : {r.status_code}")
 
     if r.status_code == 200:
         return r.text

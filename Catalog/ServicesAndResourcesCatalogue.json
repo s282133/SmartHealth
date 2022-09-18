@@ -275,7 +275,7 @@
     },
     {
       "service_name": "TelegramClient",
-      "patientTelegramToken": "5156513440:AAHF2KgmzHrZJah1990ukAroqTNOCAlVK-U",
+      "patientTelegramToken": "5713587297:AAELMDZNBua-rxdlYch9aJHKrrI8LJmJ83A",
       "APIs": [
         {
           "functionality_name": "send_peso",
@@ -368,8 +368,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 10,
-    "LastDoctorID": 4
+    "LastPatientID": 11,
+    "LastDoctorID": 5
   },
   "resources": [
     {
@@ -379,7 +379,7 @@
       "doctorMail": "antoniodeluca@gmail.com",
       "lastUpdate": "2022-09-13",
       "connectedDevice": {
-        "telegramID": 298694124
+        "telegramID": 11111111
       },
       "patientList": [
         {
@@ -396,8 +396,8 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-17",
-            "telegramID": "33",
+            "onlineSince": "2022-09-18",
+            "telegramID": "491287865",
             "thingspeakInfo": {
               "channel": 1721151,
               "apikeys": [
@@ -421,7 +421,7 @@
           "monitoring": "off",
           "connectedDevice": {
             "deviceName": "raspberry22",
-            "onlineSince": "2022-09-17",
+            "onlineSince": "2022-09-18",
             "telegramID": "786029508",
             "thingspeakInfo": {
               "channel": 1860793,
@@ -467,6 +467,62 @@
           "activeService": "application_to_raspberry",
           "activeProtocol": "mqtt",
           "lastUpdate": "2022-09-14"
+        }
+      ]
+    },
+    {
+      "doctorID": 5,
+      "doctorName": "Carl",
+      "doctorSurname": "Carlson",
+      "doctorMail": "carl.carlson@gmail.com",
+      "lastUpdate": "2022-09-17",
+      "connectedDevice": {
+        "telegramID": 298694124
+      },
+      "patientList": [
+        {
+          "patientID": 11,
+          "patientName": "Gina",
+          "patientSurname": "Marchi",
+          "personalData": {
+            "taxIDcode": "GNMRC97T18",
+            "userEmail": "gnmrc@gmail.com",
+            "pregnancyDayOne": "2022-05-02"
+          },
+          "idRegistratoSuRaspberry": "no",
+          "state": "attivo",
+          "monitoring": "off",
+          "connectedDevice": {
+            "deviceName": "11",
+            "onlineSince": "2022-09-18",
+            "telegramID": 0,
+            "thingspeakInfo": {
+              "channel": 1863880,
+              "apikeys": [
+                "RJ0Y5YFKACBQD0H5",
+                "XKBLQEJ7LIH837AP"
+              ]
+            }
+          }
+        }
+      ],
+      "devicesList": [
+        {
+          "deviceName": "11",
+          "patientID": 11,
+          "measureType": [
+            "Temperature",
+            "Battito cardiaco",
+            "Pressione",
+            "Glicemia"
+          ],
+          "availableServices": [
+            "raspberry_mqtt",
+            "raspberry_rest"
+          ],
+          "activeService": "application_to_raspberry",
+          "activeProtocol": "mqtt",
+          "lastUpdate": "2022-09-17"
         }
       ]
     }

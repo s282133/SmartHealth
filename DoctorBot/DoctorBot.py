@@ -75,7 +75,7 @@ class DoctorBot:
 
 
     def notify(self, topic, msg):
-        print(f"Il topic è: {topic}")
+        # print(f"Il topic è: {topic}")
         msg_json = json.loads(msg)
         telegramID = msg_json["telegramID"]
         messaggio = msg_json["Messaggio"]
@@ -179,15 +179,15 @@ class DoctorBot:
         patientID = query_data.split(" ")[2]
         monitoring_state = query_data.split(" ")[1]
 
-        print(f"sono DocBot, patientID {patientID}")
+        # print(f"sono DocBot, patientID {patientID}")
         patient_name = http_getNameFromClientID(patientID)
         
         local_topic_monitoring = getTopicByParameters(self.mqtt_topic_monitoring, self.mqtt_base_topic, str(patientID))
         message =  {"status": monitoring_state}
         self.mqtt_client.myPublish(local_topic_monitoring, message)
-        print(f"{message}")
+        # print(f"{message}")
 
-        self.client_bot.sendMessage(chat_ID, text=f"Monitoring {monitoring_state} ({patient_name} - ID: {patientID})")
+        self.client_bot.sendMessage(chat_ID, text=f"Monitoring set to {monitoring_state} for patient {patient_name} ({patientID}).")
  
 
 if __name__=="__main__":

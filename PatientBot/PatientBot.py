@@ -117,7 +117,7 @@ class PatientBot:
                 
                 peso =  {"status": message}
                 self.mqtt_client.myPublish(topic_send_peso, peso)
-                print("Weight published.")               
+                print("Weight submitted to the system.")               
                 self.previous_message=""
                 self.bot.sendMessage(chat_ID, text=f"Weight submitted correctly.\nYour weight is {int_weight} Kg")                
             except:

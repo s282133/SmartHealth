@@ -289,8 +289,8 @@ def delete_ex_patients():
                 final_local_uri = str(local_uri).replace("{{channelID}}", str(associated_channelID))
                 print(f"delete TS uri: {final_local_uri}")
                 r=requests.delete(final_local_uri, data=body)
-                print(f"request status code : {r.status_code}")
-                print(f"request response : {r.text}")
+                #print(f"request status code : {r.status_code}")
+                #print(f"request response : {r.text}")
                 #currentDoctor["devicesList"]=devicesList
         catalog["resources"] = doctorList
         Modificato = True
@@ -316,7 +316,7 @@ def get_lista_pazienti_da_monitorare():
 
             connectedDevice = currentPatient["connectedDevice"]
             if connectedDevice["onlineSince"] == -1 :
-                print("aggiungerò...")
+                # print("aggiungerò...")
                 patientID = currentPatient["patientID"]
                 json_lista["lista_pazienti_da_monitorare"].append(patientID)
     return json.dumps(json_lista)

@@ -32,7 +32,7 @@ SECONDI_SCADENZA_MONITORING = 300
 SECONDI_CONTROLLO_NUOVI_PAZIENTI = 30
 SECONDI_CONTROLLO_SETIMANE_GRAVIDANZA = 3600 * 24    # ONCE PER DAY
 
-ONE_MINUTE_IN_SEC = 0                
+ONE_MINUTE_IN_SEC = 60                
                                    
 SEC_WAIT_NO_MONITORING = 1
 SEC_WAIT_MONITORING = SEC_WAIT_NO_MONITORING / 3
@@ -93,7 +93,7 @@ class rpiPub():
         self.counter = 0
         self.monitoring_counter = 0
 
-        print(f"{self.clientID} created")
+        print(f"Patient with patient ID {self.clientID} is now online.")
         self.start()
         self.initSensors()
         while True:
@@ -199,7 +199,7 @@ class rpiPub():
             #Alternativa al bn che inizi per //http
             #messageHR = {"bn": f"{self.clientID}", "e": [{"n": "heartrate", "u": "bpm", "t": timeOfMessage, "v": measure}]}
             self.myPublish(topicHR, messageHR)
-            print(f"{self.clientID} published {measure} with topic: {topicHR} ({self.monitoring_status})")
+            print(f"Patient with patient ID {self.clientID} published {measure} with topic: {topicHR} ({self.monitoring_status})")
         except:
             print("RPI Publisher - error [ERR 7]")
             exit()
@@ -231,7 +231,7 @@ class rpiPub():
 
             #messagePR = {"bn": f"http://SmartHealth.org/{self.clientID}/pressureSensor/", "e": [{"n": "pressureHigh", "u": "mmHg", "t": timeOfMessage, "v": pressureHigh}, {"n": "pressureLow", "u": "mmHg", "t": timeOfMessage, "v": pressureLow}]}
             self.myPublish(topicPR, messagePR)
-            print(f"{self.clientID} published {pressureHigh},{pressureLow} with topic: {topicPR} ({self.monitoring_status})")
+            print(f"Patient with patient ID {self.clientID} published {pressureHigh},{pressureLow} with topic: {topicPR} ({self.monitoring_status})")
         except:
             print("RPI Publisher - error [ERR 9]")
             exit()
@@ -260,7 +260,7 @@ class rpiPub():
 
             #messageGL = {"bn": f"http://SmartHealth.org/{self.clientID}/glycemiaSensor/", "e": [{"n": "glycemia", "u": "mg/dL", "t": timeOfMessage, "v": measure}]}
             self.myPublish(topicGL, messageGL)
-            print(f"{self.clientID} published {measure} with topic: {topicGL} ({self.monitoring_status})")
+            print(f"Patient with patient ID {self.clientID} published {measure} with topic: {topicGL} ({self.monitoring_status})")
         except:
             print("RPI Publisher - error [ERR 11]")
             exit()
@@ -284,7 +284,7 @@ class rpiPub():
 
             messageTE = {"bn": f"{basic_uri}/{self.clientID}/{temperatureSensor}/", "e": [{"n": "temperature", "u": "C", "t": timeOfMessage, "v": measureTemp}]}
             self.myPublish(topicTE, messageTE)
-            print(f"{self.clientID} published {measureTemp} with topic: {topicTE} ({self.monitoring_status})")
+            print(f"Patient with patient ID {self.clientID} published {measureTemp} with topic: {topicTE} ({self.monitoring_status})")
         except:
             print("RPI Publisher - error [ERR 13]")
             exit()
