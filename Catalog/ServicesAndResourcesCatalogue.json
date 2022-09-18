@@ -368,8 +368,8 @@
     }
   ],
   "resourceState": {
-    "LastPatientID": 13,
-    "LastDoctorID": 6
+    "LastPatientID": 2,
+    "LastDoctorID": 1
   },
   "resources": [
     {
@@ -469,116 +469,6 @@
           "lastUpdate": "2022-09-14"
         }
       ]
-    },
-    {
-      "doctorID": 5,
-      "doctorName": "Carl",
-      "doctorSurname": "Carlson",
-      "doctorMail": "carl.carlson@gmail.com",
-      "lastUpdate": "2022-09-17",
-      "connectedDevice": {
-        "telegramID": 298694124
-      },
-      "patientList": [],
-      "devicesList": []
-    },
-    {
-      "doctorID": 6,
-      "doctorName": "Perry",
-      "doctorSurname": "Cox",
-      "doctorMail": "perry.cox@scrubs.com",
-      "lastUpdate": "2022-09-18",
-      "connectedDevice": {
-        "telegramID": 491287865
-      },
-      "patientList": [
-        {
-          "patientID": 12,
-          "patientName": "Alessandra",
-          "patientSurname": "Rizza",
-          "personalData": {
-            "taxIDcode": "ARZ45R9IOK",
-            "userEmail": "arz24@gmail.com",
-            "pregnancyDayOne": "2022-07-01"
-          },
-          "idRegistratoSuRaspberry": "yes",
-          "state": "attivo",
-          "monitoring": "on",
-          "connectedDevice": {
-            "deviceName": "5",
-            "onlineSince": "2022-09-18",
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 1864125,
-              "apikeys": [
-                "1SPFY2Q60A2FCWPZ",
-                "RHIP8UM3DXI403OY"
-              ]
-            }
-          }
-        },
-        {
-          "patientID": 13,
-          "patientName": "Chiara",
-          "patientSurname": "Codagnone",
-          "personalData": {
-            "taxIDcode": "CDGN23ER56T",
-            "userEmail": "cdgn26@gmail.com",
-            "pregnancyDayOne": "2022-05-19"
-          },
-          "idRegistratoSuRaspberry": "no",
-          "state": "attivo",
-          "monitoring": "off",
-          "connectedDevice": {
-            "deviceName": "7",
-            "onlineSince": "2022-09-18",
-            "telegramID": 0,
-            "thingspeakInfo": {
-              "channel": 1864126,
-              "apikeys": [
-                "1RENM1AP6Z4B1HOR",
-                "TFQPPHPA6W6FE88C"
-              ]
-            }
-          }
-        }
-      ],
-      "devicesList": [
-        {
-          "deviceName": "5",
-          "patientID": 12,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "application_to_raspberry",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-09-18"
-        },
-        {
-          "deviceName": "7",
-          "patientID": 13,
-          "measureType": [
-            "Temperature",
-            "Battito cardiaco",
-            "Pressione",
-            "Glicemia"
-          ],
-          "availableServices": [
-            "raspberry_mqtt",
-            "raspberry_rest"
-          ],
-          "activeService": "application_to_raspberry",
-          "activeProtocol": "mqtt",
-          "lastUpdate": "2022-09-18"
-        }
-      ]
-    }
+    } 
   ]
 }
