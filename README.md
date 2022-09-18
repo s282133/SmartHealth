@@ -34,7 +34,7 @@ The current version of the system is made up of multiple microservices, listed b
 8) Google Form Adaptor;
 9) FrontEnd.
 
-** pic cosa finale **
+![Proposal](/materiale_readme/proposal.jpg)
 
 ### How do I deploy the system?
 The steps for deploying the system are easy, you just need to:
