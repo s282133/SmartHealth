@@ -43,16 +43,22 @@ The steps for deploying the system are easy, you just need to:
 3) Install Docker (latest version, if possible);
 4) Be sure that the Docker Daemon is started;
 5) Reach the directory where you imported the repo, locally;
-6) In the Catalog folder, open file 'ServicesAndResourcesCatalogue.json', scroll to ' "service_name": "TelegramDoctor" ' and change "host" entry, setting it to your localhost IP address.
-7) Issue the bash command ``docker-compose up --build``.
+6) In the Catalog folder, open file 'ServicesAndResourcesCatalogue.json', scroll to ' "service_name": "TelegramDoctor" ' and change "host" entry, setting it to your localhost IP address;
+7) Issue the bash command ``docker-compose up --build`` *.
 
 ### Useful Links and Material
-- Link to the promotional video of the system: [url 'PROMO VIDEO'] (https://www.youtube.com/watch?v=tDhO8cAT1S8) (url 'PROMO VIDEO');
-- Link to the demo video of the system: [https://www.youtube.com/watch?v=urVWMBEqnns] (url 'DEMO VIDEO');
+- Link to the promotional video of the system: https://www.youtube.com/watch?v=tDhO8cAT1S8 ;
+- Link to the demo video of the system: https://www.youtube.com/watch?v=urVWMBEqnns ;
 - Presentation Material: you can find the PDF in readme_material folder.
+
+### Known Issues
+Most of our problems during the development of this project were due to Docker. Sometimes the engine stops without any particular reason, or it fails due to a timeout. A workaround consists in just running the system multiple times. 
 
 ### Credits
 Special thanks go to Gianfranco Giorgianni ("Gianni") for lending his voice to the promo video of the project.
 
 #### Release Version
 1.0, 18/09/2022.
+
+* The provided catalogue starts with patients 1 and 2. This is a choice of ours due to the fact that NodeRed, an external service that is very little dynamic, takes into account data of at least two patients. The reset function for the catalogue doesn't empty it up because it would delete them, but on the other hand the user can feel free to customize the starting catalogue as they wish, even leaving it empty for a fresh start.
+In the latter case, the only needed action is just go to the Catalog/ServicesAndResourcesCatalogue.json and set the list called "Resources = []" (row 374).
