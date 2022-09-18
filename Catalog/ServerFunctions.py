@@ -7,17 +7,14 @@ import requests
 
 sys.path.insert(0, os.path.abspath('..'))
 
-# Questa raccolta di funzioni si trova sullo stesso server del MainServer 
-# quindi hanno l'accesso diretto al catalogo, vengono usate solo dal MainServer
 
 def openCatalogue():
     filename = 'ServicesAndResourcesCatalogue.json'
-
     f = open(filename)
     catalog = json.load(f)
-    #time.sleep(1)
     return catalog
 
+# recupera le info dei canali su Thingspeak
 def getListsOfTSinfo():
     catalog = openCatalogue()
     lista = catalog["resources"]
@@ -29,13 +26,12 @@ def getListsOfTSinfo():
             connectedDevice = currentPatient["connectedDevice"]
             ts_info = connectedDevice["thingspeakInfo"]
             channelID = ts_info["channel"]
-            #print(f"{patientID},{channelID}")
             key_patientID = int(patientID)
             patientIDs_channels[f"{key_patientID}"] = channelID
-    #print(patientIDs_channels)
     return_dict = dict(patientIDs_channels)
     return json.dumps(patientIDs_channels)
 
+# cerca il paziente a partire dal patientID
 def get_patient_from_patient_id(patientID):
     catalog = openCatalogue()
     lista = catalog["resources"]
@@ -45,30 +41,20 @@ def get_patient_from_patient_id(patientID):
         if currentPatient != None:
             return currentPatient   
     return None
+       
 
-# # prova
-# def get_registrazion_confirm_from_chat_ID(chat_ID):
-#     catalog = openCatalogue()
-#     lista = catalog["resources"]
-#     for currentDoctor in lista:
-#         telegramID = currentDoctor["connectedDevice"]["telegramID"]  
-#         if telegramID == int(chat_ID):
-#             return 1
-#     return 0
-        
-    
 def retrievePregnancyDayOne(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     personalData = currentPatient["personalData"] 
     return personalData["pregnancyDayOne"]
                 
-
+ 
 def retrieveOnlineSince(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     connectedDevice=currentPatient["connectedDevice"]
     return connectedDevice["onlineSince"]
 
-
+# READ API thingspeak 
 def retrieveTSReadAPIfromClientID(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     connectedDevice = currentPatient["connectedDevice"]
@@ -76,20 +62,15 @@ def retrieveTSReadAPIfromClientID(patient_ID):
     api_keys = list(thingspeakInfo["apikeys"])
     return api_keys[1]
 
-
+# WRITE API thingspeak 
 def retrieveTSWriteAPIfromClientID(patient_ID):
-    #print(f"patient_ID: {patient_ID}")
     currentPatient = get_patient_from_patient_id(patient_ID) 
-    #data= currentPatient["connectedDevice"]["thingspeakInfo"]["apikeys"][0]
     connectedDevice = currentPatient["connectedDevice"]
-    #print(f"connectedDevice: {connectedDevice}")
     thingspeakInfo = connectedDevice["thingspeakInfo"]
-    #p(f"thingspeakInfo: {thingspeakInfo}")                
     api_keys = list(thingspeakInfo["apikeys"])
-    #print(f"api_keys: {api_keys}")        
     return api_keys[0]
 
-
+# cerca il paziente a partire dal telegramID
 def findPatientFromChatID(chat_ID):
     catalog = openCatalogue()
     lista = catalog["resources"]
@@ -103,7 +84,7 @@ def findPatientFromChatID(chat_ID):
                 return patientID   
     return None
 
-
+# trova il dottore del paziente a partire dal patientID
 def findDoctorTelegramIdFromPatientId(parPatientID):
     catalog = openCatalogue()
     lista = catalog["resources"]
@@ -117,27 +98,27 @@ def findDoctorTelegramIdFromPatientId(parPatientID):
                 return telegramID    
     return None
     
-
+# recupera il topic in base al nome del parametro
 def getTopicByParameters(parTopic, parBaseTopic, parPatientID):
     #"topic_temperature": "{{base_topic}}/{{patientID}}/temperature",
     local_topic = parTopic.replace("{{base_topic}}", parBaseTopic)
-    local_topic = local_topic.replace("{{patientID}}", parPatientID) #parPatient da passare come stringa
+    local_topic = local_topic.replace("{{patientID}}", parPatientID) 
     return local_topic
 
-
+# nome del paziente a partire dal patientID
 def getNameFromClientID(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     patientName=currentPatient["patientName"]
     patientSurname=currentPatient["patientSurname"]
     return f"{patientName} {patientSurname}"
 
-
+# cerca lo stato di monitoraggio on/off
 def getMonitoringStateFromClientID(patient_ID):
     currentPatient = get_patient_from_patient_id(patient_ID) 
     monitoring = currentPatient["monitoring"]
     return monitoring
 
-
+# setta lo stato di monitoraggo on/off
 def setMonitorinStatefromClientID(patient_ID, monitoring):
     catalog = openCatalogue()
     docList=catalog["resources"]
@@ -152,19 +133,19 @@ def setMonitorinStatefromClientID(patient_ID, monitoring):
                 return True    
     return False
          
-
+# trova il servizio a partire dal nome
 def main_getServiceByName(parServiceName):
     catalog = openCatalogue()
     services = catalog["services"]
     first_or_default = next((x for x in services if x["service_name"]==parServiceName), None)
     return first_or_default 
 
-
+# trova l'API a partire dal nome
 def main_getApiByServiceAndName(parAPIs,parApiName):
     first_or_default = next((x for x in parAPIs if x["functionality_name"]==parApiName), None)
     return first_or_default 
 
-
+# trova l'API a partire dal nome del servizio e dell'api
 def main_getApiByName(parServiceName,parApiName):
     mqtt_service = main_getServiceByName(parServiceName)
     if mqtt_service != None:
@@ -174,7 +155,7 @@ def main_getApiByName(parServiceName,parApiName):
     else: 
         return None
     
-
+# cerca la lista dei pazienti che non hanno il raspberry
 def get_lista_pazienti_simulati():
     json_lista = {
         "lista_pazienti_simulati": []
@@ -188,69 +169,27 @@ def get_lista_pazienti_simulati():
                 for currentPatient in patientList:
                     patientID = currentPatient["patientID"]
                     idRegistratoSuRaspberry = currentPatient["idRegistratoSuRaspberry"]
-                    
-                    # #prova
-                    # connectedDevice=currentPatient["connectedDevice"]
-                    # onlineSince = connectedDevice["onlineSince"]
-                    #aggiunto and
-                    if idRegistratoSuRaspberry == "no":
-                        
+                    if idRegistratoSuRaspberry == "no":    
                         json_lista["lista_pazienti_simulati"].append(patientID)
- 
         return json.dumps(json_lista)
 
 
-# esiste una copia identica in functionsOnCatalogue
+# trova la settimana attuale di gravidanza
 def getWeek(dayOne):
-    #print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
     currY = currTime.split("-")[0]
     currM = currTime.split("-")[1]
     currD = currTime.split("-")[2]
-    #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
     currDays = int(currY)*365 + int(currM)*30 + int(currD)
-    #print(f"DataAnalysisBlock: current day is {currDays}")
-
-    #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
-    #print(f"DataAnalysisBlock: dayOne : {dayOne}")
     dayoneY = str(dayOne).split("-")[0]
     dayoneM = str(dayOne).split("-")[1]
     dayoneD = str(dayOne).split("-")[2]
-    #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
-
     elapsedDays = currDays - dayoneDays
     week = int(elapsedDays / 7)
     return week
 
-# da cancellare se mettiamo la delete
-# def contolla_scadenza_week():
-#     catalog = openCatalogue()
-#     Modificato = False
-#     doctorList = catalog["resources"]
-#     for currentDoctor in doctorList:
-#         patientList = currentDoctor["patientList"]
-#         for currentPatient in patientList:
-
-#             if currentPatient["state"] == "archiviato": 
-#                 continue
-
-#             # archive entry in catalogue if pregnancy week is greater than 36 (i.e., 9 months)
-#             dayOne = currentPatient["personalData"]["pregnancyDayOne"] 
-#             week = getWeek(dayOne)
-#             print(f'Patient {currentPatient["patientID"]} is in week {week}')
-#             if int(week) >= 36:
-#                 currentPatient["state"] = "archiviato"
-#                 #patientList.remove(currentPatient)
-#                 Modificato = True
-
-#     if Modificato:
-#         with open('ServicesAndResourcesCatalogue.json', "w") as f:
-#             json.dump(catalog, f, indent=2)
-#             f.close()
-
-# quella con delete
+# elimina paziente dal catalogo dopo la 36esima settimana
 def delete_ex_patients():
     catalog = openCatalogue()
     Modificato = False
@@ -259,13 +198,9 @@ def delete_ex_patients():
         patientList = currentDoctor["patientList"]
         devicesList = currentDoctor["devicesList"]
         for currentPatient in patientList:
-           #patientID_to_delete = int(currentPatient["patientID"])
             dayOne = currentPatient["personalData"]["pregnancyDayOne"] 
             week = getWeek(dayOne)
-            # print(f'Patient {currentPatient["patientID"]} is in week {week}')
             if int(week) >= 36:
-                # print(f"Patient {patientID_to_delete} is being deleted from the database.")
-                # print(f"patients before : {patientList}")
                 patientID_to_delete = int(currentPatient["patientID"])
                 for currentDevice in devicesList:
                     if int(currentDevice["patientID"]) == patientID_to_delete and len(devicesList)>1:
@@ -287,11 +222,7 @@ def delete_ex_patients():
                     if int(k) == int(patientID_to_delete):
                         associated_channelID = map_dict[k]
                 final_local_uri = str(local_uri).replace("{{channelID}}", str(associated_channelID))
-                #print(f"delete TS uri: {final_local_uri}")
                 r=requests.delete(final_local_uri, data=body)
-                #print(f"request status code : {r.status_code}")
-                #print(f"request response : {r.text}")
-                #currentDoctor["devicesList"]=devicesList
         catalog["resources"] = doctorList
         Modificato = True
 
@@ -300,6 +231,7 @@ def delete_ex_patients():
             json.dump(catalog, f, indent=2)
             f.close()
 
+# trova la lista dei pazienti da monitorare
 def get_lista_pazienti_da_monitorare():
     json_lista = {
         "lista_pazienti_da_monitorare": []
@@ -316,7 +248,6 @@ def get_lista_pazienti_da_monitorare():
 
             connectedDevice = currentPatient["connectedDevice"]
             if connectedDevice["onlineSince"] == -1 :
-                # print("aggiungerò...")
                 patientID = currentPatient["patientID"]
                 json_lista["lista_pazienti_da_monitorare"].append(patientID)
     return json.dumps(json_lista)
@@ -337,6 +268,7 @@ def set_lista_pazienti_in_monitoring(patient_ID):
                 return True    
     return False
 
+# trova i pazienti a partire dal telegramID del medico
 def get_patient_from_doctortelegram_id(doctortelegramID):
     catalog = openCatalogue()
     docList=catalog["resources"]
@@ -349,20 +281,6 @@ def get_patient_from_doctortelegram_id(doctortelegramID):
         doctor_number += 1
         lista = catalog["resources"][doctor_number] 
     return json.dumps(lista) 
-
-
-# da eliminare?
-# def findDoctorIDwithtelegramID(doctortelegramID):
-#     dictionary = json.load(open('CatalogueAndSettings\\ServicesAndResourcesCatalogue.json','r'))
-
-#     lista = dictionary["resources"]
-#     for currentDoctor in lista:
-#         connectedDevice = currentDoctor["connectedDevice"]
-#         telegramID = connectedDevice["telegramID"] 
-#         if doctortelegramID == telegramID: 
-#             doctorID = currentDoctor["doctorID"] 
-#             return doctorID
-#     return None
 
 
 def file_in_use(fpath):
