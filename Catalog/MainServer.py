@@ -1,4 +1,4 @@
-# Il MainServer contiene tutte le funzioni GET, PUT, POST che servono per la gestione del catalogo in remoto
+# Il MainServer contiene tutte le funzioni GET, PUT, POST, DELETE che servono per la gestione del catalogo in remoto
 
 from gettext import Catalog                          
 import json                     

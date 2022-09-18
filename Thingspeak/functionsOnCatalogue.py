@@ -3,6 +3,9 @@ import json
 import requests
 import time
 
+# Questa raccolta di funzioni http permette (con le chiamate request.get, post, put e delete 
+# di interrogare il MainServer che ha le funzionalità GET e l'accesso al catalogo 
+
 def http_retrieveTSpatientIDsAndChannelIDs():
     
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
@@ -10,20 +13,15 @@ def http_retrieveTSpatientIDsAndChannelIDs():
 
     local_uri = api["uri"]
 
-    #print(f"request : http://{ipAddress}:{port}/{local_uri}")
-
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
-
-    # print(f"status code : {r.status_code}")
-
     if r.status_code == 200:
         return r.text
     else:
         print("http_retrieveTSpatientIDsAndChannelIDs returned status code different from 200")
         return None
 
+# prende dal config.json l'ipadress e la porta del MainServer
 def get_host_and_port():
-    # config.json mi dice qual è il server da interrogare
     filename = 'config.json'
     dictionaryCatalog = json.load(open(filename))
     ipAddress = dictionaryCatalog["ipAddress"]
@@ -32,13 +30,22 @@ def get_host_and_port():
 
 # prende il localhost dal catalogo
 def http_get_localhost():                       
-    TelegramDoctor, ipAddress, port = get_service_host_and_port("TelegramDoctor")
-    
+    TelegramDoctor, ipAddress, port = get_service_host_and_port("TelegramDoctor")    
     return ipAddress
 
-#anche questo potrebbe dover essere modificato
+# trova lo user localhost dal catalogo
+def http_get_user_localhost():
+    TelegramDocBotService, ipAddress, port = get_service_host_and_port("ResourceService")
+    monitoring_state_api = get_api_from_service_and_name( TelegramDocBotService, "get_user_localhost" )
+    local_uri = monitoring_state_api["uri"]
+    r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
+    if r.status_code == 200:
+        return r.text
+    else:
+        return None
+
+# cerca gli host e le porte dei servizi in base al nome
 def http_get_host_and_port(parServiceName): 
-    # config.json mi dice qual è il server da interrogare
     filename = 'config.json'
     dictionaryCatalog = json.load(open(filename))
     server_ipAddress    = dictionaryCatalog["ipAddress"]
@@ -53,13 +60,9 @@ def http_get_host_and_port(parServiceName):
     return serevice_idAddress, serevice_port
 
 
-
-# Questa raccolta di funzioni http permette (con le chiamate request.get, post e put) 
-# di interrogare il MainServer che ha le funzionalità GET e l'accesso al catalogo 
-
 def http_getServiceByName(parServiceName):
 
-    ipAddress, port = get_host_and_port() #presi da config
+    ipAddress, port = get_host_and_port() 
     r = requests.get(f'http://{ipAddress}:{port}/service_by_name?service_name={parServiceName}',timeout=5) 
 
     if r.status_code != 200:
@@ -80,7 +83,7 @@ def get_service_host_and_port(parServiceName):
     port        = Service["port"]
     return Service, ipAddress, port
 
-
+# prende lo stato di monitoraggio on/off dal patientID
 def http_getMonitoringStateFromClientID(patient_ID):
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
@@ -134,7 +137,7 @@ def http_getNameFromClientID(patient_ID):
     else:
         return None
 
-
+# trova il telegramID del dottore corrispondente a partire dal patientID
 def http_findDoctorTelegramIdFromPatientId(patient_ID):
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
@@ -159,8 +162,6 @@ def http_setMonitorinStatefromClientID(patient_ID, monitoring):
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
     api = get_api_from_service_and_name( ResourceService, "set_monitoring_state_from_client_ID" )
 
-    # uri: set_monitoring_by_id
-
     uri = api["uri"]
     local_uri = uri.replace("{{patient_ID}}", str(patient_ID)) 
     local_final_uri = local_uri.replace("{{monitoring}}", monitoring) 
@@ -181,7 +182,7 @@ def http_setMonitorinStatefromClientID(patient_ID, monitoring):
     else:
         return None
 
-
+# trova il paziente dal suo telegramID
 def http_findPatientFromChatID(chat_ID):
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
@@ -200,7 +201,7 @@ def http_findPatientFromChatID(chat_ID):
     else:
         return None
 
-
+# trova la WRITE API di Thingspeak dal patientID
 def http_retrieveTSWriteAPIfromClientID(patient_ID):
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
@@ -229,7 +230,6 @@ def http_get_lista_pazienti_simulati():
 
     r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
 
-
     # ipAddress, port = get_host_and_port()
     # r = requests.get(f'http://{ipAddress}:{port}/get_lista_pazienti_simulati') 
 
@@ -239,17 +239,15 @@ def http_get_lista_pazienti_simulati():
         return None
 
 
-def http_contolla_scadenza_week():
+def http_delete_ex_patients():
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
-    api = get_api_from_service_and_name( ResourceService, "contolla_scadenza_week" )
+    api = get_api_from_service_and_name( ResourceService, "delete_ex_patients" )
 
     local_uri = api["uri"]
 
-    r = requests.get(f'http://{ipAddress}:{port}/{local_uri}') 
-
-    # ipAddress, port = get_host_and_port()
-    # requests.get(f'http://{ipAddress}:{port}/contolla_scadenza_week') 
+    r = requests.delete(f'http://{ipAddress}:{port}/{local_uri}') 
+     # requests.get(f'http://{ipAddress}:{port}/delete_ex_patients')  
 
 
 def http_get_lista_pazienti_da_monitorare():
@@ -283,7 +281,7 @@ def http_set_patient_in_monitoring(parPatientID):
     # ipAddress, port = get_host_and_port()
     # r = requests.put(f'http://{ipAddress}:{port}/set_patient_in_monitoring?patient_id={parPatientID}') 
 
-
+# aggiorna il telegramID del paziente appena si iscrive
 def http_Update_PatientTelegramID(chat_ID, message):
 
     ResourceService, ipAddress, port = get_service_host_and_port("ResourceService")
@@ -318,44 +316,17 @@ def get_api_from_service_and_name( parService, parApiName ):
 
 # esiste una copia identica in ServerFunctions
 def getWeek(dayOne):
-    #print(f"dayone = {dayOne}")
     currTime = time.strftime("%Y-%m-%d")
     currY = currTime.split("-")[0]
     currM = currTime.split("-")[1]
     currD = currTime.split("-")[2]
-    #print(f"currY: {currY}, currM: {currM}, currD: {currD}")
     currDays = int(currY)*365 + int(currM)*30 + int(currD)
-    #print(f"DataAnalysisBlock: current day is {currDays}")
-
-    #print(f"DataAnalysisBlock: clientID : {self.clientID}" )      
-    #print(f"DataAnalysisBlock: dayOne : {dayOne}")
     dayoneY = str(dayOne).split("-")[0]
     dayoneM = str(dayOne).split("-")[1]
     dayoneD = str(dayOne).split("-")[2]
-    #print(f"dayoneY: {dayoneY}, dayoneM: {dayoneM}, dayoneD: {dayoneD}")
     dayoneDays = (int(dayoneY) * 365) + (int(dayoneM) * 30) + int(dayoneD)
-    #print(f"dayoneDays of {self.clientID} is {dayoneDays}")
-
     elapsedDays = currDays - dayoneDays
     week = int(elapsedDays / 7)
     return week
-
-
-# da cancellare alla fine, serve solo per inserire il -1 in automatico (quando si debugga è utile)    
-def setOnlineSinceFromClientID(patient_ID):
-    filename = 'ServicesAndResourcesCatalogue.json'
-    filepointer = open(filename)
-    dictionaryCatalog = json.load(filepointer)
-    docList=dictionaryCatalog["resources"]
-    for _doctors in docList:
-        patientList=_doctors["patientList"] 
-        for _patients in patientList: 
-            if patient_ID == _patients["patientID"]:
-                _patients["connectedDevice"]["onlineSince"] = -1
-                filepointer.close()
-                with open('ServicesAndResourcesCatalogue.json', "w") as f:
-                    json.dump(dictionaryCatalog, f, indent=2)
-
-
 
 

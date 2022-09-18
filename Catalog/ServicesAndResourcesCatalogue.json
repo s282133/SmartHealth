@@ -503,7 +503,7 @@
           },
           "idRegistratoSuRaspberry": "yes",
           "state": "attivo",
-          "monitoring": "off",
+          "monitoring": "on",
           "connectedDevice": {
             "deviceName": "5",
             "onlineSince": "2022-09-18",
