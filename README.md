@@ -47,9 +47,9 @@ The steps for deploying the system are easy, you just need to:
 7) Issue the bash command ``docker-compose up --build``.
 
 ### Useful Links and Material
-- Link to the promotional video of the system: ** link a YT ** ;
-- Link to the demo video of the system: ** link a YT ** ;
-- Presentation Material ** link al PDF ** .
+- Link to the promotional video of the system: [https://www.youtube.com/watch?v=tDhO8cAT1S8] ('PROMO VIDEO');
+- Link to the demo video of the system: [https://www.youtube.com/watch?v=urVWMBEqnns] ('DEMO VIDEO');
+- Presentation Material: you can find the PDF in readme_material folder.
 
 ### Credits
 Special thanks go to Gianfranco Giorgianni ("Gianni") for lending his voice to the promo video of the project.
